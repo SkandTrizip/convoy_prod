@@ -1,0 +1,168 @@
+import uuid
+from datetime import date, datetime
+from decimal import Decimal
+
+from geoalchemy2 import Geography
+from sqlalchemy import (
+    Boolean,
+    Date,
+    DateTime,
+    Float,
+    Index,
+    Numeric,
+    String,
+    Text,
+)
+from sqlalchemy.dialects.postgresql import JSONB, UUID
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+
+
+class Base(DeclarativeBase):
+    pass
+
+
+def new_uuid() -> uuid.UUID:
+    return uuid.uuid4()
+
+
+class LoginOTP(Base):
+    __tablename__ = "login_otps"
+    __table_args__ = (Index("idx_login_otps_mobile_expires", "mobile", "expires_at"),)
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=new_uuid)
+    mobile: Mapped[str] = mapped_column(String(20), nullable=False, index=True)
+    otp: Mapped[str] = mapped_column(String(4), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.utcnow)
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), nullable=False)
+    verified: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+
+
+class User(Base):
+    __tablename__ = "users"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=new_uuid)
+    mobile: Mapped[str] = mapped_column(String(20), unique=True, nullable=False, index=True)
+    name: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    profile_photo: Mapped[str | None] = mapped_column(Text, nullable=True)
+    kyc_status: Mapped[str] = mapped_column(String(32), default="pending", nullable=False)
+    account_status: Mapped[str] = mapped_column(String(32), default="active", nullable=False)
+    created_date: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.utcnow)
+    push_token: Mapped[str | None] = mapped_column(Text, nullable=True)
+    verification_status: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
+
+
+class Location(Base):
+    __tablename__ = "locations"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=new_uuid)
+    name: Mapped[str] = mapped_column(String(512), nullable=False, index=True)
+    lat: Mapped[float] = mapped_column(Float, nullable=False)
+    lng: Mapped[float] = mapped_column(Float, nullable=False)
+    pincode: Mapped[str | None] = mapped_column(String(12), nullable=True, index=True)
+    city: Mapped[str | None] = mapped_column(String(128), nullable=True, index=True)
+    state: Mapped[str | None] = mapped_column(String(128), nullable=True, index=True)
+    google_place_id: Mapped[str | None] = mapped_column(String(255), unique=True, nullable=True)
+    source: Mapped[str] = mapped_column(String(16), default="google", nullable=False)
+
+
+class KYCRecord(Base):
+    __tablename__ = "kyc_records"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=new_uuid)
+    user_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), index=True, nullable=False)
+    method: Mapped[str] = mapped_column(String(32), nullable=False)
+    data: Mapped[dict] = mapped_column(JSONB, default=dict, nullable=False)
+    submitted_date: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.utcnow)
+    reviewed_date: Mapped[datetime | None] = mapped_column(DateTime(timezone=False), nullable=True)
+    reviewed_by: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    status: Mapped[str] = mapped_column(String(32), nullable=False)
+    aadhaar_front_image: Mapped[str | None] = mapped_column(Text, nullable=True)
+    aadhaar_back_image: Mapped[str | None] = mapped_column(Text, nullable=True)
+    rejection_reason: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+
+class Truck(Base):
+    __tablename__ = "trucks"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=new_uuid)
+    user_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), index=True, nullable=False)
+    truck_number: Mapped[str] = mapped_column(String(32), nullable=False, index=True)
+    truck_type: Mapped[str] = mapped_column(String(64), nullable=False)
+    capacity: Mapped[float | None] = mapped_column(Float, nullable=True)
+    verification_status: Mapped[str] = mapped_column(String(32), default="pending", nullable=False)
+    vahan_data: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
+    added_date: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.utcnow)
+
+
+class TruckRoute(Base):
+    __tablename__ = "truck_routes"
+    __table_args__ = (
+        Index("idx_truck_routes_origin_location", "origin_location", postgresql_using="gist"),
+        Index("idx_truck_routes_destination_location", "destination_location", postgresql_using="gist"),
+        Index("idx_truck_routes_status_date", "status", "available_date"),
+    )
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=new_uuid)
+    truck_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), index=True, nullable=False)
+    user_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), index=True, nullable=False)
+    truck_number: Mapped[str] = mapped_column(String(32), nullable=False)
+    truck_type: Mapped[str] = mapped_column(String(64), nullable=False)
+    capacity: Mapped[float | None] = mapped_column(Float, nullable=True)
+    origin_name: Mapped[str] = mapped_column(String(255), nullable=False)
+    destination_name: Mapped[str] = mapped_column(String(255), nullable=False)
+    origin_location: Mapped[str] = mapped_column(Geography(geometry_type="POINT", srid=4326), nullable=False)
+    destination_location: Mapped[str] = mapped_column(Geography(geometry_type="POINT", srid=4326), nullable=False)
+    origin: Mapped[dict] = mapped_column(JSONB, nullable=False)
+    destination: Mapped[dict] = mapped_column(JSONB, nullable=False)
+    current_location: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
+    available_date: Mapped[date] = mapped_column(Date, nullable=False)
+    price: Mapped[Decimal | None] = mapped_column(Numeric(12, 2), nullable=True)
+    status: Mapped[str] = mapped_column(String(32), default="available", nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.utcnow)
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), nullable=False)
+
+
+class Booking(Base):
+    __tablename__ = "bookings"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=new_uuid)
+    truck_route_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), index=True, nullable=False)
+    user_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), index=True, nullable=False)
+    status: Mapped[str] = mapped_column(String(32), default="pending", nullable=False)
+    price: Mapped[Decimal | None] = mapped_column(Numeric(12, 2), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.utcnow)
+
+
+class SearchDemand(Base):
+    __tablename__ = "search_demands"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=new_uuid)
+    user_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), index=True, nullable=False)
+    origin: Mapped[dict] = mapped_column(JSONB, nullable=False)
+    destination: Mapped[dict] = mapped_column(JSONB, nullable=False)
+    truck_type: Mapped[str] = mapped_column(String(64), nullable=False)
+    search_timestamp: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.utcnow)
+    expiry_timestamp: Mapped[datetime] = mapped_column(DateTime(timezone=False), nullable=False)
+    notification_status: Mapped[str] = mapped_column(String(32), default="pending", nullable=False)
+
+
+class Notification(Base):
+    __tablename__ = "notifications"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=new_uuid)
+    user_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), index=True, nullable=False)
+    type: Mapped[str] = mapped_column(String(64), nullable=False)
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=False)
+    related_post_id: Mapped[str | None] = mapped_column(String(36), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.utcnow)
+    read_status: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+
+
+class CallLog(Base):
+    __tablename__ = "call_logs"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=new_uuid)
+    user_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), index=True, nullable=False)
+    truck_post_id: Mapped[str | None] = mapped_column(String(36), nullable=True)
+    timestamp: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.utcnow)

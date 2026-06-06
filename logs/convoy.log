@@ -1,0 +1,54 @@
+2026-06-06 14:33:06 | INFO     | convoy | Logging initialized — files: C:\Users\Acer\convoy-new\backend\logs
+2026-06-06 14:33:09 | INFO     | convoy | Logging initialized — files: C:\Users\Acer\convoy-new\backend\logs
+2026-06-06 14:33:10 | INFO     | convoy | Starting Convoy API
+2026-06-06 14:33:10 | INFO     | convoy | Database initialized (PostGIS + tables)
+2026-06-06 14:33:51 | INFO     | convoy | Logging initialized — files: C:\Users\Acer\convoy-new\backend\logs
+2026-06-06 14:33:52 | INFO     | convoy | test message
+2026-06-06 14:33:56 | INFO     | convoy | Shutting down Convoy API
+2026-06-06 14:33:57 | INFO     | convoy | Logging initialized - files: C:\Users\Acer\convoy-new\backend\logs
+2026-06-06 14:33:58 | INFO     | convoy | Starting Convoy API
+2026-06-06 14:33:58 | INFO     | convoy | Database initialized (PostGIS + tables)
+2026-06-06 14:34:01 | INFO     | convoy | Logging initialized - files: C:\Users\Acer\convoy-new\backend\logs
+2026-06-06 14:34:02 | INFO     | httpx | HTTP Request: GET http://testserver/api/truck-types "HTTP/1.1 200 OK"
+2026-06-06 14:34:02 | INFO     | httpx | HTTP Request: GET http://testserver/api/nonexistent "HTTP/1.1 404 Not Found"
+2026-06-06 14:39:35 | INFO     | convoy | Shutting down Convoy API
+2026-06-06 14:39:37 | INFO     | convoy | Logging initialized - files: C:\Users\Acer\convoy-new\backend\logs
+2026-06-06 14:39:38 | INFO     | convoy | Starting Convoy API
+2026-06-06 14:39:38 | INFO     | convoy | Database initialized (PostGIS + tables)
+2026-06-06 15:19:25 | WARNING  | convoy | No push token found for user 5ebaee02-b569-4802-b9aa-6f4de19c15c6
+2026-06-06 15:19:35 | WARNING  | convoy | No push token found for user 5ebaee02-b569-4802-b9aa-6f4de19c15c6
+2026-06-06 15:19:45 | WARNING  | convoy | No push token found for user 5ebaee02-b569-4802-b9aa-6f4de19c15c6
+2026-06-06 15:30:32 | INFO     | convoy | Shutting down Convoy API
+2026-06-06 15:30:33 | INFO     | convoy | Logging initialized - files: C:\Users\Acer\convoy-new\backend\logs
+2026-06-06 15:30:35 | INFO     | convoy | Logging initialized - files: C:\Users\Acer\convoy-new\backend\logs
+2026-06-06 15:30:36 | INFO     | convoy | Starting Convoy API
+2026-06-06 15:30:36 | INFO     | convoy | Database initialized (PostGIS + tables)
+2026-06-06 15:30:39 | INFO     | convoy | Shutting down Convoy API
+2026-06-06 15:30:40 | INFO     | convoy | Logging initialized - files: C:\Users\Acer\convoy-new\backend\logs
+2026-06-06 15:30:41 | INFO     | convoy | Starting Convoy API
+2026-06-06 15:30:41 | INFO     | convoy | Database initialized (PostGIS + tables)
+2026-06-06 15:30:41 | INFO     | convoy | Shutting down Convoy API
+2026-06-06 15:30:43 | INFO     | convoy | Logging initialized - files: C:\Users\Acer\convoy-new\backend\logs
+2026-06-06 15:30:44 | INFO     | convoy | Starting Convoy API
+2026-06-06 15:30:44 | INFO     | convoy | Database initialized (PostGIS + tables)
+2026-06-06 15:30:57 | INFO     | convoy | Shutting down Convoy API
+2026-06-06 15:30:59 | INFO     | convoy | Logging initialized - files: C:\Users\Acer\convoy-new\backend\logs
+2026-06-06 15:31:00 | INFO     | convoy | Starting Convoy API
+2026-06-06 15:31:00 | INFO     | convoy | Database initialized (PostGIS + tables)
+2026-06-06 15:42:46 | INFO     | convoy | Logging initialized - files: C:\Users\Acer\convoy-new\backend\logs
+2026-06-06 15:42:47 | ERROR    | convoy | Cashfree send OTP failed: IP not whitelisted. Your current ip is 122.162.146.188. For IP whitelisting assistance, visit our guide at https://www.cashfree.com/docs/secure-id/get-started/integration/ip-whitelisting-verification.
+2026-06-06 15:54:18 | INFO     | convoy | Shutting down Convoy API
+2026-06-06 15:54:19 | INFO     | convoy | Logging initialized - files: C:\Users\Acer\convoy-new\backend\logs
+2026-06-06 15:54:21 | INFO     | convoy | Starting Convoy API
+2026-06-06 15:54:21 | INFO     | convoy | Database initialized (PostGIS + tables)
+2026-06-06 15:54:21 | INFO     | convoy | Shutting down Convoy API
+2026-06-06 15:54:23 | INFO     | convoy | Logging initialized - files: C:\Users\Acer\convoy-new\backend\logs
+2026-06-06 15:54:28 | INFO     | convoy | Logging initialized - files: C:\Users\Acer\convoy-new\backend\logs
+2026-06-06 15:54:29 | INFO     | convoy | Starting Convoy API
+2026-06-06 15:54:29 | INFO     | convoy | Database initialized (PostGIS + tables)
+2026-06-06 15:54:30 | INFO     | convoy | Shutting down Convoy API
+2026-06-06 15:54:31 | INFO     | convoy | Logging initialized - files: C:\Users\Acer\convoy-new\backend\logs
+2026-06-06 15:54:32 | INFO     | convoy | Starting Convoy API
+2026-06-06 15:54:32 | INFO     | convoy | Database initialized (PostGIS + tables)
+2026-06-06 15:54:52 | INFO     | convoy | Logging initialized - files: C:\Users\Acer\convoy-new\backend\logs
+2026-06-06 16:05:56 | INFO     | convoy | Shutting down Convoy API
