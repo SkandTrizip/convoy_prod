@@ -5,9 +5,9 @@ on:
     branches:
       - main
       - master
-    paths:
-      - "backend/**"
-      - ".github/workflows/deploy-backend.yml"
+    paths-ignore:
+      - "**.md"
+      - "Convoy_API.postman_collection.json"
 
   workflow_dispatch:
 
@@ -25,14 +25,26 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup SSH key
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Start SSH agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Add server to known_hosts
         run: |
           mkdir -p ~/.ssh
-          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -p "${{ secrets.SSH_PORT || 22 }}" "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null || true
+          ssh-keyscan -p "${{ secrets.SSH_PORT || 22 }}" "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Verify SSH connection
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT: ${{ secrets.SSH_PORT || 22 }}
+        run: |
+          echo "Deploy key fingerprint:"
+          ssh-add -l
+          ssh -p "${SSH_PORT}" -o BatchMode=yes -o StrictHostKeyChecking=yes \
+            "${SSH_USER}@${SSH_HOST}" "echo connected as \$(whoami) in \$(pwd)"
 
       - name: Sync backend files
         env:
@@ -43,50 +55,52 @@ jobs:
         run: |
           rsync -avz --delete \
             --exclude '.env' \
+            --exclude '.git/' \
+            --exclude 'venv/' \
             --exclude '__pycache__/' \
             --exclude '*.pyc' \
             --exclude 'logs/' \
             --exclude '.pytest_cache/' \
-            -e "ssh -i ~/.ssh/deploy_key -p ${SSH_PORT} -o StrictHostKeyChecking=no" \
-            backend/ "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/"
+            -e "ssh -p ${SSH_PORT} -o BatchMode=yes -o StrictHostKeyChecking=yes" \
+            ./ "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/"
 
       - name: Install dependencies and restart
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ secrets.SSH_PORT || 22 }}
-          script_stop: true
-          script: |
-            set -euo pipefail
-            DEPLOY_PATH="${{ secrets.DEPLOY_PATH }}"
-            cd "${DEPLOY_PATH}"
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT: ${{ secrets.SSH_PORT || 22 }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+        run: |
+          ssh -p "${SSH_PORT}" -o BatchMode=yes -o StrictHostKeyChecking=yes \
+            "${SSH_USER}@${SSH_HOST}" bash -s <<EOF
+          set -euo pipefail
+          cd "${DEPLOY_PATH}"
 
-            if [ ! -d venv ]; then
-              python3 -m venv venv
-            fi
-            source venv/bin/activate
-            pip install --upgrade pip
-            pip install -r requirements.txt
+          if [ ! -d venv ]; then
+            python3 -m venv venv
+          fi
+          source venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
 
-            if [ ! -f .env ]; then
-              echo "ERROR: ${DEPLOY_PATH}/.env is missing on the server."
-              echo "Create it once with DATABASE_URL, API keys, etc."
-              exit 1
-            fi
+          if [ ! -f .env ]; then
+            echo "ERROR: ${DEPLOY_PATH}/.env is missing on the server."
+            echo "Create it once with DATABASE_URL, API keys, etc."
+            exit 1
+          fi
 
-            sudo systemctl restart convoy-api
-            sleep 2
-            sudo systemctl is-active --quiet convoy-api
-            echo "Backend deployed and convoy-api is running."
+          sudo systemctl restart convoy-api
+          sleep 2
+          sudo systemctl is-active --quiet convoy-api
+          echo "Backend deployed and convoy-api is running."
+          EOF
 
       - name: Health check
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ secrets.SSH_PORT || 22 }}
-          script: |
-            curl -fsS http://127.0.0.1:8000/api/ | grep -q Convoy
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT: ${{ secrets.SSH_PORT || 22 }}
+        run: |
+          ssh -p "${SSH_PORT}" -o BatchMode=yes -o StrictHostKeyChecking=yes \
+            "${SSH_USER}@${SSH_HOST}" \
+            "curl -fsS http://127.0.0.1:8000/api/ | grep -q Convoy"
