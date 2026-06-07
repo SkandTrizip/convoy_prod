@@ -1,7 +1,7 @@
 from datetime import datetime
 from decimal import Decimal
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -16,8 +16,8 @@ router = APIRouter(prefix="/bookings", tags=["bookings"])
 
 @router.post("")
 async def create_booking(
-    user_id: str,
     data: CreateBookingRequest,
+    user_id: str = Query(..., description="UUID of the user making the booking"),
     session: AsyncSession = Depends(get_session),
 ):
     """Book an available truck route."""

@@ -52,3 +52,5 @@
 2026-06-06 15:54:32 | INFO     | convoy | Database initialized (PostGIS + tables)
 2026-06-06 15:54:52 | INFO     | convoy | Logging initialized - files: C:\Users\Acer\convoy-new\backend\logs
 2026-06-06 16:05:56 | INFO     | convoy | Shutting down Convoy API
+2026-06-07 18:41:56 | INFO     | convoy | Logging initialized - files: C:\Users\Acer\convoy-new\backend\logs
+2026-06-07 18:42:49 | INFO     | convoy | Logging initialized - files: C:\Users\Acer\convoy-new\backend\logs

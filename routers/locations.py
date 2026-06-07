@@ -1,5 +1,5 @@
 import requests
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -31,7 +31,7 @@ async def _search_db_locations(session: AsyncSession, query: str, limit: int = 5
 
 @router.get("/search")
 async def search_locations(
-    query: str,
+    query: str = Query(..., min_length=1, description="Search text (min 3 chars for results)"),
     session: AsyncSession = Depends(get_session),
 ):
     """Autosuggest locations: DB first (min 3 chars), then Google Places."""

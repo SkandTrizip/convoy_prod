@@ -6,6 +6,7 @@ from starlette.middleware.cors import CORSMiddleware
 from config import logger
 from database import close_db, init_db
 from middleware import RequestLoggingMiddleware
+from openapi_config import API_METADATA, OPENAPI_TAGS, get_servers
 from routers import api_router
 
 
@@ -24,7 +25,15 @@ async def lifespan(app: FastAPI):
     await close_db()
 
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(
+    lifespan=lifespan,
+    **API_METADATA,
+    openapi_tags=OPENAPI_TAGS,
+    servers=get_servers(),
+    docs_url="/docs",
+    redoc_url="/redoc",
+    openapi_url="/openapi.json",
+)
 app.include_router(api_router)
 
 app.add_middleware(RequestLoggingMiddleware)

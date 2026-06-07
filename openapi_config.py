@@ -1,0 +1,95 @@
+import os
+
+API_TITLE = "Convoy API"
+API_VERSION = "1.0.0"
+API_DESCRIPTION = """
+Convoy is a truck discovery and availability marketplace API.
+
+## Authentication
+Most endpoints require a `user_id` (UUID) obtained from **POST /api/auth/verify-otp** after OTP login.
+
+## Interactive docs
+- **Swagger UI:** `/docs`
+- **ReDoc:** `/redoc`
+- **OpenAPI JSON:** `/openapi.json`
+
+## Base path
+All routes are served under **`/api`**.
+"""
+
+OPENAPI_TAGS = [
+    {
+        "name": "auth",
+        "description": "Mobile OTP login and registration.",
+    },
+    {
+        "name": "user",
+        "description": "User profile and Expo push notification token.",
+    },
+    {
+        "name": "locations",
+        "description": "Location autosuggest (local DB + Google Places).",
+    },
+    {
+        "name": "kyc",
+        "description": "Aadhaar OTP and KYC submission workflows.",
+    },
+    {
+        "name": "vehicle",
+        "description": "Add and list verified trucks for a user.",
+    },
+    {
+        "name": "verification",
+        "description": "VAHAN vehicle and SARATHI DL verification via ULIP proxy.",
+    },
+    {
+        "name": "posts",
+        "description": "Create, list, reactivate, and delete truck availability posts.",
+    },
+    {
+        "name": "search",
+        "description": "Spatial truck search, demand tracking, and call logging.",
+    },
+    {
+        "name": "trucks",
+        "description": "Truck route CRUD and search.",
+    },
+    {
+        "name": "bookings",
+        "description": "Book an available truck route.",
+    },
+    {
+        "name": "notifications",
+        "description": "In-app notifications for users.",
+    },
+    {
+        "name": "admin",
+        "description": "Admin KYC review and analytics dashboard.",
+    },
+    {
+        "name": "misc",
+        "description": "Health check and reference data.",
+    },
+]
+
+
+def get_servers() -> list[dict]:
+    base_url = os.environ.get("API_BASE_URL", "http://localhost:8000").rstrip("/")
+    return [
+        {"url": base_url, "description": "Current environment"},
+        {"url": "http://localhost:8000", "description": "Local development"},
+    ]
+
+
+API_METADATA = {
+    "title": API_TITLE,
+    "version": API_VERSION,
+    "description": API_DESCRIPTION,
+    "contact": {
+        "name": "Convoy Support",
+        "url": "https://github.com/SkandTrizip/convoy_prod",
+    },
+    "license_info": {
+        "name": "Proprietary",
+    },
+}

@@ -1,6 +1,4 @@
-from typing import Dict
-
-from fastapi import APIRouter, Body, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -8,7 +6,7 @@ from config import logger
 from database import get_session
 from db.base import User
 from db.serializers import parse_uuid, user_to_dict
-from models import UserProfile
+from models import PushTokenRequest, UserProfile
 
 router = APIRouter(prefix="/user", tags=["user"])
 
@@ -78,15 +76,12 @@ async def update_user_profile(
 @router.post("/push-token/{user_id}")
 async def update_push_token(
     user_id: str,
-    data: Dict = Body(...),
+    data: PushTokenRequest,
     session: AsyncSession = Depends(get_session),
 ):
     """Update user's push notification token"""
     try:
-        push_token = data.get("pushToken")
-        if not push_token:
-            raise HTTPException(status_code=400, detail="Push token required")
-
+        push_token = data.pushToken
         await session.execute(
             update(User)
             .where(User.id == parse_uuid(user_id))
