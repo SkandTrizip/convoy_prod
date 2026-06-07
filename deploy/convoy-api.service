@@ -1,0 +1,17 @@
+[Unit]
+Description=Convoy FastAPI backend
+After=network.target postgresql.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=azureuser
+Group=azureuser
+WorkingDirectory=/home/azureuser/convoy_prod
+Environment=PATH=/home/azureuser/convoy_prod/venv/bin
+ExecStart=/home/azureuser/convoy_prod/venv/bin/uvicorn server:app --host 0.0.0.0 --port 8000
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
