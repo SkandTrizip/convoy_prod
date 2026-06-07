@@ -54,3 +54,21 @@
 2026-06-06 16:05:56 | INFO     | convoy | Shutting down Convoy API
 2026-06-07 18:41:56 | INFO     | convoy | Logging initialized - files: C:\Users\Acer\convoy-new\backend\logs
 2026-06-07 18:42:49 | INFO     | convoy | Logging initialized - files: C:\Users\Acer\convoy-new\backend\logs
+2026-06-07 22:27:38 | INFO     | convoy | Logging initialized - files: C:\Users\Acer\convoy-new\backend\logs
+2026-06-07 22:27:41 | INFO     | convoy | Logging initialized - files: C:\Users\Acer\convoy-new\backend\logs
+2026-06-07 22:27:42 | INFO     | watchfiles.main | 1 change detected
+2026-06-07 22:27:42 | INFO     | convoy | Starting Convoy API
+2026-06-07 22:27:42 | INFO     | convoy | Database initialized (PostGIS + tables)
+2026-06-07 22:27:53 | INFO     | convoy | OTP SMS sent via Veup to 8090364218
+2026-06-07 22:27:53 | INFO     | convoy | OTP generated for 8090364218
+2026-06-07 22:28:20 | INFO     | watchfiles.main | 1 change detected
+2026-06-07 22:29:46 | INFO     | watchfiles.main | 1 change detected
+2026-06-07 22:30:12 | INFO     | watchfiles.main | 2 changes detected
+2026-06-07 22:30:12 | INFO     | convoy | Shutting down Convoy API
+2026-06-07 22:30:13 | INFO     | watchfiles.main | 2 changes detected
+2026-06-07 22:30:13 | INFO     | convoy | Logging initialized - files: C:\Users\Acer\convoy-new\backend\logs
+2026-06-07 22:30:14 | INFO     | watchfiles.main | 10 changes detected
+2026-06-07 22:30:14 | INFO     | convoy | Starting Convoy API
+2026-06-07 22:30:14 | INFO     | convoy | Database initialized (PostGIS + tables)
+2026-06-07 22:30:14 | INFO     | watchfiles.main | 1 change detected
+2026-06-07 22:30:33 | INFO     | convoy | Shutting down Convoy API

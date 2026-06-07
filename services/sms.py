@@ -68,7 +68,7 @@ def send_otp_sms(mobile: str, otp: str) -> bool:
     """Send login OTP SMS via Veup."""
     api_key = _get_veup_api_key()
     if not api_key:
-        logger.warning("Veup credentials not configured. SMS not sent.")
+        logger.warning("Veup SMS not sent (missing credentials or token request failed).")
         return False
 
     number = normalize_indian_mobile(mobile)

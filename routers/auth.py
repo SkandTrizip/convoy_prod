@@ -24,14 +24,19 @@ async def send_otp(
         otp = generate_otp()
 
         await store_otp(session, mobile, otp)
-        send_otp_sms(mobile, otp)
+        sms_sent = send_otp_sms(mobile, otp)
 
         logger.info(f"OTP generated for {mobile}")
 
+        # Dev mode or Veup failure: return OTP in JSON so login still works.
+        include_otp = is_sms_dev_mode() or not sms_sent
+        if not sms_sent and not is_sms_dev_mode():
+            logger.warning("SMS delivery failed for %s; returning OTP in API response", mobile)
+
         return {
             "success": True,
-            "message": "OTP sent successfully",
-            "otp": otp if is_sms_dev_mode() else None,
+            "message": "OTP sent successfully" if sms_sent else "OTP generated (SMS not delivered)",
+            "otp": otp if include_otp else None,
         }
     except Exception as e:
         logger.error(f"Error in send_otp: {str(e)}")
