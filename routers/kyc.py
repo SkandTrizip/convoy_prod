@@ -9,6 +9,7 @@ from database import get_session
 from db.base import KYCRecord, User
 from db.serializers import kyc_to_dict, parse_uuid
 from models import (
+    AadhaarOcrRequest,
     AadhaarSendOtpRequest,
     AadhaarVerifyOtpRequest,
     KYCSubmission,
@@ -17,11 +18,66 @@ from services.kyc import (
     normalize_aadhaar,
     send_aadhaar_otp,
     verify_aadhaar_otp,
+    verify_aadhaar_with_smart_ocr,
     verify_kyc_with_cashfree,
 )
 from services.notifications import send_expo_push_notification
 
 router = APIRouter(prefix="/kyc", tags=["kyc"])
+
+
+async def _save_approved_kyc(
+    session: AsyncSession,
+    user: User,
+    kyc_record: KYCRecord | None,
+    *,
+    method: str,
+    verified_data: dict,
+    extra_data: dict | None = None,
+    front_image: str | None = None,
+    back_image: str | None = None,
+) -> KYCRecord:
+    now = datetime.utcnow()
+    record_data = {**(extra_data or {}), "verified": verified_data}
+
+    if kyc_record:
+        kyc_record.method = method
+        kyc_record.data = record_data
+        kyc_record.submitted_date = now
+        kyc_record.reviewed_date = now
+        kyc_record.status = "approved"
+        kyc_record.reviewed_by = "cashfree"
+        if front_image:
+            kyc_record.aadhaar_front_image = front_image
+        if back_image:
+            kyc_record.aadhaar_back_image = back_image
+    else:
+        kyc_record = KYCRecord(
+            user_id=user.id,
+            method=method,
+            data=record_data,
+            submitted_date=now,
+            reviewed_date=now,
+            status="approved",
+            reviewed_by="cashfree",
+            aadhaar_front_image=front_image,
+            aadhaar_back_image=back_image,
+        )
+        session.add(kyc_record)
+
+    verified_name = verified_data.get("name")
+    if verified_name:
+        user.name = verified_name
+
+    await session.execute(
+        update(User).where(User.id == user.id).values(
+            kyc_status="approved",
+            name=user.name,
+        )
+    )
+    await session.commit()
+    await session.refresh(kyc_record)
+    return kyc_record
 
 
 @router.post("/aadhaar/send-otp/{user_id}")
@@ -196,13 +252,87 @@ async def verify_kyc_aadhaar_otp(
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@router.post("/aadhaar/ocr/{user_id}")
+async def verify_kyc_aadhaar_ocr(
+    user_id: str,
+    request: AadhaarOcrRequest,
+    session: AsyncSession = Depends(get_session),
+):
+    """Verify Aadhaar by uploading front/back images via Cashfree Smart OCR."""
+    try:
+        user_uuid = parse_uuid(user_id)
+        user_result = await session.execute(select(User).where(User.id == user_uuid))
+        user = user_result.scalar_one_or_none()
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        expected_aadhaar = None
+        if request.aadhaarNumber:
+            try:
+                expected_aadhaar = normalize_aadhaar(request.aadhaarNumber)
+            except ValueError as e:
+                raise HTTPException(status_code=400, detail=str(e)) from e
+
+        ocr_result = verify_aadhaar_with_smart_ocr(
+            front_image=request.aadhaarFrontImage,
+            back_image=request.aadhaarBackImage,
+            user_id=str(user_uuid),
+            expected_aadhaar=expected_aadhaar,
+        )
+        if not ocr_result.get("success"):
+            raise HTTPException(
+                status_code=400,
+                detail=ocr_result.get("message") or "Aadhaar OCR verification failed",
+            )
+
+        kyc_result = await session.execute(
+            select(KYCRecord).where(KYCRecord.user_id == user_uuid)
+        )
+        existing_kyc = kyc_result.scalar_one_or_none()
+        verified = ocr_result["verified_data"]
+        kyc_record = await _save_approved_kyc(
+            session,
+            user,
+            existing_kyc,
+            method="aadhaar_ocr",
+            verified_data=verified,
+            extra_data={"ocr": ocr_result.get("ocr")},
+            front_image=request.aadhaarFrontImage,
+            back_image=request.aadhaarBackImage,
+        )
+
+        await send_expo_push_notification(
+            user_id,
+            "KYC Approved",
+            "Your Aadhaar has been verified. You can now add vehicles.",
+            session=session,
+        )
+
+        return {
+            "success": True,
+            "status": "approved",
+            "verifiedName": verified.get("name"),
+            "kyc": kyc_to_dict(kyc_record),
+            "user": {
+                "_id": str(user.id),
+                "kycStatus": "approved",
+                "name": user.name,
+            },
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error("Error in verify_kyc_aadhaar_ocr: %s", e, exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @router.post("/submit/{user_id}")
 async def submit_kyc(
     user_id: str,
     submission: KYCSubmission,
     session: AsyncSession = Depends(get_session),
 ):
-    """Submit manual KYC with document images for admin review."""
+    """Submit KYC with document images — verified via Cashfree Smart OCR when images provided."""
     try:
         if submission.method == "digilocker":
             raise HTTPException(
@@ -211,6 +341,11 @@ async def submit_kyc(
             )
 
         user_uuid = parse_uuid(user_id)
+        user_result = await session.execute(select(User).where(User.id == user_uuid))
+        user = user_result.scalar_one_or_none()
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+
         result = await session.execute(
             select(KYCRecord).where(KYCRecord.user_id == user_uuid)
         )
@@ -222,10 +357,44 @@ async def submit_kyc(
                 "front": submission.aadhaarFrontImage,
                 "back": submission.aadhaarBackImage,
             },
+            user_id=str(user_uuid),
         )
         status = verification.get("status", "under_review")
-        now = datetime.utcnow()
 
+        if status == "approved" and verification.get("verified_data"):
+            kyc_record = await _save_approved_kyc(
+                session,
+                user,
+                existing_kyc,
+                method=submission.method or "aadhaar_ocr",
+                verified_data=verification["verified_data"],
+                extra_data={
+                    **submission.data,
+                    "verification": verification,
+                },
+                front_image=submission.aadhaarFrontImage,
+                back_image=submission.aadhaarBackImage,
+            )
+            await send_expo_push_notification(
+                user_id,
+                "KYC Approved",
+                "Your Aadhaar has been verified. You can now add vehicles.",
+                session=session,
+            )
+            return {
+                "success": True,
+                "status": "approved",
+                "verifiedName": verification["verified_data"].get("name"),
+                "kyc": kyc_to_dict(kyc_record),
+            }
+
+        if status == "rejected":
+            raise HTTPException(
+                status_code=400,
+                detail=verification.get("message") or "KYC document verification failed",
+            )
+
+        now = datetime.utcnow()
         if existing_kyc:
             existing_kyc.method = submission.method
             existing_kyc.data = {**submission.data, "verification": verification}

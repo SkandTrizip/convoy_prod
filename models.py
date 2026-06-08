@@ -115,6 +115,14 @@ class AadhaarVerifyOtpRequest(BaseModel):
     aadhaarNumber: str = Field(..., description="12-digit Aadhaar number")
 
 
+class AadhaarOcrRequest(BaseModel):
+    aadhaarFrontImage: str = Field(..., description="Base64 or HTTPS URL of Aadhaar front")
+    aadhaarBackImage: str = Field(..., description="Base64 or HTTPS URL of Aadhaar back")
+    aadhaarNumber: Optional[str] = Field(
+        None, description="Optional 12-digit Aadhaar to cross-check against OCR"
+    )
+
+
 class KYCSubmission(BaseModel):
     method: str = Field(..., description="KYC method", examples=["aadhaar"])
     data: Dict[str, Any] = Field(default_factory=dict, description="Method-specific payload")

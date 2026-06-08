@@ -5,3 +5,5 @@ FROM users
 WHERE users.mobile = $1::VARCHAR]
 [parameters: ('8090364218',)]
 (Background on this error at: https://sqlalche.me/e/20/f405)
+2026-06-08 10:38:33 | ERROR    | convoy | Cashfree Smart OCR failed: IP not whitelisted. Your current ip is 122.162.146.188. For IP whitelisting assistance, visit our guide at https://www.cashfree.com/docs/secure-id/get-started/integration/ip-whitelisting-verification.
+2026-06-08 10:38:33 | ERROR    | convoy | Cashfree Smart OCR failed: IP not whitelisted. Your current ip is 122.162.146.188. For IP whitelisting assistance, visit our guide at https://www.cashfree.com/docs/secure-id/get-started/integration/ip-whitelisting-verification.
