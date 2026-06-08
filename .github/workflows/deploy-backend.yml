@@ -91,7 +91,12 @@ jobs:
 
           sudo systemctl restart convoy-api
           sleep 5
-          sudo systemctl is-active --quiet convoy-api
+          if ! sudo systemctl is-active --quiet convoy-api; then
+            echo "convoy-api failed to start. Recent logs:"
+            sudo systemctl status convoy-api --no-pager || true
+            sudo journalctl -u convoy-api -n 40 --no-pager || true
+            exit 1
+          fi
           echo "Backend deployed and convoy-api is running."
           EOF
 
