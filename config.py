@@ -9,6 +9,7 @@ ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / ".env")
 
 LOG_LEVEL = os.environ.get("LOG_LEVEL", "INFO")
+PORT = int(os.environ.get("PORT", "8000"))
 logger = setup_logging(LOG_LEVEL)
 
 # Veup SMS (login OTP)

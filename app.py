@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
-from config import logger
+from config import PORT, logger
 from database import close_db, init_db
 from middleware import RequestLoggingMiddleware
 from openapi_config import API_METADATA, OPENAPI_TAGS, get_servers
@@ -73,4 +73,4 @@ app.add_middleware(
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("app:app", host="0.0.0.0", port=PORT, reload=True)

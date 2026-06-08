@@ -19,6 +19,11 @@ async def get_truck_types():
     return {"success": True, "truckTypes": truck_types}
 
 
+@router.get("/health")
+async def health():
+    return {"status": "ok", "service": "Convoy API"}
+
+
 @router.get("/")
 async def root():
     return {"message": "Convoy API - Truck Discovery & Availability Marketplace"}

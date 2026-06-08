@@ -90,7 +90,7 @@ jobs:
           fi
 
           sudo systemctl restart convoy-api
-          sleep 2
+          sleep 5
           sudo systemctl is-active --quiet convoy-api
           echo "Backend deployed and convoy-api is running."
           EOF
@@ -102,5 +102,17 @@ jobs:
           SSH_PORT: ${{ secrets.SSH_PORT || 22 }}
         run: |
           ssh -p "${SSH_PORT}" -o BatchMode=yes -o StrictHostKeyChecking=yes \
-            "${SSH_USER}@${SSH_HOST}" \
-            "curl -fsS http://127.0.0.1:8000/api/ | grep -q Convoy"
+            "${SSH_USER}@${SSH_HOST}" bash -s <<'EOF'
+          set -euo pipefail
+          for i in 1 2 3 4 5; do
+            if curl -fsS http://127.0.0.1:5050/api/health | grep -q 'ok'; then
+              echo "Health check passed."
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Health check failed. Recent service logs:"
+          sudo journalctl -u convoy-api -n 30 --no-pager || true
+          curl -v http://127.0.0.1:5050/api/health || true
+          exit 1
+          EOF
