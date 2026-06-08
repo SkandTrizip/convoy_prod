@@ -1,1 +1,7 @@
 2026-06-06 15:42:47 | ERROR    | convoy | Cashfree send OTP failed: IP not whitelisted. Your current ip is 122.162.146.188. For IP whitelisting assistance, visit our guide at https://www.cashfree.com/docs/secure-id/get-started/integration/ip-whitelisting-verification.
+2026-06-07 22:43:43 | ERROR    | convoy | Error in verify_otp: (sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.UndefinedColumnError'>: column users.verification_status does not exist
+[SQL: SELECT users.id, users.mobile, users.name, users.profile_photo, users.kyc_status, users.account_status, users.created_date, users.push_token, users.verification_status 
+FROM users 
+WHERE users.mobile = $1::VARCHAR]
+[parameters: ('8090364218',)]
+(Background on this error at: https://sqlalche.me/e/20/f405)

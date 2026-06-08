@@ -67,7 +67,9 @@ async def search_truck_routes_spatial(
           AND ST_DWithin(tr.origin_location, ST_GeogFromText(:origin_point), :radius_m)
           AND ST_DWithin(tr.destination_location, ST_GeogFromText(:dest_point), :radius_m)
           {truck_type_filter}
-        ORDER BY origin_distance_km + destination_distance_km
+        ORDER BY
+            ST_Distance(tr.origin_location, ST_GeogFromText(:origin_point))
+            + ST_Distance(tr.destination_location, ST_GeogFromText(:dest_point))
         LIMIT 1000
     """)
 
