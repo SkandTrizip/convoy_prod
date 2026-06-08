@@ -1,6 +1,6 @@
-import requests
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import or_, select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from config import GOOGLE_PLACES_API_KEY, logger
@@ -29,6 +29,46 @@ async def _search_db_locations(session: AsyncSession, query: str, limit: int = 5
     return list(result.scalars().all())
 
 
+async def _get_location_by_place_id(
+    session: AsyncSession, place_id: str
+) -> Location | None:
+    result = await session.execute(
+        select(Location).where(Location.google_place_id == place_id)
+    )
+    return result.scalar_one_or_none()
+
+
+async def _cache_google_location(
+    session: AsyncSession,
+    place_id: str,
+    details: dict,
+    fallback_name: str,
+) -> Location | None:
+    """Persist a Google place, reusing an existing row if already cached."""
+    existing = await _get_location_by_place_id(session, place_id)
+    if existing:
+        return existing
+
+    location = Location(
+        name=details["name"] or fallback_name,
+        lat=details["lat"],
+        lng=details["lng"],
+        pincode=details["pincode"],
+        city=details["city"],
+        state=details["state"],
+        google_place_id=place_id,
+        source="google",
+    )
+    session.add(location)
+    try:
+        await session.commit()
+        await session.refresh(location)
+        return location
+    except IntegrityError:
+        await session.rollback()
+        return await _get_location_by_place_id(session, place_id)
+
+
 @router.get("/search")
 async def search_locations(
     query: str = Query(..., min_length=1, description="Search text (min 3 chars for results)"),
@@ -52,10 +92,7 @@ async def search_locations(
             if not place_id or place_id in seen_place_ids:
                 continue
 
-            existing = await session.execute(
-                select(Location).where(Location.google_place_id == place_id)
-            )
-            cached = existing.scalar_one_or_none()
+            cached = await _get_location_by_place_id(session, place_id)
             if cached:
                 results.append(location_to_dict(cached))
                 seen_place_ids.add(place_id)
@@ -65,19 +102,15 @@ async def search_locations(
             if not details:
                 continue
 
-            location = Location(
-                name=details["name"] or prediction.get("description", ""),
-                lat=details["lat"],
-                lng=details["lng"],
-                pincode=details["pincode"],
-                city=details["city"],
-                state=details["state"],
-                google_place_id=place_id,
-                source="google",
+            location = await _cache_google_location(
+                session,
+                place_id,
+                details,
+                prediction.get("description", ""),
             )
-            session.add(location)
-            await session.commit()
-            await session.refresh(location)
+            if not location:
+                continue
+
             results.append(location_to_dict(location))
             seen_place_ids.add(place_id)
 

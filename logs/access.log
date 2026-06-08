@@ -26,3 +26,4 @@
 2026-06-07 23:21:07 | INFO     | convoy.access | GET /openapi.json | status=200 | 87.8ms | client=127.0.0.1
 2026-06-07 23:21:27 | INFO     | convoy.access | POST /api/auth/send-otp | status=200 | 3804.6ms | client=127.0.0.1
 2026-06-07 23:23:17 | INFO     | convoy.access | POST /api/auth/send-otp | status=200 | 1472.1ms | client=127.0.0.1
+2026-06-08 14:40:55 | INFO     | convoy.access | POST /api/auth/send-otp | status=200 | 2871.8ms | client=127.0.0.1
