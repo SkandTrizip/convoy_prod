@@ -70,7 +70,10 @@ def test_verify_otp_success_create_user(s):
     assert data["success"] is True
     assert data["user"]["mobile"] == TEST_MOBILE_A
     assert data["user"]["kycStatus"] == "pending"
+    assert data.get("accessToken"), "verify-otp should return JWT accessToken"
     STATE["user_id"] = data["user"]["_id"]
+    STATE["access_token"] = data["accessToken"]
+    s.headers.update({"Authorization": f"Bearer {STATE['access_token']}"})
 
 
 # ==================== USER PROFILE ====================
@@ -174,7 +177,12 @@ def test_add_vehicle_without_kyc(s):
     otp = r1.json()["otp"]
     r2 = s.post(f"{API}/auth/verify-otp", json={"mobile": mob, "otp": otp})
     new_uid = r2.json()["user"]["_id"]
-    r = s.post(f"{API}/vehicle/add/{new_uid}", json={"vehicleNumber": "DL01AB9999", "truckType": "Pickup"})
+    new_token = r2.json()["accessToken"]
+    r = s.post(
+        f"{API}/vehicle/add/{new_uid}",
+        json={"vehicleNumber": "DL01AB9999", "truckType": "Pickup"},
+        headers={"Authorization": f"Bearer {new_token}"},
+    )
     assert r.status_code == 403
 
 
@@ -191,6 +199,7 @@ def test_search_trucks_no_results(s):
     otp = r1.json()["otp"]
     r2 = s.post(f"{API}/auth/verify-otp", json={"mobile": mob, "otp": otp})
     STATE["searcher_id"] = r2.json()["user"]["_id"]
+    STATE["searcher_token"] = r2.json()["accessToken"]
 
     # Search for unique route - should return empty initially
     payload = {"origin": BANGALORE, "destination": MUMBAI, "truckType": "Trailer"}
@@ -204,7 +213,11 @@ def test_search_trucks_no_results(s):
 def test_track_search_demand(s):
     uid = STATE["searcher_id"]
     payload = {"origin": DELHI, "destination": MUMBAI, "truckType": "Container"}
-    r = s.post(f"{API}/search/track-demand/{uid}", json=payload)
+    r = s.post(
+        f"{API}/search/track-demand/{uid}",
+        json=payload,
+        headers={"Authorization": f"Bearer {STATE['searcher_token']}"},
+    )
     assert r.status_code == 200
     assert r.json()["success"] is True
 
@@ -230,7 +243,10 @@ def test_smart_match_notification_sent(s):
     """After truck post is created matching the tracked demand, searcher should get notification"""
     uid = STATE["searcher_id"]
     time.sleep(1)  # allow processing
-    r = s.get(f"{API}/notifications/{uid}")
+    r = s.get(
+        f"{API}/notifications/{uid}",
+        headers={"Authorization": f"Bearer {STATE['searcher_token']}"},
+    )
     assert r.status_code == 200
     notifs = r.json()["notifications"]
     smart_matches = [n for n in notifs if n.get("type") == "smart_match"]
@@ -279,7 +295,11 @@ def test_search_trucks_outside_radius(s):
 # ==================== CALL LOG ====================
 def test_log_call(s):
     uid = STATE["searcher_id"]
-    r = s.post(f"{API}/search/log-call/{uid}", json={"postId": STATE["post_id"]})
+    r = s.post(
+        f"{API}/search/log-call/{uid}",
+        json={"postId": STATE["post_id"]},
+        headers={"Authorization": f"Bearer {STATE['searcher_token']}"},
+    )
     assert r.status_code == 200
     assert r.json()["success"] is True
 
@@ -287,7 +307,10 @@ def test_log_call(s):
 # ==================== NOTIFICATIONS ====================
 def test_get_notifications(s):
     uid = STATE["searcher_id"]
-    r = s.get(f"{API}/notifications/{uid}")
+    r = s.get(
+        f"{API}/notifications/{uid}",
+        headers={"Authorization": f"Bearer {STATE['searcher_token']}"},
+    )
     assert r.status_code == 200
     assert isinstance(r.json()["notifications"], list)
 

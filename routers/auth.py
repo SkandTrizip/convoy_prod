@@ -6,6 +6,7 @@ from config import logger
 from database import get_session
 from db.base import User
 from db.serializers import user_to_dict
+from middleware.auth import create_access_token
 from models import SendOTPRequest, VerifyOTPRequest
 from services.otp import generate_otp, store_otp, verify_stored_otp
 from services.sms import is_sms_dev_mode, send_otp_sms
@@ -65,9 +66,13 @@ async def verify_otp(
             await session.commit()
             await session.refresh(user)
 
+        access_token = create_access_token(str(user.id), user.mobile)
+
         return {
             "success": True,
             "message": "Login successful",
+            "accessToken": access_token,
+            "tokenType": "bearer",
             "user": user_to_dict(user),
         }
     except HTTPException:

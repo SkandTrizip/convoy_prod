@@ -6,7 +6,10 @@ API_DESCRIPTION = """
 Convoy is a truck discovery and availability marketplace API.
 
 ## Authentication
-Most endpoints require a `user_id` (UUID) obtained from **POST /api/auth/verify-otp** after OTP login.
+1. **POST /api/auth/send-otp** then **POST /api/auth/verify-otp** to log in.
+2. Use the returned **`accessToken`** as a Bearer JWT on all other endpoints:
+   `Authorization: Bearer <accessToken>`
+3. Path `user_id` must match the logged-in user (from the token).
 
 ## Interactive docs
 - **Swagger UI:** `/docs`

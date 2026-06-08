@@ -10566,3 +10566,4 @@ WHERE users.mobile = $1::VARCHAR]
 2026-06-08 10:38:32 | INFO     | convoy | Logging initialized - files: C:\Users\Acer\convoy-new\backend\logs
 2026-06-08 10:38:33 | ERROR    | convoy | Cashfree Smart OCR failed: IP not whitelisted. Your current ip is 122.162.146.188. For IP whitelisting assistance, visit our guide at https://www.cashfree.com/docs/secure-id/get-started/integration/ip-whitelisting-verification.
 2026-06-08 10:38:33 | ERROR    | convoy | Cashfree Smart OCR failed: IP not whitelisted. Your current ip is 122.162.146.188. For IP whitelisting assistance, visit our guide at https://www.cashfree.com/docs/secure-id/get-started/integration/ip-whitelisting-verification.
+2026-06-08 10:56:43 | INFO     | convoy | Logging initialized - files: C:\Users\Acer\convoy-new\backend\logs

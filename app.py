@@ -34,7 +34,31 @@ app = FastAPI(
     redoc_url="/redoc",
     openapi_url="/openapi.json",
 )
+
+
 app.include_router(api_router)
+
+
+def _configure_openapi_security() -> None:
+    schema = app.openapi()
+    schema.setdefault("components", {}).setdefault("securitySchemes", {})[
+        "BearerAuth"
+    ] = {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "JWT from POST /api/auth/verify-otp (`accessToken`)",
+    }
+    for path, methods in schema.get("paths", {}).items():
+        if path.startswith("/api/auth/") or path in ("/api/", "/api/truck-types"):
+            continue
+        for operation in methods.values():
+            if isinstance(operation, dict):
+                operation["security"] = [{"BearerAuth": []}]
+    app.openapi_schema = schema
+
+
+_configure_openapi_security()
 
 app.add_middleware(RequestLoggingMiddleware)
 app.add_middleware(

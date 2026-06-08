@@ -13,6 +13,7 @@ shapely>=2.0.0,<3.0.0
 
 # External services (Google Places, VAHAN, Expo push, Veup SMS)
 requests>=2.31.0,<3.0.0
+PyJWT>=2.8.0,<3.0.0
 
 # Tests (backend/tests/)
 pytest>=8.0.0,<10.0.0

@@ -4,8 +4,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from config import logger
 from database import get_session
-from db.base import Notification
+from db.base import Notification, User
 from db.serializers import notification_to_dict, parse_uuid
+from middleware.auth import authorize_user_id, get_current_user, require_path_user
 
 router = APIRouter(prefix="/notifications", tags=["notifications"])
 
@@ -14,6 +15,7 @@ router = APIRouter(prefix="/notifications", tags=["notifications"])
 async def get_notifications(
     user_id: str,
     session: AsyncSession = Depends(get_session),
+    _: User = Depends(require_path_user),
 ):
     """Get user's notifications"""
     try:
@@ -38,12 +40,23 @@ async def get_notifications(
 async def mark_notification_read(
     notification_id: str,
     session: AsyncSession = Depends(get_session),
+    current_user: User = Depends(get_current_user),
 ):
     """Mark notification as read"""
     try:
+        notification_uuid = parse_uuid(notification_id)
+        existing = await session.execute(
+            select(Notification).where(Notification.id == notification_uuid)
+        )
+        notification = existing.scalar_one_or_none()
+        if not notification:
+            raise HTTPException(status_code=404, detail="Notification not found")
+
+        authorize_user_id(str(notification.user_id), current_user)
+
         await session.execute(
             update(Notification)
-            .where(Notification.id == parse_uuid(notification_id))
+            .where(Notification.id == notification_uuid)
             .values(read_status=True)
         )
         await session.commit()

@@ -9,6 +9,7 @@ from config import logger
 from database import get_session
 from db.base import Booking, TruckRoute, User
 from db.serializers import booking_to_dict, parse_uuid
+from middleware.auth import require_path_user
 from models import CreateBookingRequest
 
 router = APIRouter(prefix="/bookings", tags=["bookings"])
@@ -19,6 +20,7 @@ async def create_booking(
     data: CreateBookingRequest,
     user_id: str = Query(..., description="UUID of the user making the booking"),
     session: AsyncSession = Depends(get_session),
+    _: User = Depends(require_path_user),
 ):
     """Book an available truck route."""
     try:

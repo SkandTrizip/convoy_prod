@@ -9,6 +9,7 @@ from config import logger
 from database import get_session
 from db.base import Truck, User
 from db.serializers import parse_uuid, truck_to_dict
+from middleware.auth import require_path_user
 from models import AddVehicleRequest
 from services.notifications import send_expo_push_notification
 from services.ulip import verify_vehicle_registration
@@ -21,6 +22,7 @@ async def add_vehicle(
     user_id: str,
     vehicle_data: AddVehicleRequest,
     session: AsyncSession = Depends(get_session),
+    _: User = Depends(require_path_user),
 ):
     """Add a truck for user"""
     try:
@@ -91,6 +93,7 @@ async def add_vehicle(
 async def list_vehicles(
     user_id: str,
     session: AsyncSession = Depends(get_session),
+    _: User = Depends(require_path_user),
 ):
     """Get all trucks for user"""
     try:

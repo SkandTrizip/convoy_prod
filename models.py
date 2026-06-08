@@ -88,7 +88,6 @@ class CreateTruckRequest(BaseModel):
     destination: Location
     current_location: Optional[Location] = None
     available_date: date
-    price: Optional[float] = Field(None, description="Quoted price in INR")
 
 
 class CreateBookingRequest(BaseModel):
@@ -160,7 +159,6 @@ class CreateTruckPostRequest(BaseModel):
     destination: Location
     currentLocation: Location
     available_date: Optional[date] = None
-    price: Optional[float] = Field(None, description="Quoted price in INR")
 
 
 class AdminKYCAction(BaseModel):

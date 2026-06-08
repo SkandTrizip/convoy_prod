@@ -23,6 +23,10 @@ GOOGLE_PLACES_API_KEY = os.environ.get("GOOGLE_PLACES_API_KEY")
 CASHFREE_CLIENT_ID = os.environ.get("CASHFREE_CLIENT_ID")
 CASHFREE_CLIENT_SECRET = os.environ.get("CASHFREE_CLIENT_SECRET")
 CASHFREE_ENVIRONMENT = os.environ.get("CASHFREE_ENVIRONMENT", "production")
+
+# JWT (API auth after OTP login)
+JWT_SECRET = os.environ.get("JWT_SECRET", "dev-insecure-change-in-production")
+JWT_EXPIRE_HOURS = int(os.environ.get("JWT_EXPIRE_HOURS", "168"))
 # ULIP proxy (EC2) — VAHAN / SARATHI verification
 ULIP_PROXY_URL = os.environ.get("ULIP_PROXY_URL")
 ULIP_PROXY_API_KEY = os.environ.get("ULIP_PROXY_API_KEY")

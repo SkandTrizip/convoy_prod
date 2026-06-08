@@ -7,8 +7,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from config import logger
 from database import get_session
-from db.base import CallLog, SearchDemand
+from db.base import CallLog, SearchDemand, User
 from db.serializers import parse_uuid
+from middleware.auth import require_path_user
 from models import SearchTrucksRequest
 from services.spatial import search_truck_routes_spatial
 
@@ -60,6 +61,7 @@ async def track_search_demand(
     user_id: str,
     search_request: SearchTrucksRequest,
     session: AsyncSession = Depends(get_session),
+    _: User = Depends(require_path_user),
 ):
     """Track failed search for smart notifications"""
     try:
@@ -115,6 +117,7 @@ async def log_call_click(
     user_id: str,
     data: Dict = Body(...),
     session: AsyncSession = Depends(get_session),
+    _: User = Depends(require_path_user),
 ):
     """Log call button click for analytics"""
     try:

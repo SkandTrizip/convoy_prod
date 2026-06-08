@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from config import logger
 from database import get_session
 from db.base import KYCRecord, User
+from middleware.auth import require_path_user
 from db.serializers import kyc_to_dict, parse_uuid
 from models import (
     AadhaarOcrRequest,
@@ -85,6 +86,7 @@ async def send_kyc_aadhaar_otp(
     user_id: str,
     request: AadhaarSendOtpRequest,
     session: AsyncSession = Depends(get_session),
+    _: User = Depends(require_path_user),
 ):
     """Send OTP to the mobile number linked with the Aadhaar."""
     try:
@@ -162,6 +164,7 @@ async def verify_kyc_aadhaar_otp(
     user_id: str,
     request: AadhaarVerifyOtpRequest,
     session: AsyncSession = Depends(get_session),
+    _: User = Depends(require_path_user),
 ):
     """Verify Aadhaar OTP via Cashfree and approve KYC on success."""
     try:
@@ -257,6 +260,7 @@ async def verify_kyc_aadhaar_ocr(
     user_id: str,
     request: AadhaarOcrRequest,
     session: AsyncSession = Depends(get_session),
+    _: User = Depends(require_path_user),
 ):
     """Verify Aadhaar by uploading front/back images via Cashfree Smart OCR."""
     try:
@@ -331,6 +335,7 @@ async def submit_kyc(
     user_id: str,
     submission: KYCSubmission,
     session: AsyncSession = Depends(get_session),
+    _: User = Depends(require_path_user),
 ):
     """Submit KYC with document images — verified via Cashfree Smart OCR when images provided."""
     try:
@@ -434,6 +439,7 @@ async def submit_kyc(
 async def get_kyc_status(
     user_id: str,
     session: AsyncSession = Depends(get_session),
+    _: User = Depends(require_path_user),
 ):
     """Get KYC status for user"""
     try:

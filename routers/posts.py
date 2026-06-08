@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-from decimal import Decimal
 from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -10,6 +9,7 @@ from config import logger
 from database import get_session
 from db.base import Truck, TruckRoute, User
 from db.serializers import parse_uuid, truck_route_to_dict
+from middleware.auth import authorize_user_id, get_current_user, require_path_user
 from models import CreateTruckPostRequest
 from services.matching import process_smart_match_notifications
 from services.spatial import make_geography_point
@@ -22,6 +22,7 @@ async def create_truck_post(
     user_id: str,
     post_data: CreateTruckPostRequest,
     session: AsyncSession = Depends(get_session),
+    _: User = Depends(require_path_user),
 ):
     """Create a truck availability post (stored as truck_route with PostGIS)."""
     try:
@@ -64,7 +65,6 @@ async def create_truck_post(
             destination=post_data.destination.model_dump(),
             current_location=post_data.currentLocation.model_dump(),
             available_date=available,
-            price=Decimal(str(post_data.price)) if post_data.price is not None else None,
             status="available",
             created_at=now,
             expires_at=now + timedelta(hours=24),
@@ -89,6 +89,7 @@ async def get_my_posts(
     user_id: str,
     status: Optional[str] = None,
     session: AsyncSession = Depends(get_session),
+    _: User = Depends(require_path_user),
 ):
     """Get user's truck posts"""
     try:
@@ -132,6 +133,7 @@ async def get_my_posts(
 async def reactivate_post(
     post_id: str,
     session: AsyncSession = Depends(get_session),
+    current_user: User = Depends(get_current_user),
 ):
     """Reactivate an expired post"""
     try:
@@ -143,6 +145,8 @@ async def reactivate_post(
 
         if not post:
             raise HTTPException(status_code=404, detail="Post not found")
+
+        authorize_user_id(str(post.user_id), current_user)
 
         now = datetime.utcnow()
         post.status = "available"
@@ -166,11 +170,22 @@ async def reactivate_post(
 async def delete_post(
     post_id: str,
     session: AsyncSession = Depends(get_session),
+    current_user: User = Depends(get_current_user),
 ):
     """Delete a truck post"""
     try:
+        post_uuid = parse_uuid(post_id)
+        existing = await session.execute(
+            select(TruckRoute).where(TruckRoute.id == post_uuid)
+        )
+        post = existing.scalar_one_or_none()
+        if not post:
+            raise HTTPException(status_code=404, detail="Post not found")
+
+        authorize_user_id(str(post.user_id), current_user)
+
         result = await session.execute(
-            delete(TruckRoute).where(TruckRoute.id == parse_uuid(post_id))
+            delete(TruckRoute).where(TruckRoute.id == post_uuid)
         )
         await session.commit()
 

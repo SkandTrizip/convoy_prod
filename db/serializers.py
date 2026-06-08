@@ -94,7 +94,6 @@ def truck_route_to_dict(route: TruckRoute) -> dict:
         "originName": route.origin_name,
         "destinationName": route.destination_name,
         "availableDate": route.available_date.isoformat(),
-        "price": float(route.price) if route.price is not None else None,
         "status": route.status,
         "createdAt": route.created_at,
         "expiresAt": route.expires_at,

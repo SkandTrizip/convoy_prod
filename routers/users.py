@@ -6,6 +6,7 @@ from config import logger
 from database import get_session
 from db.base import User
 from db.serializers import parse_uuid, user_to_dict
+from middleware.auth import require_path_user
 from models import PushTokenRequest, UserProfile
 
 router = APIRouter(prefix="/user", tags=["user"])
@@ -15,6 +16,7 @@ router = APIRouter(prefix="/user", tags=["user"])
 async def get_user_profile(
     user_id: str,
     session: AsyncSession = Depends(get_session),
+    _: User = Depends(require_path_user),
 ):
     """Get user profile"""
     try:
@@ -38,6 +40,7 @@ async def update_user_profile(
     user_id: str,
     profile: UserProfile,
     session: AsyncSession = Depends(get_session),
+    _: User = Depends(require_path_user),
 ):
     """Update user profile"""
     try:
@@ -78,6 +81,7 @@ async def update_push_token(
     user_id: str,
     data: PushTokenRequest,
     session: AsyncSession = Depends(get_session),
+    _: User = Depends(require_path_user),
 ):
     """Update user's push notification token"""
     try:

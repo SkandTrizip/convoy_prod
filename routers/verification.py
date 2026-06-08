@@ -8,6 +8,7 @@ from config import logger
 from database import get_session
 from db.base import User
 from db.serializers import parse_uuid, user_to_dict
+from middleware.auth import require_path_user
 from models import BatchVerifyRequest, VerifyDLRequest, VerifyVehicleRequest
 from services.ulip import (
     to_api_response,
@@ -45,6 +46,7 @@ async def verify_vehicle(
     user_id: str,
     request: VerifyVehicleRequest,
     session: AsyncSession = Depends(get_session),
+    _: User = Depends(require_path_user),
 ):
     """Verify vehicle registration via ULIP VAHAN proxy."""
     try:
@@ -72,6 +74,7 @@ async def verify_dl(
     user_id: str,
     request: VerifyDLRequest,
     session: AsyncSession = Depends(get_session),
+    _: User = Depends(require_path_user),
 ):
     """Verify driving license via ULIP SARATHI proxy."""
     try:
@@ -106,6 +109,7 @@ async def batch_verify(
     user_id: str,
     request: BatchVerifyRequest,
     session: AsyncSession = Depends(get_session),
+    _: User = Depends(require_path_user),
 ):
     """Verify multiple documents in one request."""
     try:

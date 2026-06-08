@@ -1,5 +1,4 @@
 from datetime import date, datetime, timedelta
-from decimal import Decimal
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
@@ -9,6 +8,7 @@ from config import logger
 from database import get_session
 from db.base import Truck, TruckRoute, User
 from db.serializers import parse_uuid, truck_route_to_dict, truck_to_dict
+from middleware.auth import require_path_user
 from models import CreateTruckRequest, TruckSearchRequest
 from services.spatial import make_geography_point, search_truck_routes_spatial
 
@@ -20,6 +20,7 @@ async def create_truck_listing(
     user_id: str,
     data: CreateTruckRequest,
     session: AsyncSession = Depends(get_session),
+    _: User = Depends(require_path_user),
 ):
     """Post truck availability with PostGIS origin/destination."""
     try:
@@ -60,7 +61,6 @@ async def create_truck_listing(
             if data.current_location
             else None,
             available_date=data.available_date,
-            price=Decimal(str(data.price)) if data.price is not None else None,
             status="available",
             created_at=now,
             expires_at=now + timedelta(hours=24),
