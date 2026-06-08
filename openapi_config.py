@@ -1,5 +1,7 @@
 import os
 
+from config import PORT
+
 API_TITLE = "Convoy API"
 API_VERSION = "1.0.0"
 API_DESCRIPTION = """
@@ -77,10 +79,11 @@ OPENAPI_TAGS = [
 
 
 def get_servers() -> list[dict]:
-    base_url = os.environ.get("API_BASE_URL", "http://localhost:8000").rstrip("/")
+    local_url = f"http://localhost:{PORT}"
+    base_url = os.environ.get("API_BASE_URL", local_url).rstrip("/")
     return [
         {"url": base_url, "description": "Current environment"},
-        {"url": "http://localhost:8000", "description": "Local development"},
+        {"url": local_url, "description": "Local development"},
     ]
 
 
