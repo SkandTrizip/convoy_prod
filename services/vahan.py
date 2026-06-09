@@ -2,7 +2,7 @@ from services.ulip import verify_vehicle_registration
 
 
 async def verify_vehicle_with_vahan(vehicle_number: str):
-    """Verify vehicle using ULIP VAHAN proxy."""
+    """Verify vehicle using ULIP VAHAN API."""
     result = verify_vehicle_registration(vehicle_number)
     if not result.get("verified"):
         return None

@@ -48,7 +48,7 @@ async def verify_vehicle(
     session: AsyncSession = Depends(get_session),
     _: User = Depends(require_path_user),
 ):
-    """Verify vehicle registration via ULIP VAHAN proxy."""
+    """Verify vehicle registration via ULIP VAHAN API."""
     try:
         await _get_user_or_404(session, user_id)
         result = verify_vehicle_registration(request.vehicleNumber)
@@ -76,7 +76,7 @@ async def verify_dl(
     session: AsyncSession = Depends(get_session),
     _: User = Depends(require_path_user),
 ):
-    """Verify driving license via ULIP SARATHI proxy."""
+    """Verify driving license via ULIP SARATHI API."""
     try:
         user = await _get_user_or_404(session, user_id)
         validate_dl_dob(request.dob)

@@ -28,6 +28,27 @@ class UserProfile(BaseModel):
     profilePhoto: Optional[str] = Field(None, description="URL to profile image")
 
 
+class HashedContact(BaseModel):
+    name: str = Field(..., description="Contact display name from device")
+    hashedNumber: str = Field(
+        ...,
+        description="SHA256 hex hash of normalized phone digits (never send raw numbers)",
+        min_length=64,
+        max_length=64,
+    )
+
+
+class SyncContactsRequest(BaseModel):
+    contacts: list[HashedContact] = Field(
+        default_factory=list,
+        description="Hashed device contacts to store for mutual matching",
+    )
+
+
+class MutualContactsRequest(BaseModel):
+    otherUserId: str = Field(..., description="User ID to compare phone books against")
+
+
 class PushTokenRequest(BaseModel):
     model_config = ConfigDict(
         json_schema_extra={"example": {"pushToken": "ExponentPushToken[xxxxxxxxxxxxxx]"}}

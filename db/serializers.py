@@ -79,6 +79,12 @@ vehicle_to_dict = truck_to_dict
 
 
 def truck_route_to_dict(route: TruckRoute) -> dict:
+    from datetime import datetime
+
+    from services.post_expiry import is_post_expired
+
+    now = datetime.utcnow()
+    expired = is_post_expired(route, now)
     return {
         "_id": str(route.id),
         "userId": str(route.user_id),
@@ -94,7 +100,8 @@ def truck_route_to_dict(route: TruckRoute) -> dict:
         "originName": route.origin_name,
         "destinationName": route.destination_name,
         "availableDate": route.available_date.isoformat(),
-        "status": route.status,
+        "status": "expired" if expired else route.status,
+        "isExpired": expired,
         "createdAt": route.created_at,
         "expiresAt": route.expires_at,
     }

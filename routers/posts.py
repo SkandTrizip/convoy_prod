@@ -1,17 +1,26 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import delete, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from config import logger
+from config import POST_EXPIRE_HOURS, logger
 from database import get_session
 from db.base import Truck, TruckRoute, User
 from db.serializers import parse_uuid, truck_route_to_dict
 from middleware.auth import authorize_user_id, get_current_user, require_path_user
 from models import CreateTruckPostRequest
 from services.matching import process_smart_match_notifications
+from services.post_expiry import (
+    ACTIVE_POST_STATUSES,
+    DEFAULT_ACTIVE_STATUS,
+    EXPIRED_STATUS,
+    apply_post_reactivation,
+    expire_overdue_posts,
+    is_post_expired,
+    post_expires_at,
+)
 from services.spatial import make_geography_point
 
 router = APIRouter(prefix="/posts", tags=["posts"])
@@ -24,7 +33,7 @@ async def create_truck_post(
     session: AsyncSession = Depends(get_session),
     _: User = Depends(require_path_user),
 ):
-    """Create a truck availability post (stored as truck_route with PostGIS)."""
+    """Create a truck availability post (auto-expires after 24 hours)."""
     try:
         user_uuid = parse_uuid(user_id)
         result = await session.execute(select(User).where(User.id == user_uuid))
@@ -65,9 +74,9 @@ async def create_truck_post(
             destination=post_data.destination.model_dump(),
             current_location=post_data.currentLocation.model_dump(),
             available_date=available,
-            status="available",
+            status=DEFAULT_ACTIVE_STATUS,
             created_at=now,
-            expires_at=now + timedelta(hours=24),
+            expires_at=post_expires_at(now),
         )
         session.add(route)
         await session.commit()
@@ -91,21 +100,23 @@ async def get_my_posts(
     session: AsyncSession = Depends(get_session),
     _: User = Depends(require_path_user),
 ):
-    """Get user's truck posts"""
+    """Get user's truck posts (active or expired)."""
     try:
+        await expire_overdue_posts(session)
+
         user_uuid = parse_uuid(user_id)
         stmt = select(TruckRoute).where(TruckRoute.user_id == user_uuid)
         now = datetime.utcnow()
 
         if status == "active":
             stmt = stmt.where(
-                TruckRoute.status.in_(("available", "active")),
+                TruckRoute.status.in_(ACTIVE_POST_STATUSES),
                 TruckRoute.expires_at > now,
             )
         elif status == "expired":
             stmt = stmt.where(
                 or_(
-                    TruckRoute.status == "expired",
+                    TruckRoute.status == EXPIRED_STATUS,
                     TruckRoute.expires_at <= now,
                 )
             )
@@ -114,16 +125,10 @@ async def get_my_posts(
         result = await session.execute(stmt)
         posts = result.scalars().all()
 
-        response_posts = []
-        for post in posts:
-            if post.status in ("available", "active") and post.expires_at < now:
-                post.status = "expired"
-            response_posts.append(truck_route_to_dict(post))
-
-        if any(p["status"] == "expired" for p in response_posts):
-            await session.commit()
-
-        return {"success": True, "posts": response_posts}
+        return {
+            "success": True,
+            "posts": [truck_route_to_dict(post) for post in posts],
+        }
     except Exception as e:
         logger.error(f"Error in get_my_posts: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -135,8 +140,10 @@ async def reactivate_post(
     session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user),
 ):
-    """Reactivate an expired post"""
+    """Reactivate an expired post for another 24 hours."""
     try:
+        await expire_overdue_posts(session)
+
         post_uuid = parse_uuid(post_id)
         result = await session.execute(
             select(TruckRoute).where(TruckRoute.id == post_uuid)
@@ -148,17 +155,24 @@ async def reactivate_post(
 
         authorize_user_id(str(post.user_id), current_user)
 
-        now = datetime.utcnow()
-        post.status = "available"
-        post.created_at = now
-        post.expires_at = now + timedelta(hours=24)
+        if not is_post_expired(post):
+            raise HTTPException(
+                status_code=400,
+                detail="Post is still active. Reactivation is only for expired posts.",
+            )
+
+        apply_post_reactivation(post)
         await session.commit()
         await session.refresh(post)
 
         post_dict = truck_route_to_dict(post)
         await process_smart_match_notifications(post_id, post_dict, session)
 
-        return {"success": True, "message": "Post reactivated successfully"}
+        return {
+            "success": True,
+            "message": f"Post reactivated for {POST_EXPIRE_HOURS} hours",
+            "post": post_dict,
+        }
     except HTTPException:
         raise
     except Exception as e:

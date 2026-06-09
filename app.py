@@ -1,3 +1,4 @@
+import asyncio
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -8,19 +9,28 @@ from database import close_db, init_db
 from middleware import RequestLoggingMiddleware
 from openapi_config import API_METADATA, OPENAPI_TAGS, get_servers
 from routers import api_router
+from services.post_expiry import run_post_expiry_loop
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Create PostGIS extension and tables on startup; close DB on shutdown."""
     logger.info("Starting Convoy API")
+    expiry_task: asyncio.Task | None = None
     try:
         await init_db()
         logger.info("Database initialized (PostGIS + tables)")
+        expiry_task = asyncio.create_task(run_post_expiry_loop())
     except Exception as e:
         logger.error("Error during startup: %s", e, exc_info=True)
         raise
     yield
+    if expiry_task:
+        expiry_task.cancel()
+        try:
+            await expiry_task
+        except asyncio.CancelledError:
+            pass
     logger.info("Shutting down Convoy API")
     await close_db()
 

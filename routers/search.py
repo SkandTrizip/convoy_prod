@@ -9,8 +9,10 @@ from config import logger
 from database import get_session
 from db.base import CallLog, SearchDemand, User
 from db.serializers import parse_uuid
-from middleware.auth import require_path_user
+from middleware.auth import get_current_user, require_path_user
 from models import SearchTrucksRequest
+from services.contacts import attach_mutuals_to_listings
+from services.post_expiry import expire_overdue_posts
 from services.spatial import search_truck_routes_spatial
 
 router = APIRouter(prefix="/search", tags=["search"])
@@ -20,9 +22,12 @@ router = APIRouter(prefix="/search", tags=["search"])
 async def search_trucks(
     search_request: SearchTrucksRequest,
     session: AsyncSession = Depends(get_session),
+    current_user: User = Depends(get_current_user),
 ):
     """Search for available trucks using PostGIS ST_DWithin."""
     try:
+        await expire_overdue_posts(session)
+
         matching_posts = await search_truck_routes_spatial(
             session,
             origin_lat=search_request.origin.lat,
@@ -33,6 +38,10 @@ async def search_trucks(
             available_date=search_request.available_date,
             truck_type=search_request.truckType,
             include_user_info=True,
+        )
+
+        matching_posts = await attach_mutuals_to_listings(
+            session, current_user.id, matching_posts
         )
 
         # Legacy response shape for existing frontend

@@ -5,6 +5,7 @@ from routers import (
     admin,
     auth,
     bookings,
+    contacts,
     kyc,
     locations,
     misc,
@@ -26,6 +27,7 @@ api_router.include_router(misc.router)
 # Protected routes (Bearer JWT required)
 protected_router = APIRouter(dependencies=[Depends(get_current_user)])
 protected_router.include_router(users.router)
+protected_router.include_router(contacts.router)
 protected_router.include_router(locations.router)
 protected_router.include_router(kyc.router)
 protected_router.include_router(vehicles.router)

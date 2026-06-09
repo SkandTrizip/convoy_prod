@@ -1,4 +1,4 @@
-from datetime import date, datetime, timedelta
+from datetime import date, datetime
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
@@ -8,8 +8,14 @@ from config import logger
 from database import get_session
 from db.base import Truck, TruckRoute, User
 from db.serializers import parse_uuid, truck_route_to_dict, truck_to_dict
-from middleware.auth import require_path_user
+from middleware.auth import get_current_user, require_path_user
 from models import CreateTruckRequest, TruckSearchRequest
+from services.contacts import attach_mutuals_to_listings
+from services.post_expiry import (
+    DEFAULT_ACTIVE_STATUS,
+    expire_overdue_posts,
+    post_expires_at,
+)
 from services.spatial import make_geography_point, search_truck_routes_spatial
 
 router = APIRouter(prefix="/trucks", tags=["trucks"])
@@ -61,9 +67,9 @@ async def create_truck_listing(
             if data.current_location
             else None,
             available_date=data.available_date,
-            status="available",
+            status=DEFAULT_ACTIVE_STATUS,
             created_at=now,
-            expires_at=now + timedelta(hours=24),
+            expires_at=post_expires_at(now),
         )
         session.add(route)
         await session.commit()
@@ -87,9 +93,12 @@ async def search_trucks(
     radius_km: float = 150,
     truck_type: str | None = None,
     session: AsyncSession = Depends(get_session),
+    current_user: User = Depends(get_current_user),
 ):
     """PostGIS radius search for available trucks."""
     try:
+        await expire_overdue_posts(session)
+
         results = await search_truck_routes_spatial(
             session,
             origin_lat=origin_lat,
@@ -100,6 +109,7 @@ async def search_trucks(
             available_date=available_date,
             truck_type=truck_type,
         )
+        results = await attach_mutuals_to_listings(session, current_user.id, results)
         return {"success": True, "trucks": results, "count": len(results)}
     except Exception as e:
         logger.error(f"Error in search_trucks: {str(e)}")
@@ -110,9 +120,12 @@ async def search_trucks(
 async def search_trucks_post(
     body: TruckSearchRequest,
     session: AsyncSession = Depends(get_session),
+    current_user: User = Depends(get_current_user),
 ):
     """PostGIS radius search (JSON body)."""
     try:
+        await expire_overdue_posts(session)
+
         results = await search_truck_routes_spatial(
             session,
             origin_lat=body.origin_lat,
@@ -123,6 +136,7 @@ async def search_trucks_post(
             available_date=body.available_date,
             truck_type=body.truck_type,
         )
+        results = await attach_mutuals_to_listings(session, current_user.id, results)
         return {"success": True, "trucks": results, "count": len(results)}
     except Exception as e:
         logger.error(f"Error in search_trucks_post: {str(e)}")

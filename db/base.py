@@ -8,10 +8,12 @@ from sqlalchemy import (
     Date,
     DateTime,
     Float,
+    ForeignKey,
     Index,
     Numeric,
     String,
     Text,
+    UniqueConstraint,
 )
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
@@ -49,6 +51,26 @@ class User(Base):
     created_date: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.utcnow)
     push_token: Mapped[str | None] = mapped_column(Text, nullable=True)
     verification_status: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
+    contacts_last_updated: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=False), nullable=True
+    )
+
+
+class UserContact(Base):
+    __tablename__ = "user_contacts"
+    __table_args__ = (
+        UniqueConstraint("user_id", "hashed_number", name="uq_user_contacts_user_hash"),
+        Index("idx_user_contacts_user_id", "user_id"),
+        Index("idx_user_contacts_hashed_number", "hashed_number"),
+    )
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=new_uuid)
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+    )
+    hashed_number: Mapped[str] = mapped_column(String(64), nullable=False)
+    name: Mapped[str] = mapped_column(String(255), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.utcnow)
 
 
 class Location(Base):

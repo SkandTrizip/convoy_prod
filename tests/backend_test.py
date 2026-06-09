@@ -330,9 +330,10 @@ def test_admin_analytics(s):
 
 
 # ==================== POST LIFECYCLE ====================
-def test_reactivate_post(s):
+def test_reactivate_post_requires_expired(s):
+    """Active posts cannot be reactivated — only expired ones."""
     r = s.post(f"{API}/posts/reactivate/{STATE['post_id']}")
-    assert r.status_code == 200
+    assert r.status_code == 400
 
 
 def test_delete_post(s):

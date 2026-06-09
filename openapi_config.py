@@ -32,6 +32,10 @@ OPENAPI_TAGS = [
         "description": "User profile and Expo push notification token.",
     },
     {
+        "name": "contacts",
+        "description": "Hashed phone contact sync and mutual-connection matching.",
+    },
+    {
         "name": "locations",
         "description": "Location autosuggest (local DB + Google Places).",
     },
@@ -45,7 +49,7 @@ OPENAPI_TAGS = [
     },
     {
         "name": "verification",
-        "description": "VAHAN vehicle and SARATHI DL verification via ULIP proxy.",
+        "description": "VAHAN vehicle and SARATHI DL verification via ULIP API.",
     },
     {
         "name": "posts",
