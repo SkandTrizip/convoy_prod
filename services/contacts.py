@@ -48,6 +48,12 @@ async def sync_user_contacts(
     if len(contacts) > MAX_CONTACTS_PER_SYNC:
         raise ValueError(f"Too many contacts (max {MAX_CONTACTS_PER_SYNC})")
 
+    # Lock the user row to prevent race conditions during concurrent syncs
+    user_result = await session.execute(
+        select(User).where(User.id == user_id).with_for_update()
+    )
+    user = user_result.scalar_one_or_none()
+
     normalized = _dedupe_contacts(
         [
             {
@@ -73,8 +79,6 @@ async def sync_user_contacts(
         )
 
     now = datetime.utcnow()
-    user_result = await session.execute(select(User).where(User.id == user_id))
-    user = user_result.scalar_one_or_none()
     if user:
         user.contacts_last_updated = now
 
