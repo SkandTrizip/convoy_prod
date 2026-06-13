@@ -10,7 +10,7 @@ from database import get_session
 from db.base import Truck, TruckRoute, User
 from db.serializers import parse_uuid, truck_route_to_dict
 from middleware.auth import authorize_user_id, get_current_user, require_path_user
-from models import CreateTruckPostRequest
+from models import CreateTruckPostRequest, EditTruckPostRequest
 from services.matching import process_smart_match_notifications
 from services.post_expiry import (
     ACTIVE_POST_STATUSES,
@@ -211,4 +211,76 @@ async def delete_post(
         raise
     except Exception as e:
         logger.error(f"Error in delete_post: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.put("/edit/{post_id}")
+async def edit_post(
+    post_id: str,
+    edit_data: EditTruckPostRequest,
+    session: AsyncSession = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+):
+    """Edit a truck post (vehicle, destination, current location) and reactivate/extend expiry."""
+    try:
+        post_uuid = parse_uuid(post_id)
+        result = await session.execute(
+            select(TruckRoute).where(TruckRoute.id == post_uuid)
+        )
+        post = result.scalar_one_or_none()
+        
+        if not post:
+            raise HTTPException(status_code=404, detail="Post not found")
+            
+        authorize_user_id(str(post.user_id), current_user)
+        
+        # If editing vehicle
+        if edit_data.vehicleId:
+            truck_uuid = parse_uuid(edit_data.vehicleId)
+            truck_result = await session.execute(
+                select(Truck).where(Truck.id == truck_uuid, Truck.user_id == post.user_id)
+            )
+            truck = truck_result.scalar_one_or_none()
+            if not truck:
+                raise HTTPException(status_code=404, detail="Vehicle not found")
+            if truck.verification_status != "verified":
+                raise HTTPException(status_code=403, detail="Vehicle must be verified")
+                
+            post.truck_id = truck_uuid
+            post.truck_number = truck.truck_number
+            post.truck_type = truck.truck_type
+            post.capacity = truck.capacity
+            
+        # If editing destination
+        if edit_data.destination:
+            post.destination_name = edit_data.destination.name
+            post.destination_location = make_geography_point(
+                edit_data.destination.lng, edit_data.destination.lat
+            )
+            post.destination = edit_data.destination.model_dump()
+            
+        # If editing current location
+        if edit_data.currentLocation:
+            post.current_location = edit_data.currentLocation.model_dump()
+            
+        # Reset expiry and ensure status is active
+        now = datetime.utcnow()
+        post.status = DEFAULT_ACTIVE_STATUS
+        post.expires_at = post_expires_at(now)
+        
+        await session.commit()
+        await session.refresh(post)
+        
+        post_dict = truck_route_to_dict(post)
+        await process_smart_match_notifications(post_id, post_dict, session)
+        
+        return {
+            "success": True,
+            "message": "Post updated successfully",
+            "post": post_dict,
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error in edit_post: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))

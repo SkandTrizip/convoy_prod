@@ -182,6 +182,12 @@ class CreateTruckPostRequest(BaseModel):
     available_date: Optional[date] = None
 
 
+class EditTruckPostRequest(BaseModel):
+    vehicleId: Optional[str] = Field(None, description="UUID of a verified vehicle to update the post to")
+    destination: Optional[Location] = None
+    currentLocation: Optional[Location] = None
+
+
 class AdminKYCAction(BaseModel):
     model_config = ConfigDict(
         json_schema_extra={
