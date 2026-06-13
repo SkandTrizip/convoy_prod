@@ -7,8 +7,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from config import logger
 from database import get_session
-from db.base import Truck, User
-from db.serializers import parse_uuid, truck_to_dict
+from db.base import Truck, TruckRoute, User
+from db.serializers import parse_uuid, truck_route_to_dict, truck_to_dict
 from middleware.auth import require_path_user
 from models import AddVehicleRequest
 from services.notifications import send_expo_push_notification
@@ -107,4 +107,91 @@ async def list_vehicles(
         }
     except Exception as e:
         logger.error(f"Error in list_vehicles: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/related-posts/{user_id}/{vehicle_id}")
+async def get_related_posts(
+    user_id: str,
+    vehicle_id: str,
+    session: AsyncSession = Depends(get_session),
+    _: User = Depends(require_path_user),
+):
+    """Get all active truck posts associated with a specific vehicle"""
+    try:
+        user_uuid = parse_uuid(user_id)
+        vehicle_uuid = parse_uuid(vehicle_id)
+        
+        # Verify truck belongs to user
+        truck_result = await session.execute(
+            select(Truck).where(
+                Truck.user_id == user_uuid,
+                Truck.id == vehicle_uuid,
+            )
+        )
+        if not truck_result.scalar_one_or_none():
+            raise HTTPException(status_code=404, detail="Vehicle not found")
+            
+        # Fetch active posts
+        result = await session.execute(
+            select(TruckRoute).where(
+                TruckRoute.truck_id == vehicle_uuid,
+                TruckRoute.status == "available"
+            )
+        )
+        posts = result.scalars().all()
+        
+        return {
+            "success": True,
+            "posts": [truck_route_to_dict(p) for p in posts],
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error in get_related_posts: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.delete("/remove/{user_id}/{vehicle_id}")
+async def remove_vehicle(
+    user_id: str,
+    vehicle_id: str,
+    session: AsyncSession = Depends(get_session),
+    _: User = Depends(require_path_user),
+):
+    """Remove a vehicle and its associated posts"""
+    try:
+        user_uuid = parse_uuid(user_id)
+        vehicle_uuid = parse_uuid(vehicle_id)
+        
+        # Find truck
+        result = await session.execute(
+            select(Truck).where(
+                Truck.user_id == user_uuid,
+                Truck.id == vehicle_uuid,
+            )
+        )
+        truck = result.scalar_one_or_none()
+        if not truck:
+            raise HTTPException(status_code=404, detail="Vehicle not found")
+            
+        # Find and delete associated posts (truck routes)
+        posts_result = await session.execute(
+            select(TruckRoute).where(
+                TruckRoute.truck_id == vehicle_uuid,
+            )
+        )
+        posts = posts_result.scalars().all()
+        for post in posts:
+            await session.delete(post)
+            
+        # Delete the truck
+        await session.delete(truck)
+        await session.commit()
+        
+        return {"success": True, "message": "Vehicle and associated posts removed successfully"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error in remove_vehicle: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
