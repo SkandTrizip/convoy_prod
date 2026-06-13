@@ -136,7 +136,7 @@ async def get_related_posts(
         result = await session.execute(
             select(TruckRoute).where(
                 TruckRoute.truck_id == vehicle_uuid,
-                TruckRoute.status.in_(["available", "expired"])
+                TruckRoute.status.in_(["active", "expired"])
             )
         )
         posts = result.scalars().all()
