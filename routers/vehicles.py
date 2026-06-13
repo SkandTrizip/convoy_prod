@@ -132,11 +132,11 @@ async def get_related_posts(
         if not truck_result.scalar_one_or_none():
             raise HTTPException(status_code=404, detail="Vehicle not found")
             
-        # Fetch active posts
+        # Fetch active or expired posts
         result = await session.execute(
             select(TruckRoute).where(
                 TruckRoute.truck_id == vehicle_uuid,
-                TruckRoute.status == "available"
+                TruckRoute.status.in_(["available", "expired"])
             )
         )
         posts = result.scalars().all()
