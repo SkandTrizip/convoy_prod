@@ -11,6 +11,7 @@ from db.base import Truck, TruckRoute, User
 from db.serializers import parse_uuid, truck_route_to_dict, truck_to_dict
 from middleware.auth import require_path_user
 from models import AddVehicleRequest
+from services.destinations import get_destinations_for_routes
 from services.notifications import send_expo_push_notification
 from services.ulip import verify_vehicle_registration
 
@@ -140,10 +141,17 @@ async def get_related_posts(
             )
         )
         posts = result.scalars().all()
-        
+
+        destinations_by_route = await get_destinations_for_routes(
+            session, [p.id for p in posts]
+        )
+
         return {
             "success": True,
-            "posts": [truck_route_to_dict(p) for p in posts],
+            "posts": [
+                truck_route_to_dict(p, destinations_by_route.get(str(p.id), []))
+                for p in posts
+            ],
         }
     except HTTPException:
         raise

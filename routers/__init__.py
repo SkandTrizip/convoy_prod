@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends
 
 from middleware.auth import get_current_user
 from routers import (
+    activity,
     admin,
     auth,
     bookings,
@@ -12,7 +13,6 @@ from routers import (
     notifications,
     posts,
     search,
-    trucks,
     users,
     vehicles,
     verification,
@@ -34,8 +34,8 @@ protected_router.include_router(vehicles.router)
 protected_router.include_router(verification.router)
 protected_router.include_router(posts.router)
 protected_router.include_router(search.router)
-protected_router.include_router(trucks.router)
 protected_router.include_router(bookings.router)
 protected_router.include_router(notifications.router)
 protected_router.include_router(admin.router)
+protected_router.include_router(activity.router)
 api_router.include_router(protected_router)

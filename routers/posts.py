@@ -7,11 +7,19 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from config import POST_EXPIRE_HOURS, logger
 from database import get_session
-from db.base import Truck, TruckRoute, User
+from db.base import Truck, TruckRoute, User, new_uuid
 from db.serializers import parse_uuid, truck_route_to_dict
 from middleware.auth import authorize_user_id, get_current_user, require_path_user
 from models import CreateTruckPostRequest, EditTruckPostRequest
-from services.matching import process_smart_match_notifications
+# Smart-match notifications are disabled pending multi-destination support in services/matching.py
+# (deferred to a later phase — see services/matching.py::process_smart_match_notifications).
+from services.activity import record_post_activity
+from services.destinations import (
+    create_destinations,
+    get_destinations_for_route,
+    get_destinations_for_routes,
+    replace_destinations,
+)
 from services.post_expiry import (
     ACTIVE_POST_STATUSES,
     DEFAULT_ACTIVE_STATUS,
@@ -57,33 +65,34 @@ async def create_truck_post(
         available = post_data.available_date or now.date()
 
         route = TruckRoute(
+            id=new_uuid(),
             truck_id=truck_uuid,
             user_id=user_uuid,
             truck_number=truck.truck_number,
             truck_type=truck.truck_type,
             capacity=truck.capacity,
+            contact_name=post_data.contactName or user.name,
+            contact_number=post_data.contactNumber or user.mobile,
             origin_name=post_data.origin.name,
-            destination_name=post_data.destination.name,
             origin_location=make_geography_point(
                 post_data.origin.lng, post_data.origin.lat
             ),
-            destination_location=make_geography_point(
-                post_data.destination.lng, post_data.destination.lat
-            ),
             origin=post_data.origin.model_dump(),
-            destination=post_data.destination.model_dump(),
             current_location=post_data.currentLocation.model_dump(),
             available_date=available,
             status=DEFAULT_ACTIVE_STATUS,
             created_at=now,
             expires_at=post_expires_at(now),
         )
+        destinations = await create_destinations(session, route.id, post_data.destinations)
         session.add(route)
         await session.commit()
         await session.refresh(route)
 
-        post_dict = truck_route_to_dict(route)
-        await process_smart_match_notifications(str(route.id), post_dict, session)
+        await record_post_activity(session, user_uuid, route.id)
+
+        post_dict = truck_route_to_dict(route, destinations)
+        # Smart-match notifications disabled this phase — see import comment above.
 
         return {"success": True, "post": post_dict}
     except HTTPException:
@@ -125,9 +134,16 @@ async def get_my_posts(
         result = await session.execute(stmt)
         posts = result.scalars().all()
 
+        destinations_by_route = await get_destinations_for_routes(
+            session, [post.id for post in posts]
+        )
+
         return {
             "success": True,
-            "posts": [truck_route_to_dict(post) for post in posts],
+            "posts": [
+                truck_route_to_dict(post, destinations_by_route.get(str(post.id), []))
+                for post in posts
+            ],
         }
     except Exception as e:
         logger.error(f"Error in get_my_posts: {str(e)}")
@@ -165,8 +181,9 @@ async def reactivate_post(
         await session.commit()
         await session.refresh(post)
 
-        post_dict = truck_route_to_dict(post)
-        await process_smart_match_notifications(post_id, post_dict, session)
+        destinations = await get_destinations_for_route(session, post.id)
+        post_dict = truck_route_to_dict(post, destinations)
+        # Smart-match notifications disabled this phase — see import comment above.
 
         return {
             "success": True,
@@ -251,29 +268,32 @@ async def edit_post(
             post.truck_type = truck.truck_type
             post.capacity = truck.capacity
             
-        # If editing destination
-        if edit_data.destination:
-            post.destination_name = edit_data.destination.name
-            post.destination_location = make_geography_point(
-                edit_data.destination.lng, edit_data.destination.lat
-            )
-            post.destination = edit_data.destination.model_dump()
-            
+        # If editing destinations (full replace)
+        if edit_data.destinations:
+            await replace_destinations(session, post.id, edit_data.destinations)
+
         # If editing current location
         if edit_data.currentLocation:
             post.current_location = edit_data.currentLocation.model_dump()
-            
+
+        # If editing contact info
+        if edit_data.contactName:
+            post.contact_name = edit_data.contactName
+        if edit_data.contactNumber:
+            post.contact_number = edit_data.contactNumber
+
         # Reset expiry and ensure status is active
         now = datetime.utcnow()
         post.status = DEFAULT_ACTIVE_STATUS
         post.expires_at = post_expires_at(now)
-        
+
         await session.commit()
         await session.refresh(post)
-        
-        post_dict = truck_route_to_dict(post)
-        await process_smart_match_notifications(post_id, post_dict, session)
-        
+
+        destinations = await get_destinations_for_route(session, post.id)
+        post_dict = truck_route_to_dict(post, destinations)
+        # Smart-match notifications disabled this phase — see import comment above.
+
         return {
             "success": True,
             "message": "Post updated successfully",

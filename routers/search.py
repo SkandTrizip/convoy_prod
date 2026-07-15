@@ -1,3 +1,4 @@
+import math
 from datetime import datetime, timedelta
 from typing import Dict
 
@@ -11,9 +12,10 @@ from db.base import CallLog, SearchDemand, User
 from db.serializers import parse_uuid
 from middleware.auth import get_current_user, require_path_user
 from models import SearchTrucksRequest
+from services.activity import record_search_activity
 from services.contacts import attach_mutuals_to_listings
 from services.post_expiry import expire_overdue_posts
-from services.spatial import search_truck_routes_spatial
+from services.spatial import SEARCH_PAGE_SIZE, search_truck_routes_spatial
 
 router = APIRouter(prefix="/search", tags=["search"])
 
@@ -28,37 +30,35 @@ async def search_trucks(
     try:
         await expire_overdue_posts(session)
 
-        matching_posts = await search_truck_routes_spatial(
+        matching_posts, total_count = await search_truck_routes_spatial(
             session,
-            origin_lat=search_request.origin.lat,
-            origin_lng=search_request.origin.lng,
-            destination_lat=search_request.destination.lat,
-            destination_lng=search_request.destination.lng,
+            origin_lat=search_request.origin.lat if search_request.origin else None,
+            origin_lng=search_request.origin.lng if search_request.origin else None,
+            destination_lat=search_request.destination.lat if search_request.destination else None,
+            destination_lng=search_request.destination.lng if search_request.destination else None,
             radius_km=search_request.radius_km,
             available_date=search_request.available_date,
             truck_type=search_request.truckType,
-            include_user_info=True,
+            min_capacity=search_request.capacity,
+            page=search_request.page,
         )
 
         matching_posts = await attach_mutuals_to_listings(
             session, current_user.id, matching_posts
         )
 
-        # Legacy response shape for existing frontend
-        legacy_posts = []
-        for item in matching_posts:
-            legacy_posts.append(
-                {
-                    **item,
-                    "origin": item["originLocation"],
-                    "destination": item["destinationLocation"],
-                }
-            )
+        # Best-effort recent-searches tracking — page excluded, it's pagination state,
+        # not part of "what was searched for".
+        search_criteria = search_request.model_dump(mode="json", exclude={"page"})
+        await record_search_activity(session, current_user.id, search_criteria)
 
         return {
             "success": True,
-            "posts": legacy_posts,
-            "count": len(legacy_posts),
+            "posts": matching_posts,
+            "page": search_request.page,
+            "pageSize": SEARCH_PAGE_SIZE,
+            "totalCount": total_count,
+            "totalPages": math.ceil(total_count / SEARCH_PAGE_SIZE) if total_count else 0,
         }
     except Exception as e:
         logger.error(f"Error in search_trucks: {str(e)}")
@@ -74,6 +74,12 @@ async def track_search_demand(
 ):
     """Track failed search for smart notifications"""
     try:
+        if not search_request.origin or not search_request.destination or not search_request.truckType:
+            raise HTTPException(
+                status_code=400,
+                detail="origin, destination, and truckType are all required to track search demand",
+            )
+
         user_uuid = parse_uuid(user_id)
         now = datetime.utcnow()
 
@@ -116,6 +122,8 @@ async def track_search_demand(
 
         await session.commit()
         return {"success": True, "message": "Search demand tracked"}
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"Error in track_search_demand: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))

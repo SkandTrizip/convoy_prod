@@ -1,17 +1,29 @@
 from datetime import datetime
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, Header, HTTPException
 from sqlalchemy import func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from config import logger
+from config import ADMIN_API_KEY, logger
 from database import get_session
 from db.base import CallLog, KYCRecord, Notification, SearchDemand, Truck, TruckRoute, User
 from db.serializers import kyc_to_dict, parse_uuid
 from models import AdminKYCAction
 from services.notifications import send_expo_push_notification
+from services.user_deletion import delete_user_cascade
 
 router = APIRouter(prefix="/admin", tags=["admin"])
+
+
+async def require_admin_key(x_admin_key: str | None = Header(None, alias="X-Admin-Key")) -> None:
+    """Extra gate for destructive admin actions, on top of the normal JWT auth every
+    /api/admin/* route already requires. Needed because there's no admin/role field on
+    User — any authenticated user's JWT otherwise passes the router-level auth check.
+    """
+    if not ADMIN_API_KEY:
+        raise HTTPException(status_code=503, detail="Admin API key not configured on server")
+    if not x_admin_key or x_admin_key != ADMIN_API_KEY:
+        raise HTTPException(status_code=403, detail="Invalid or missing X-Admin-Key header")
 
 
 @router.get("/kyc/pending")
@@ -175,4 +187,44 @@ async def get_analytics(session: AsyncSession = Depends(get_session)):
         }
     except Exception as e:
         logger.error(f"Error in get_analytics: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.delete("/users/delete/{user_id}", dependencies=[Depends(require_admin_key)])
+async def delete_user_account(
+    user_id: str,
+    session: AsyncSession = Depends(get_session),
+):
+    """Permanently delete a user and everything tied to them: truck posts (and their
+    destinations), registered vehicles, KYC record, bookings (their own and other
+    users' bookings on their posts), search-demand tracking, notifications, call logs,
+    synced contacts, and pending login OTPs. Irreversible. Requires the X-Admin-Key
+    header in addition to a normal user JWT.
+    """
+    try:
+        try:
+            user_uuid = parse_uuid(user_id)
+        except ValueError as e:
+            raise HTTPException(status_code=400, detail=str(e)) from e
+
+        result = await session.execute(select(User).where(User.id == user_uuid))
+        user = result.scalar_one_or_none()
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        deleted = await delete_user_cascade(session, user)
+        await session.commit()
+
+        logger.warning("Admin deleted user %s (mobile=%s): %s", user_id, user.mobile, deleted)
+
+        return {
+            "success": True,
+            "message": "User and all associated data permanently deleted",
+            "deleted": deleted,
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        await session.rollback()
+        logger.error(f"Error in delete_user_account: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))

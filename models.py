@@ -1,7 +1,7 @@
 from datetime import date
 from typing import Any, Dict, Optional
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 class SendOTPRequest(BaseModel):
@@ -82,33 +82,32 @@ class Location(BaseModel):
 
 
 class SearchTrucksRequest(BaseModel):
-    origin: Location
-    destination: Location
-    truckType: str = Field(..., description="Truck type filter", examples=["Open Body"])
+    origin: Optional[Location] = Field(
+        None, description="Required if destination is omitted — at least one of the two is needed"
+    )
+    destination: Optional[Location] = Field(
+        None, description="Required if origin is omitted — at least one of the two is needed"
+    )
+    truckType: Optional[str] = Field(
+        None,
+        description="Truck type filter. If omitted, posts of any truck type are returned.",
+        examples=["Open Body"],
+    )
     radius_km: float = Field(150, description="Search radius in kilometres", ge=1, le=500)
     available_date: Optional[date] = Field(None, description="Required availability date")
+    page: int = Field(1, ge=1, description="Page number (1-indexed), 10 results per page")
+    capacity: Optional[float] = Field(
+        None,
+        ge=0,
+        description="Minimum required capacity in tonnes. If omitted, posts of any capacity are "
+        "returned; if set, only posts with capacity >= this value are returned.",
+    )
 
-
-class TruckSearchRequest(BaseModel):
-    origin: str
-    destination: str
-    origin_lat: float
-    origin_lng: float
-    destination_lat: float
-    destination_lng: float
-    radius_km: float = Field(150, ge=1, le=500)
-    available_date: date
-    truck_type: Optional[str] = None
-
-
-class CreateTruckRequest(BaseModel):
-    truck_number: str = Field(..., examples=["MH12AB1234"])
-    truck_type: str = Field(..., examples=["Open Body"])
-    capacity: Optional[float] = Field(None, description="Capacity in tonnes")
-    origin: Location
-    destination: Location
-    current_location: Optional[Location] = None
-    available_date: date
+    @model_validator(mode="after")
+    def _require_origin_or_destination(self) -> "SearchTrucksRequest":
+        if self.origin is None and self.destination is None:
+            raise ValueError("At least one of origin or destination is required")
+        return self
 
 
 class CreateBookingRequest(BaseModel):
@@ -177,15 +176,27 @@ class AddVehicleRequest(BaseModel):
 class CreateTruckPostRequest(BaseModel):
     vehicleId: str = Field(..., description="UUID of a verified vehicle")
     origin: Location
-    destination: Location
+    destinations: list[Location] = Field(
+        ..., min_length=1, max_length=5, description="1-5 destinations for this route"
+    )
     currentLocation: Location
     available_date: Optional[date] = None
+    contactName: Optional[str] = Field(
+        None, description="Contact name for this post. Defaults to the user's own name if omitted."
+    )
+    contactNumber: Optional[str] = Field(
+        None, description="Contact number for this post. Defaults to the user's own mobile if omitted."
+    )
 
 
 class EditTruckPostRequest(BaseModel):
     vehicleId: Optional[str] = Field(None, description="UUID of a verified vehicle to update the post to")
-    destination: Optional[Location] = None
+    destinations: Optional[list[Location]] = Field(
+        None, min_length=1, max_length=5, description="Full replacement list of 1-5 destinations"
+    )
     currentLocation: Optional[Location] = None
+    contactName: Optional[str] = Field(None, description="Override this post's contact name")
+    contactNumber: Optional[str] = Field(None, description="Override this post's contact number")
 
 
 class AdminKYCAction(BaseModel):

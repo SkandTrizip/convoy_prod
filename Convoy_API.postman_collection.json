@@ -5,19 +5,58 @@
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
-    { "key": "baseUrl", "value": "http://localhost:8000/api" },
-    { "key": "mobile", "value": "+919876543210" },
-    { "key": "otp", "value": "1234" },
-    { "key": "userId", "value": "" },
-    { "key": "searcherId", "value": "" },
-    { "key": "vehicleId", "value": "" },
-    { "key": "postId", "value": "" },
-    { "key": "truckRouteId", "value": "" },
-    { "key": "bookingId", "value": "" },
-    { "key": "notificationId", "value": "" },
-    { "key": "aadhaarRefId", "value": "" },
-    { "key": "aadhaarNumber", "value": "655675523712" },
-    { "key": "aadhaarOtp", "value": "111000" }
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8000/api"
+    },
+    {
+      "key": "mobile",
+      "value": "+919876543210"
+    },
+    {
+      "key": "otp",
+      "value": "1234"
+    },
+    {
+      "key": "userId",
+      "value": ""
+    },
+    {
+      "key": "searcherId",
+      "value": ""
+    },
+    {
+      "key": "vehicleId",
+      "value": ""
+    },
+    {
+      "key": "postId",
+      "value": ""
+    },
+    {
+      "key": "truckRouteId",
+      "value": ""
+    },
+    {
+      "key": "bookingId",
+      "value": ""
+    },
+    {
+      "key": "notificationId",
+      "value": ""
+    },
+    {
+      "key": "aadhaarRefId",
+      "value": ""
+    },
+    {
+      "key": "aadhaarNumber",
+      "value": "655675523712"
+    },
+    {
+      "key": "aadhaarOtp",
+      "value": "111000"
+    }
   ],
   "item": [
     {
@@ -60,7 +99,12 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"mobile\": \"{{mobile}}\"\n}"
@@ -84,7 +128,12 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"mobile\": \"{{mobile}}\",\n  \"otp\": \"{{otp}}\"\n}"
@@ -109,7 +158,12 @@
           "name": "Update Profile",
           "request": {
             "method": "PUT",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"name\": \"Test Driver\",\n  \"profilePhoto\": null\n}"
@@ -121,7 +175,12 @@
           "name": "Update Push Token",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"pushToken\": \"ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]\"\n}"
@@ -141,9 +200,19 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/locations/search?query=delhi",
-              "host": ["{{baseUrl}}"],
-              "path": ["locations", "search"],
-              "query": [{ "key": "query", "value": "delhi" }]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "locations",
+                "search"
+              ],
+              "query": [
+                {
+                  "key": "query",
+                  "value": "delhi"
+                }
+              ]
             }
           }
         }
@@ -168,7 +237,12 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"aadhaarNumber\": \"{{aadhaarNumber}}\"\n}"
@@ -180,7 +254,12 @@
           "name": "Verify Aadhaar OTP",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"refId\": \"{{aadhaarRefId}}\",\n  \"otp\": \"{{aadhaarOtp}}\",\n  \"aadhaarNumber\": \"{{aadhaarNumber}}\"\n}"
@@ -192,7 +271,12 @@
           "name": "Submit KYC (Manual - under review)",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"method\": \"manual\",\n  \"data\": {\n    \"aadhaar\": \"123412341234\",\n    \"name\": \"Test Driver\"\n  },\n  \"aadhaarFrontImage\": \"base64-or-url-front\",\n  \"aadhaarBackImage\": \"base64-or-url-back\"\n}"
@@ -217,7 +301,12 @@
           "name": "Verify Vehicle (VAHAN)",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"vehicleNumber\": \"DL01AB1234\"\n}"
@@ -229,7 +318,12 @@
           "name": "Verify DL (SARATHI)",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"dlnumber\": \"DL1420110012345\",\n  \"dob\": \"1990-08-15\"\n}"
@@ -241,7 +335,12 @@
           "name": "Batch Verify DL + Vehicle",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"documents\": [\n    {\n      \"type\": \"dl\",\n      \"data\": {\n        \"dlNumber\": \"DL1420110012345\",\n        \"dob\": \"1990-08-15\"\n      }\n    },\n    {\n      \"type\": \"vehicle\",\n      \"data\": {\n        \"vehicleNumber\": \"DL01AB1234\"\n      }\n    }\n  ]\n}"
@@ -270,7 +369,12 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"vehicleNumber\": \"MH12AB1234\",\n  \"truckType\": \"Container\",\n  \"capacity\": 20\n}"
@@ -310,10 +414,15 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"vehicleId\": \"{{vehicleId}}\",\n  \"origin\": {\n    \"name\": \"Delhi\",\n    \"lat\": 28.7041,\n    \"lng\": 77.1025,\n    \"type\": \"local\"\n  },\n  \"destination\": {\n    \"name\": \"Mumbai\",\n    \"lat\": 19.0760,\n    \"lng\": 72.8777,\n    \"type\": \"local\"\n  },\n  \"currentLocation\": {\n    \"name\": \"Delhi\",\n    \"lat\": 28.7041,\n    \"lng\": 77.1025,\n    \"type\": \"local\"\n  },\n  \"price\": 45000\n}"
+              "raw": "{\n  \"vehicleId\": \"{{vehicleId}}\",\n  \"origin\": {\n    \"name\": \"Delhi\",\n    \"lat\": 28.7041,\n    \"lng\": 77.1025,\n    \"type\": \"local\"\n  },\n  \"destinations\": [\n    {\n      \"name\": \"Mumbai\",\n      \"lat\": 19.076,\n      \"lng\": 72.8777,\n      \"type\": \"local\"\n    }\n  ],\n  \"currentLocation\": {\n    \"name\": \"Delhi\",\n    \"lat\": 28.7041,\n    \"lng\": 77.1025,\n    \"type\": \"local\"\n  },\n  \"price\": 45000,\n  \"contactName\": null,\n  \"contactNumber\": null\n}"
             },
             "url": "{{baseUrl}}/posts/create/{{userId}}"
           }
@@ -333,9 +442,20 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/posts/my-posts/{{userId}}?status=active",
-              "host": ["{{baseUrl}}"],
-              "path": ["posts", "my-posts", "{{userId}}"],
-              "query": [{ "key": "status", "value": "active" }]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "posts",
+                "my-posts",
+                "{{userId}}"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "active"
+                }
+              ]
             }
           }
         },
@@ -346,9 +466,20 @@
             "header": [],
             "url": {
               "raw": "{{baseUrl}}/posts/my-posts/{{userId}}?status=expired",
-              "host": ["{{baseUrl}}"],
-              "path": ["posts", "my-posts", "{{userId}}"],
-              "query": [{ "key": "status", "value": "expired" }]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "posts",
+                "my-posts",
+                "{{userId}}"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "expired"
+                }
+              ]
             }
           }
         },
@@ -377,10 +508,15 @@
           "name": "Search Trucks",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"origin\": {\n    \"name\": \"Delhi\",\n    \"lat\": 28.7041,\n    \"lng\": 77.1025,\n    \"type\": \"local\"\n  },\n  \"destination\": {\n    \"name\": \"Mumbai\",\n    \"lat\": 19.0760,\n    \"lng\": 72.8777,\n    \"type\": \"local\"\n  },\n  \"truckType\": \"Container\",\n  \"radius_km\": 150\n}"
+              "raw": "{\n  \"origin\": {\n    \"name\": \"Delhi\",\n    \"lat\": 28.7041,\n    \"lng\": 77.1025,\n    \"type\": \"local\"\n  },\n  \"destination\": {\n    \"name\": \"Mumbai\",\n    \"lat\": 19.076,\n    \"lng\": 72.8777,\n    \"type\": \"local\"\n  },\n  \"truckType\": \"Container\",\n  \"radius_km\": 150,\n  \"page\": 1,\n  \"capacity\": null\n}"
             },
             "url": "{{baseUrl}}/search/trucks"
           }
@@ -389,7 +525,12 @@
           "name": "Track Search Demand",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"origin\": {\n    \"name\": \"Delhi\",\n    \"lat\": 28.7041,\n    \"lng\": 77.1025,\n    \"type\": \"local\"\n  },\n  \"destination\": {\n    \"name\": \"Mumbai\",\n    \"lat\": 19.0760,\n    \"lng\": 72.8777,\n    \"type\": \"local\"\n  },\n  \"truckType\": \"Container\"\n}"
@@ -401,87 +542,17 @@
           "name": "Log Call Click",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"postId\": \"{{postId}}\"\n}"
             },
             "url": "{{baseUrl}}/search/log-call/{{searcherId}}"
-          }
-        }
-      ]
-    },
-    {
-      "name": "9. Trucks (alternate routes API)",
-      "item": [
-        {
-          "name": "Create Truck Listing",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "const json = pm.response.json();",
-                  "if (json.route && json.route._id) pm.collectionVariables.set('truckRouteId', json.route._id);"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"truck_number\": \"MH12AB1234\",\n  \"truck_type\": \"Container\",\n  \"capacity\": 20,\n  \"origin\": {\n    \"name\": \"Delhi\",\n    \"lat\": 28.7041,\n    \"lng\": 77.1025,\n    \"type\": \"local\"\n  },\n  \"destination\": {\n    \"name\": \"Mumbai\",\n    \"lat\": 19.0760,\n    \"lng\": 72.8777,\n    \"type\": \"local\"\n  },\n  \"available_date\": \"2026-06-10\",\n  \"price\": 45000\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/trucks?user_id={{userId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["trucks"],
-              "query": [{ "key": "user_id", "value": "{{userId}}" }]
-            }
-          }
-        },
-        {
-          "name": "Search Trucks (GET)",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/trucks/search?origin_lat=28.7041&origin_lng=77.1025&destination_lat=19.0760&destination_lng=72.8777&available_date=2026-06-10&radius_km=150&truck_type=Container",
-              "host": ["{{baseUrl}}"],
-              "path": ["trucks", "search"],
-              "query": [
-                { "key": "origin_lat", "value": "28.7041" },
-                { "key": "origin_lng", "value": "77.1025" },
-                { "key": "destination_lat", "value": "19.0760" },
-                { "key": "destination_lng", "value": "72.8777" },
-                { "key": "available_date", "value": "2026-06-10" },
-                { "key": "radius_km", "value": "150" },
-                { "key": "truck_type", "value": "Container" }
-              ]
-            }
-          }
-        },
-        {
-          "name": "Search Trucks (POST)",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"origin\": \"Delhi\",\n  \"destination\": \"Mumbai\",\n  \"origin_lat\": 28.7041,\n  \"origin_lng\": 77.1025,\n  \"destination_lat\": 19.0760,\n  \"destination_lng\": 72.8777,\n  \"radius_km\": 150,\n  \"available_date\": \"2026-06-10\",\n  \"truck_type\": \"Container\"\n}"
-            },
-            "url": "{{baseUrl}}/trucks/search"
-          }
-        },
-        {
-          "name": "Get Truck Route by ID",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": "{{baseUrl}}/trucks/{{truckRouteId}}"
           }
         }
       ]
@@ -505,16 +576,30 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"truck_route_id\": \"{{truckRouteId}}\",\n  \"price\": 45000\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/bookings?user_id={{searcherId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["bookings"],
-              "query": [{ "key": "user_id", "value": "{{searcherId}}" }]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "bookings"
+              ],
+              "query": [
+                {
+                  "key": "user_id",
+                  "value": "{{searcherId}}"
+                }
+              ]
             }
           }
         }
@@ -568,7 +653,12 @@
           "name": "KYC Approve",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"userId\": \"{{userId}}\",\n  \"action\": \"approve\"\n}"
@@ -580,7 +670,12 @@
           "name": "KYC Reject",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"userId\": \"{{userId}}\",\n  \"action\": \"reject\",\n  \"reason\": \"Document unclear\"\n}"
@@ -594,6 +689,40 @@
             "method": "GET",
             "header": [],
             "url": "{{baseUrl}}/admin/analytics"
+          }
+        },
+        {
+          "name": "Delete User (DESTRUCTIVE)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "X-Admin-Key",
+                "value": "{{adminApiKey}}"
+              }
+            ],
+            "url": "{{baseUrl}}/admin/users/delete/{{userId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "13. History",
+      "item": [
+        {
+          "name": "Recent Posts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/history?type=post"
+          }
+        },
+        {
+          "name": "Recent Searches",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/history?type=search"
           }
         }
       ]

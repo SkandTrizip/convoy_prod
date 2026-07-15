@@ -10,6 +10,7 @@ from db.base import (
     SearchDemand,
     Truck,
     TruckRoute,
+    TruckRouteDestination,
     User,
 )
 
@@ -78,9 +79,10 @@ def truck_to_dict(truck: Truck) -> dict:
 vehicle_to_dict = truck_to_dict
 
 
-def truck_route_to_dict(route: TruckRoute) -> dict:
+def truck_route_to_dict(route: TruckRoute, destinations: list[TruckRouteDestination]) -> dict:
     from datetime import datetime
 
+    from services.destinations import destination_to_dict
     from services.post_expiry import is_post_expired
 
     now = datetime.utcnow()
@@ -94,11 +96,12 @@ def truck_route_to_dict(route: TruckRoute) -> dict:
         "truckNumber": route.truck_number,
         "truckType": route.truck_type,
         "capacity": route.capacity,
+        "contactName": route.contact_name,
+        "contactNumber": route.contact_number,
         "origin": route.origin,
-        "destination": route.destination,
+        "destinations": [destination_to_dict(d) for d in destinations],
         "currentLocation": route.current_location,
         "originName": route.origin_name,
-        "destinationName": route.destination_name,
         "availableDate": route.available_date.isoformat(),
         "status": "expired" if expired else route.status,
         "isExpired": expired,

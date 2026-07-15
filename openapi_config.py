@@ -76,6 +76,10 @@ OPENAPI_TAGS = [
         "description": "Admin KYC review and analytics dashboard.",
     },
     {
+        "name": "history",
+        "description": "Recent activity: last 10 searches and last 10 posts for the logged-in user.",
+    },
+    {
         "name": "misc",
         "description": "Health check and reference data.",
     },

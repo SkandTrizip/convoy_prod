@@ -34,6 +34,9 @@ CASHFREE_ENVIRONMENT = os.environ.get("CASHFREE_ENVIRONMENT", "production")
 # JWT (API auth after OTP login)
 JWT_SECRET = os.environ.get("JWT_SECRET", "dev-insecure-change-in-production")
 JWT_EXPIRE_HOURS = int(os.environ.get("JWT_EXPIRE_HOURS", "168"))
+
+# Admin API key (required header for destructive /api/admin/* actions, e.g. user deletion)
+ADMIN_API_KEY = os.environ.get("ADMIN_API_KEY")
 # ULIP (direct) — VAHAN / SARATHI verification from this server
 ULIP_BASE_URL = os.environ.get(
     "ULIP_BASE_URL", "https://www.ulip.dpiit.gov.in/ulip/v1.0.0"
