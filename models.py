@@ -1,5 +1,5 @@
 from datetime import date
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Literal, Optional
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
@@ -101,6 +101,13 @@ class SearchTrucksRequest(BaseModel):
         ge=0,
         description="Minimum required capacity in tonnes. If omitted, posts of any capacity are "
         "returned; if set, only posts with capacity >= this value are returned.",
+    )
+    sortBy: Optional[Literal["nearest_origin", "nearest_destination"]] = Field(
+        None,
+        description="Sort results by distance to origin or destination. If omitted, defaults to "
+        "combined distance (both given), or whichever single one was given. If the requested side "
+        "wasn't provided in the search (e.g. nearest_origin with no origin), falls back to the "
+        "default ranking instead of failing.",
     )
 
     @model_validator(mode="after")

@@ -40,6 +40,7 @@ async def search_trucks(
             available_date=search_request.available_date,
             truck_type=search_request.truckType,
             min_capacity=search_request.capacity,
+            sort_by=search_request.sortBy,
             page=search_request.page,
         )
 

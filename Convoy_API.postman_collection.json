@@ -516,7 +516,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"origin\": {\n    \"name\": \"Delhi\",\n    \"lat\": 28.7041,\n    \"lng\": 77.1025,\n    \"type\": \"local\"\n  },\n  \"destination\": {\n    \"name\": \"Mumbai\",\n    \"lat\": 19.076,\n    \"lng\": 72.8777,\n    \"type\": \"local\"\n  },\n  \"truckType\": \"Container\",\n  \"radius_km\": 150,\n  \"page\": 1,\n  \"capacity\": null\n}"
+              "raw": "{\n  \"origin\": {\n    \"name\": \"Delhi\",\n    \"lat\": 28.7041,\n    \"lng\": 77.1025,\n    \"type\": \"local\"\n  },\n  \"destination\": {\n    \"name\": \"Mumbai\",\n    \"lat\": 19.076,\n    \"lng\": 72.8777,\n    \"type\": \"local\"\n  },\n  \"truckType\": \"Container\",\n  \"radius_km\": 150,\n  \"page\": 1,\n  \"capacity\": null,\n  \"sortBy\": null\n}"
             },
             "url": "{{baseUrl}}/search/trucks"
           }

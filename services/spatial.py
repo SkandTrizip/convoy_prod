@@ -27,6 +27,7 @@ async def search_truck_routes_spatial(
     available_date: date | None = None,
     truck_type: str | None = None,
     min_capacity: float | None = None,
+    sort_by: str | None = None,
     page: int = 1,
 ) -> tuple[list[dict[str, Any]], int]:
     """PostGIS search: at least one of origin/destination is required. When both are
@@ -35,6 +36,11 @@ async def search_truck_routes_spatial(
     When only one side is given, matching and ranking are based on that side alone,
     with no filtering on the other — e.g. an origin-only search returns posts with any
     destination, ranked by origin distance alone.
+
+    sort_by can request "nearest_origin" or "nearest_destination" to rank by just that
+    side instead of the combined default. If the requested side wasn't actually part of
+    the search (e.g. "nearest_origin" with no origin given), it's silently ignored in
+    favor of the default ranking below — never raises for this.
 
     De-dupes to one row per route via DISTINCT ON. When destination is part of the
     search, the nearest matching destination is picked and returned as "matchedDestination"
@@ -82,7 +88,11 @@ async def search_truck_routes_spatial(
     # confirmed to meet the requirement.
     capacity_filter = "AND tr.capacity >= :min_capacity" if min_capacity is not None else ""
 
-    if has_origin and has_destination:
+    if sort_by == "nearest_origin" and has_origin:
+        rank_expr = "origin_distance_km"
+    elif sort_by == "nearest_destination" and has_destination:
+        rank_expr = "destination_distance_km"
+    elif has_origin and has_destination:
         rank_expr = "origin_distance_km + destination_distance_km"
     elif has_origin:
         rank_expr = "origin_distance_km"
