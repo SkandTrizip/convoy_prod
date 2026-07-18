@@ -1,12 +1,11 @@
 import uuid
-from datetime import date, datetime
+from datetime import datetime
 from decimal import Decimal
 
 from geoalchemy2 import Geography
 from sqlalchemy import (
     Boolean,
     CheckConstraint,
-    Date,
     DateTime,
     Float,
     ForeignKey,
@@ -122,7 +121,6 @@ class TruckRoute(Base):
     __tablename__ = "truck_routes"
     __table_args__ = (
         Index("idx_truck_routes_origin_location", "origin_location", postgresql_using="gist"),
-        Index("idx_truck_routes_status_date", "status", "available_date"),
     )
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=new_uuid)
@@ -137,7 +135,6 @@ class TruckRoute(Base):
     origin_location: Mapped[str] = mapped_column(Geography(geometry_type="POINT", srid=4326), nullable=False)
     origin: Mapped[dict] = mapped_column(JSONB, nullable=False)
     current_location: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
-    available_date: Mapped[date] = mapped_column(Date, nullable=False)
     price: Mapped[Decimal | None] = mapped_column(Numeric(12, 2), nullable=True)
     status: Mapped[str] = mapped_column(String(32), default="available", nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.utcnow)

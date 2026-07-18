@@ -37,7 +37,6 @@ async def search_trucks(
             destination_lat=search_request.destination.lat if search_request.destination else None,
             destination_lng=search_request.destination.lng if search_request.destination else None,
             radius_km=search_request.radius_km,
-            available_date=search_request.available_date,
             truck_type=search_request.truckType,
             min_capacity=search_request.capacity,
             sort_by=search_request.sortBy,

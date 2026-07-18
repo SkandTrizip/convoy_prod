@@ -1,4 +1,3 @@
-from datetime import date
 from typing import Any, Dict, Literal, Optional
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
@@ -94,7 +93,6 @@ class SearchTrucksRequest(BaseModel):
         examples=["Open Body"],
     )
     radius_km: float = Field(150, description="Search radius in kilometres", ge=1, le=500)
-    available_date: Optional[date] = Field(None, description="Required availability date")
     page: int = Field(1, ge=1, description="Page number (1-indexed), 10 results per page")
     capacity: Optional[float] = Field(
         None,
@@ -187,7 +185,6 @@ class CreateTruckPostRequest(BaseModel):
         ..., min_length=1, max_length=5, description="1-5 destinations for this route"
     )
     currentLocation: Location
-    available_date: Optional[date] = None
     contactName: Optional[str] = Field(
         None, description="Contact name for this post. Defaults to the user's own name if omitted."
     )

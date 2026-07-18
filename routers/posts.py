@@ -62,7 +62,6 @@ async def create_truck_post(
             raise HTTPException(status_code=403, detail="Vehicle must be verified")
 
         now = datetime.utcnow()
-        available = post_data.available_date or now.date()
 
         route = TruckRoute(
             id=new_uuid(),
@@ -79,7 +78,6 @@ async def create_truck_post(
             ),
             origin=post_data.origin.model_dump(),
             current_location=post_data.currentLocation.model_dump(),
-            available_date=available,
             status=DEFAULT_ACTIVE_STATUS,
             created_at=now,
             expires_at=post_expires_at(now),

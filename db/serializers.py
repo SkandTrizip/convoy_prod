@@ -102,7 +102,6 @@ def truck_route_to_dict(route: TruckRoute, destinations: list[TruckRouteDestinat
         "destinations": [destination_to_dict(d) for d in destinations],
         "currentLocation": route.current_location,
         "originName": route.origin_name,
-        "availableDate": route.available_date.isoformat(),
         "status": "expired" if expired else route.status,
         "isExpired": expired,
         "createdAt": route.created_at,

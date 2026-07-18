@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Convoy API",
-    "description": "\nConvoy is a truck discovery and availability marketplace API.\n\n## Authentication\nMost endpoints require a `user_id` (UUID) obtained from **POST /api/auth/verify-otp** after OTP login.\n\n## Interactive docs\n- **Swagger UI:** `/docs`\n- **ReDoc:** `/redoc`\n- **OpenAPI JSON:** `/openapi.json`\n\n## Base path\nAll routes are served under **`/api`**.\n",
+    "description": "\nConvoy is a truck discovery and availability marketplace API.\n\n## Authentication\n1. **POST /api/auth/send-otp** then **POST /api/auth/verify-otp** to log in.\n2. Use the returned **`accessToken`** as a Bearer JWT on all other endpoints:\n   `Authorization: Bearer <accessToken>`\n3. Path `user_id` must match the logged-in user (from the token).\n\n## Interactive docs\n- **Swagger UI:** `/docs`\n- **ReDoc:** `/redoc`\n- **OpenAPI JSON:** `/openapi.json`\n\n## Base path\nAll routes are served under **`/api`**.\n",
     "contact": {
       "name": "Convoy Support",
       "url": "https://github.com/SkandTrizip/convoy_prod"
@@ -103,6 +103,69 @@
         }
       }
     },
+    "/api/truck-types": {
+      "get": {
+        "tags": [
+          "misc"
+        ],
+        "summary": "Get Truck Types",
+        "description": "Get list of available truck types",
+        "operationId": "get_truck_types_api_truck_types_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/health": {
+      "get": {
+        "tags": [
+          "misc"
+        ],
+        "summary": "Health",
+        "operationId": "health_api_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/": {
+      "get": {
+        "tags": [
+          "misc"
+        ],
+        "summary": "Root",
+        "operationId": "root_api__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/user/profile/{user_id}": {
       "get": {
         "tags": [
@@ -111,6 +174,11 @@
         "summary": "Get User Profile",
         "description": "Get user profile",
         "operationId": "get_user_profile_api_user_profile__user_id__get",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "user_id",
@@ -150,6 +218,11 @@
         "summary": "Update User Profile",
         "description": "Update user profile",
         "operationId": "update_user_profile_api_user_profile__user_id__put",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "user_id",
@@ -201,6 +274,11 @@
         "summary": "Update Push Token",
         "description": "Update user's push notification token",
         "operationId": "update_push_token_api_user_push_token__user_id__post",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "user_id",
@@ -244,6 +322,171 @@
         }
       }
     },
+    "/api/contacts/sync/{user_id}": {
+      "post": {
+        "tags": [
+          "contacts"
+        ],
+        "summary": "Sync Contacts",
+        "description": "Store hashed device contacts for mutual-connection matching.",
+        "operationId": "sync_contacts_api_contacts_sync__user_id__post",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "User Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SyncContactsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/contacts/mutual/{user_id}": {
+      "post": {
+        "tags": [
+          "contacts"
+        ],
+        "summary": "Get Mutual Contacts",
+        "description": "Find phone-book contacts shared between the logged-in user and another user.",
+        "operationId": "get_mutual_contacts_api_contacts_mutual__user_id__post",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "User Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MutualContactsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "contacts"
+        ],
+        "summary": "Get Mutual Contacts Query",
+        "description": "GET variant for driver profile \u2014 compare with ?otherUserId=.",
+        "operationId": "get_mutual_contacts_query_api_contacts_mutual__user_id__get",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "User Id"
+            }
+          },
+          {
+            "name": "otherUserId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Otheruserid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/locations/search": {
       "get": {
         "tags": [
@@ -252,6 +495,11 @@
         "summary": "Search Locations",
         "description": "Autosuggest locations: DB first (min 3 chars), then Google Places.",
         "operationId": "search_locations_api_locations_search_get",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "query",
@@ -296,6 +544,11 @@
         "summary": "Send Kyc Aadhaar Otp",
         "description": "Send OTP to the mobile number linked with the Aadhaar.",
         "operationId": "send_kyc_aadhaar_otp_api_kyc_aadhaar_send_otp__user_id__post",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "user_id",
@@ -347,6 +600,11 @@
         "summary": "Verify Kyc Aadhaar Otp",
         "description": "Verify Aadhaar OTP via Cashfree and approve KYC on success.",
         "operationId": "verify_kyc_aadhaar_otp_api_kyc_aadhaar_verify__user_id__post",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "user_id",
@@ -390,14 +648,75 @@
         }
       }
     },
+    "/api/kyc/aadhaar/ocr/{user_id}": {
+      "post": {
+        "tags": [
+          "kyc"
+        ],
+        "summary": "Verify Kyc Aadhaar Ocr",
+        "description": "Verify Aadhaar by uploading front/back images via Cashfree Smart OCR.",
+        "operationId": "verify_kyc_aadhaar_ocr_api_kyc_aadhaar_ocr__user_id__post",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "User Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AadhaarOcrRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/kyc/submit/{user_id}": {
       "post": {
         "tags": [
           "kyc"
         ],
         "summary": "Submit Kyc",
-        "description": "Submit manual KYC with document images for admin review.",
+        "description": "Submit KYC with document images \u2014 verified via Cashfree Smart OCR when images provided.",
         "operationId": "submit_kyc_api_kyc_submit__user_id__post",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "user_id",
@@ -449,6 +768,11 @@
         "summary": "Get Kyc Status",
         "description": "Get KYC status for user",
         "operationId": "get_kyc_status_api_kyc_status__user_id__get",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "user_id",
@@ -490,6 +814,11 @@
         "summary": "Add Vehicle",
         "description": "Add a truck for user",
         "operationId": "add_vehicle_api_vehicle_add__user_id__post",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "user_id",
@@ -541,6 +870,11 @@
         "summary": "List Vehicles",
         "description": "Get all trucks for user",
         "operationId": "list_vehicles_api_vehicle_list__user_id__get",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "user_id",
@@ -574,14 +908,129 @@
         }
       }
     },
+    "/api/vehicle/related-posts/{user_id}/{vehicle_id}": {
+      "get": {
+        "tags": [
+          "vehicle"
+        ],
+        "summary": "Get Related Posts",
+        "description": "Get all active truck posts associated with a specific vehicle",
+        "operationId": "get_related_posts_api_vehicle_related_posts__user_id___vehicle_id__get",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "User Id"
+            }
+          },
+          {
+            "name": "vehicle_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Vehicle Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/vehicle/remove/{user_id}/{vehicle_id}": {
+      "delete": {
+        "tags": [
+          "vehicle"
+        ],
+        "summary": "Remove Vehicle",
+        "description": "Remove a vehicle and its associated posts",
+        "operationId": "remove_vehicle_api_vehicle_remove__user_id___vehicle_id__delete",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "User Id"
+            }
+          },
+          {
+            "name": "vehicle_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Vehicle Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/verification/vehicle/{user_id}": {
       "post": {
         "tags": [
           "verification"
         ],
         "summary": "Verify Vehicle",
-        "description": "Verify vehicle registration via ULIP VAHAN proxy.",
+        "description": "Verify vehicle registration via ULIP VAHAN API.",
         "operationId": "verify_vehicle_api_verification_vehicle__user_id__post",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "user_id",
@@ -631,8 +1080,13 @@
           "verification"
         ],
         "summary": "Verify Dl",
-        "description": "Verify driving license via ULIP SARATHI proxy.",
+        "description": "Verify driving license via ULIP SARATHI API.",
         "operationId": "verify_dl_api_verification_dl__user_id__post",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "user_id",
@@ -684,6 +1138,11 @@
         "summary": "Batch Verify",
         "description": "Verify multiple documents in one request.",
         "operationId": "batch_verify_api_verification_batch__user_id__post",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "user_id",
@@ -733,8 +1192,13 @@
           "posts"
         ],
         "summary": "Create Truck Post",
-        "description": "Create a truck availability post (stored as truck_route with PostGIS).",
+        "description": "Create a truck availability post (auto-expires after 24 hours).",
         "operationId": "create_truck_post_api_posts_create__user_id__post",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "user_id",
@@ -784,8 +1248,13 @@
           "posts"
         ],
         "summary": "Get My Posts",
-        "description": "Get user's truck posts",
+        "description": "Get user's truck posts (active or expired).",
         "operationId": "get_my_posts_api_posts_my_posts__user_id__get",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "user_id",
@@ -841,8 +1310,13 @@
           "posts"
         ],
         "summary": "Reactivate Post",
-        "description": "Reactivate an expired post",
+        "description": "Reactivate an expired post for another 24 hours.",
         "operationId": "reactivate_post_api_posts_reactivate__post_id__post",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "post_id",
@@ -884,6 +1358,11 @@
         "summary": "Delete Post",
         "description": "Delete a truck post",
         "operationId": "delete_post_api_posts_delete__post_id__delete",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "post_id",
@@ -895,6 +1374,62 @@
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/posts/edit/{post_id}": {
+      "put": {
+        "tags": [
+          "posts"
+        ],
+        "summary": "Edit Post",
+        "description": "Edit a truck post (vehicle, destination, current location) and reactivate/extend expiry.",
+        "operationId": "edit_post_api_posts_edit__post_id__put",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "post_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Post Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditTruckPostRequest"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -954,7 +1489,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
       }
     },
     "/api/search/track-demand/{user_id}": {
@@ -965,6 +1505,11 @@
         "summary": "Track Search Demand",
         "description": "Track failed search for smart notifications",
         "operationId": "track_search_demand_api_search_track_demand__user_id__post",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "user_id",
@@ -1016,6 +1561,11 @@
         "summary": "Log Call Click",
         "description": "Log call button click for analytics",
         "operationId": "log_call_click_api_search_log_call__user_id__post",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "user_id",
@@ -1061,240 +1611,6 @@
         }
       }
     },
-    "/api/trucks": {
-      "post": {
-        "tags": [
-          "trucks"
-        ],
-        "summary": "Create Truck Listing",
-        "description": "Post truck availability with PostGIS origin/destination.",
-        "operationId": "create_truck_listing_api_trucks_post",
-        "parameters": [
-          {
-            "name": "user_id",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "User Id"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateTruckRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/trucks/search": {
-      "get": {
-        "tags": [
-          "trucks"
-        ],
-        "summary": "Search Trucks",
-        "description": "PostGIS radius search for available trucks.",
-        "operationId": "search_trucks_api_trucks_search_get",
-        "parameters": [
-          {
-            "name": "origin_lat",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "number",
-              "title": "Origin Lat"
-            }
-          },
-          {
-            "name": "origin_lng",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "number",
-              "title": "Origin Lng"
-            }
-          },
-          {
-            "name": "destination_lat",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "number",
-              "title": "Destination Lat"
-            }
-          },
-          {
-            "name": "destination_lng",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "number",
-              "title": "Destination Lng"
-            }
-          },
-          {
-            "name": "available_date",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "date",
-              "title": "Available Date"
-            }
-          },
-          {
-            "name": "radius_km",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "number",
-              "default": 150,
-              "title": "Radius Km"
-            }
-          },
-          {
-            "name": "truck_type",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Truck Type"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "trucks"
-        ],
-        "summary": "Search Trucks Post",
-        "description": "PostGIS radius search (JSON body).",
-        "operationId": "search_trucks_post_api_trucks_search_post",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TruckSearchRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/trucks/{truck_route_id}": {
-      "get": {
-        "tags": [
-          "trucks"
-        ],
-        "summary": "Get Truck Route",
-        "description": "Get a truck route listing by ID.",
-        "operationId": "get_truck_route_api_trucks__truck_route_id__get",
-        "parameters": [
-          {
-            "name": "truck_route_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Truck Route Id"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/bookings": {
       "post": {
         "tags": [
@@ -1303,6 +1619,11 @@
         "summary": "Create Booking",
         "description": "Book an available truck route.",
         "operationId": "create_booking_api_bookings_post",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "user_id",
@@ -1310,10 +1631,8 @@
             "required": true,
             "schema": {
               "type": "string",
-              "description": "UUID of the user making the booking",
               "title": "User Id"
-            },
-            "description": "UUID of the user making the booking"
+            }
           }
         ],
         "requestBody": {
@@ -1356,6 +1675,11 @@
         "summary": "Get Notifications",
         "description": "Get user's notifications",
         "operationId": "get_notifications_api_notifications__user_id__get",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "user_id",
@@ -1397,6 +1721,11 @@
         "summary": "Mark Notification Read",
         "description": "Mark notification as read",
         "operationId": "mark_notification_read_api_notifications_mark_read__notification_id__post",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "notification_id",
@@ -1447,7 +1776,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
       }
     },
     "/api/admin/kyc/action": {
@@ -1487,7 +1821,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
       }
     },
     "/api/admin/analytics": {
@@ -1507,17 +1846,54 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
       }
     },
-    "/api/truck-types": {
-      "get": {
+    "/api/admin/users/delete/{user_id}": {
+      "delete": {
         "tags": [
-          "misc"
+          "admin"
         ],
-        "summary": "Get Truck Types",
-        "description": "Get list of available truck types",
-        "operationId": "get_truck_types_api_truck_types_get",
+        "summary": "Delete User Account",
+        "description": "Permanently delete a user and everything tied to them: truck posts (and their\ndestinations), registered vehicles, KYC record, bookings (their own and other\nusers' bookings on their posts), search-demand tracking, notifications, call logs,\nsynced contacts, and pending login OTPs. Irreversible. Requires the X-Admin-Key\nheader in addition to a normal user JWT.",
+        "operationId": "delete_user_account_api_admin_users_delete__user_id__delete",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "User Id"
+            }
+          },
+          {
+            "name": "X-Admin-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Key"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -1526,23 +1902,63 @@
                 "schema": {}
               }
             }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
           }
         }
       }
     },
-    "/api/": {
+    "/api/history": {
       "get": {
         "tags": [
-          "misc"
+          "history"
         ],
-        "summary": "Root",
-        "operationId": "root_api__get",
+        "summary": "Get Recent Activity",
+        "description": "Get the logged-in user's last 10 searches or last 10 posts.",
+        "operationId": "get_recent_activity_api_history_get",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^(search|post)$",
+              "description": "'search' or 'post'",
+              "title": "Type"
+            },
+            "description": "'search' or 'post'"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
               "application/json": {
                 "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -1552,6 +1968,38 @@
   },
   "components": {
     "schemas": {
+      "AadhaarOcrRequest": {
+        "properties": {
+          "aadhaarFrontImage": {
+            "type": "string",
+            "title": "Aadhaarfrontimage",
+            "description": "Base64 or HTTPS URL of Aadhaar front"
+          },
+          "aadhaarBackImage": {
+            "type": "string",
+            "title": "Aadhaarbackimage",
+            "description": "Base64 or HTTPS URL of Aadhaar back"
+          },
+          "aadhaarNumber": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Aadhaarnumber",
+            "description": "Optional 12-digit Aadhaar to cross-check against OCR"
+          }
+        },
+        "type": "object",
+        "required": [
+          "aadhaarFrontImage",
+          "aadhaarBackImage"
+        ],
+        "title": "AadhaarOcrRequest"
+      },
       "AadhaarSendOtpRequest": {
         "properties": {
           "aadhaarNumber": {
@@ -1749,81 +2197,85 @@
           "origin": {
             "$ref": "#/components/schemas/Location"
           },
-          "destination": {
-            "$ref": "#/components/schemas/Location"
+          "destinations": {
+            "items": {
+              "$ref": "#/components/schemas/Location"
+            },
+            "type": "array",
+            "maxItems": 5,
+            "minItems": 1,
+            "title": "Destinations",
+            "description": "1-5 destinations for this route"
           },
           "currentLocation": {
             "$ref": "#/components/schemas/Location"
           },
-          "available_date": {
+          "contactName": {
             "anyOf": [
               {
-                "type": "string",
-                "format": "date"
+                "type": "string"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Available Date"
+            "title": "Contactname",
+            "description": "Contact name for this post. Defaults to the user's own name if omitted."
           },
-          "price": {
+          "contactNumber": {
             "anyOf": [
               {
-                "type": "number"
+                "type": "string"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Price",
-            "description": "Quoted price in INR"
+            "title": "Contactnumber",
+            "description": "Contact number for this post. Defaults to the user's own mobile if omitted."
           }
         },
         "type": "object",
         "required": [
           "vehicleId",
           "origin",
-          "destination",
+          "destinations",
           "currentLocation"
         ],
         "title": "CreateTruckPostRequest"
       },
-      "CreateTruckRequest": {
+      "EditTruckPostRequest": {
         "properties": {
-          "truck_number": {
-            "type": "string",
-            "title": "Truck Number",
-            "examples": [
-              "MH12AB1234"
-            ]
-          },
-          "truck_type": {
-            "type": "string",
-            "title": "Truck Type",
-            "examples": [
-              "Open Body"
-            ]
-          },
-          "capacity": {
+          "vehicleId": {
             "anyOf": [
               {
-                "type": "number"
+                "type": "string"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Capacity",
-            "description": "Capacity in tonnes"
+            "title": "Vehicleid",
+            "description": "UUID of a verified vehicle to update the post to"
           },
-          "origin": {
-            "$ref": "#/components/schemas/Location"
+          "destinations": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/Location"
+                },
+                "type": "array",
+                "maxItems": 5,
+                "minItems": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Destinations",
+            "description": "Full replacement list of 1-5 destinations"
           },
-          "destination": {
-            "$ref": "#/components/schemas/Location"
-          },
-          "current_location": {
+          "currentLocation": {
             "anyOf": [
               {
                 "$ref": "#/components/schemas/Location"
@@ -1833,33 +2285,33 @@
               }
             ]
           },
-          "available_date": {
-            "type": "string",
-            "format": "date",
-            "title": "Available Date"
-          },
-          "price": {
+          "contactName": {
             "anyOf": [
               {
-                "type": "number"
+                "type": "string"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Price",
-            "description": "Quoted price in INR"
+            "title": "Contactname",
+            "description": "Override this post's contact name"
+          },
+          "contactNumber": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Contactnumber",
+            "description": "Override this post's contact number"
           }
         },
         "type": "object",
-        "required": [
-          "truck_number",
-          "truck_type",
-          "origin",
-          "destination",
-          "available_date"
-        ],
-        "title": "CreateTruckRequest"
+        "title": "EditTruckPostRequest"
       },
       "HTTPValidationError": {
         "properties": {
@@ -1873,6 +2325,28 @@
         },
         "type": "object",
         "title": "HTTPValidationError"
+      },
+      "HashedContact": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "Contact display name from device"
+          },
+          "hashedNumber": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 64,
+            "title": "Hashednumber",
+            "description": "SHA256 hex hash of normalized phone digits (never send raw numbers)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "hashedNumber"
+        ],
+        "title": "HashedContact"
       },
       "KYCSubmission": {
         "properties": {
@@ -1998,6 +2472,20 @@
           "type": "local"
         }
       },
+      "MutualContactsRequest": {
+        "properties": {
+          "otherUserId": {
+            "type": "string",
+            "title": "Otheruserid",
+            "description": "User ID to compare phone books against"
+          }
+        },
+        "type": "object",
+        "required": [
+          "otherUserId"
+        ],
+        "title": "MutualContactsRequest"
+      },
       "PushTokenRequest": {
         "properties": {
           "pushToken": {
@@ -2018,15 +2506,38 @@
       "SearchTrucksRequest": {
         "properties": {
           "origin": {
-            "$ref": "#/components/schemas/Location"
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Location"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Required if destination is omitted \u2014 at least one of the two is needed"
           },
           "destination": {
-            "$ref": "#/components/schemas/Location"
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Location"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Required if origin is omitted \u2014 at least one of the two is needed"
           },
           "truckType": {
-            "type": "string",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Trucktype",
-            "description": "Truck type filter",
+            "description": "Truck type filter. If omitted, posts of any truck type are returned.",
             "examples": [
               "Open Body"
             ]
@@ -2039,26 +2550,44 @@
             "description": "Search radius in kilometres",
             "default": 150
           },
-          "available_date": {
+          "page": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Page",
+            "description": "Page number (1-indexed), 10 results per page",
+            "default": 1
+          },
+          "capacity": {
             "anyOf": [
               {
-                "type": "string",
-                "format": "date"
+                "type": "number",
+                "minimum": 0.0
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Available Date",
-            "description": "Required availability date"
+            "title": "Capacity",
+            "description": "Minimum required capacity in tonnes. If omitted, posts of any capacity are returned; if set, only posts with capacity >= this value are returned."
+          },
+          "sortBy": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "nearest_origin",
+                  "nearest_destination"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sortby",
+            "description": "Sort results by distance to origin or destination. If omitted, defaults to combined distance (both given), or whichever single one was given. If the requested side wasn't provided in the search (e.g. nearest_origin with no origin), falls back to the default ranking instead of failing."
           }
         },
         "type": "object",
-        "required": [
-          "origin",
-          "destination",
-          "truckType"
-        ],
         "title": "SearchTrucksRequest"
       },
       "SendOTPRequest": {
@@ -2081,67 +2610,19 @@
           "mobile": "9876543210"
         }
       },
-      "TruckSearchRequest": {
+      "SyncContactsRequest": {
         "properties": {
-          "origin": {
-            "type": "string",
-            "title": "Origin"
-          },
-          "destination": {
-            "type": "string",
-            "title": "Destination"
-          },
-          "origin_lat": {
-            "type": "number",
-            "title": "Origin Lat"
-          },
-          "origin_lng": {
-            "type": "number",
-            "title": "Origin Lng"
-          },
-          "destination_lat": {
-            "type": "number",
-            "title": "Destination Lat"
-          },
-          "destination_lng": {
-            "type": "number",
-            "title": "Destination Lng"
-          },
-          "radius_km": {
-            "type": "number",
-            "maximum": 500.0,
-            "minimum": 1.0,
-            "title": "Radius Km",
-            "default": 150
-          },
-          "available_date": {
-            "type": "string",
-            "format": "date",
-            "title": "Available Date"
-          },
-          "truck_type": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Truck Type"
+          "contacts": {
+            "items": {
+              "$ref": "#/components/schemas/HashedContact"
+            },
+            "type": "array",
+            "title": "Contacts",
+            "description": "Hashed device contacts to store for mutual matching"
           }
         },
         "type": "object",
-        "required": [
-          "origin",
-          "destination",
-          "origin_lat",
-          "origin_lng",
-          "destination_lat",
-          "destination_lng",
-          "available_date"
-        ],
-        "title": "TruckSearchRequest"
+        "title": "SyncContactsRequest"
       },
       "UserProfile": {
         "properties": {
@@ -2287,6 +2768,18 @@
         ],
         "title": "VerifyVehicleRequest"
       }
+    },
+    "securitySchemes": {
+      "HTTPBearer": {
+        "type": "http",
+        "scheme": "bearer"
+      },
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "JWT from POST /api/auth/verify-otp (`accessToken`)"
+      }
     }
   },
   "tags": [
@@ -2297,6 +2790,10 @@
     {
       "name": "user",
       "description": "User profile and Expo push notification token."
+    },
+    {
+      "name": "contacts",
+      "description": "Hashed phone contact sync and mutual-connection matching."
     },
     {
       "name": "locations",
@@ -2312,7 +2809,7 @@
     },
     {
       "name": "verification",
-      "description": "VAHAN vehicle and SARATHI DL verification via ULIP proxy."
+      "description": "VAHAN vehicle and SARATHI DL verification via ULIP API."
     },
     {
       "name": "posts",
@@ -2337,6 +2834,10 @@
     {
       "name": "admin",
       "description": "Admin KYC review and analytics dashboard."
+    },
+    {
+      "name": "history",
+      "description": "Recent activity: last 10 searches and last 10 posts for the logged-in user."
     },
     {
       "name": "misc",

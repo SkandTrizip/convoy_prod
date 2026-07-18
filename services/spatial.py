@@ -1,4 +1,3 @@
-from datetime import date
 from typing import Any
 
 from geoalchemy2 import WKTElement
@@ -24,7 +23,6 @@ async def search_truck_routes_spatial(
     destination_lat: float | None = None,
     destination_lng: float | None = None,
     radius_km: float = 150,
-    available_date: date | None = None,
     truck_type: str | None = None,
     min_capacity: float | None = None,
     sort_by: str | None = None,
@@ -61,7 +59,6 @@ async def search_truck_routes_spatial(
         raise ValueError("At least one of origin or destination is required")
 
     radius_m = radius_km * 1000
-    search_date = available_date or date.today()
 
     origin_point = f"SRID=4326;POINT({origin_lng} {origin_lat})" if has_origin else None
     dest_point = (
@@ -103,7 +100,6 @@ async def search_truck_routes_spatial(
         "origin_point": origin_point,
         "dest_point": dest_point,
         "radius_m": radius_m,
-        "search_date": search_date,
         "max_matches": SEARCH_MAX_MATCHES,
         "offset": (page - 1) * SEARCH_PAGE_SIZE,
         "page_size": SEARCH_PAGE_SIZE,
@@ -134,7 +130,6 @@ async def search_truck_routes_spatial(
                 tr.origin_name,
                 tr.origin,
                 tr.current_location,
-                tr.available_date,
                 tr.status,
                 tr.created_at,
                 tr.expires_at,
@@ -145,7 +140,6 @@ async def search_truck_routes_spatial(
             FROM truck_routes tr
             JOIN truck_route_destinations d ON d.truck_route_id = tr.id
             WHERE tr.status IN ('available', 'active')
-              AND tr.available_date >= :search_date
               AND tr.expires_at > NOW()
               {origin_filter}
               {dest_filter}
@@ -185,7 +179,6 @@ async def search_truck_routes_spatial(
             "contactName": row["contact_name"],
             "contactNumber": row["contact_number"],
             "origin": row["origin_name"],
-            "available_date": row["available_date"].isoformat(),
             "status": row["status"],
             "_id": route_id,
             "userId": str(row["user_id"]),
