@@ -22,7 +22,7 @@ async def send_otp(
     """Send OTP to mobile number"""
     try:
         mobile = request.mobile
-        otp = generate_otp()
+        otp = generate_otp(mobile)
 
         await store_otp(session, mobile, otp)
         sms_sent = send_otp_sms(mobile, otp)
