@@ -45,3 +45,8 @@ ULIP_LOGIN_URL = os.environ.get("ULIP_LOGIN_URL")
 ULIP_USERNAME = os.environ.get("ULIP_USERNAME")
 ULIP_PASSWORD = os.environ.get("ULIP_PASSWORD")
 ULIP_VAHAN_API = os.environ.get("ULIP_VAHAN_API", "VAHAN/04")
+
+# Azure Blob Storage (profile photos) — private container, served via backend proxy
+AZURE_CONN_STR = os.environ.get("AZURE_CONN_STR")
+AZURE_CONTAINER_NAME = os.environ.get("AZURE_CONTAINER_NAME", "trizip")
+PROFILE_PHOTO_MAX_SIZE_MB = int(os.environ.get("PROFILE_PHOTO_MAX_SIZE_MB", "5"))

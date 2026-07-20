@@ -1,13 +1,20 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, UploadFile
+from fastapi.responses import Response
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from config import logger
+from config import PROFILE_PHOTO_MAX_SIZE_MB, logger
 from database import get_session
 from db.base import User
 from db.serializers import parse_uuid, user_to_dict
-from middleware.auth import require_path_user
+from middleware.auth import get_current_user, require_path_user
 from models import PushTokenRequest, UserProfile
+from services.blob_storage import (
+    ALLOWED_CONTENT_TYPES,
+    delete_profile_photo,
+    download_profile_photo,
+    upload_profile_photo,
+)
 
 router = APIRouter(prefix="/user", tags=["user"])
 
@@ -73,6 +80,79 @@ async def update_user_profile(
         raise
     except Exception as e:
         logger.error(f"Error in update_user_profile: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/profile-photo/{user_id}")
+async def upload_user_profile_photo(
+    user_id: str,
+    file: UploadFile,
+    session: AsyncSession = Depends(get_session),
+    _: User = Depends(require_path_user),
+):
+    """Upload/replace the user's profile photo (stored in a private Azure blob container)"""
+    try:
+        if file.content_type not in ALLOWED_CONTENT_TYPES:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Unsupported image type '{file.content_type}'. Allowed: {', '.join(ALLOWED_CONTENT_TYPES)}",
+            )
+
+        content = await file.read()
+        max_bytes = PROFILE_PHOTO_MAX_SIZE_MB * 1024 * 1024
+        if len(content) > max_bytes:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Image exceeds {PROFILE_PHOTO_MAX_SIZE_MB}MB limit",
+            )
+
+        result = await session.execute(select(User).where(User.id == parse_uuid(user_id)))
+        user = result.scalar_one_or_none()
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        old_photo = user.profile_photo
+        blob_name = upload_profile_photo(user_id, content, file.content_type)
+
+        await session.execute(
+            update(User).where(User.id == parse_uuid(user_id)).values(profile_photo=blob_name)
+        )
+        await session.commit()
+
+        if old_photo and not old_photo.startswith("http"):
+            delete_profile_photo(old_photo)
+
+        return {"success": True, "profilePhoto": f"/api/user/profile-photo/{user_id}"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error in upload_user_profile_photo: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/profile-photo/{user_id}")
+async def get_user_profile_photo(
+    user_id: str,
+    session: AsyncSession = Depends(get_session),
+    _: User = Depends(get_current_user),
+):
+    """Stream a user's profile photo from blob storage (keeps the container private)"""
+    try:
+        result = await session.execute(select(User).where(User.id == parse_uuid(user_id)))
+        user = result.scalar_one_or_none()
+        if not user or not user.profile_photo or user.profile_photo.startswith("http"):
+            raise HTTPException(status_code=404, detail="Profile photo not found")
+
+        downloaded = download_profile_photo(user.profile_photo)
+        if not downloaded:
+            raise HTTPException(status_code=404, detail="Profile photo not found")
+
+        content, content_type = downloaded
+        return Response(content=content, media_type=content_type)
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error in get_user_profile_photo: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 

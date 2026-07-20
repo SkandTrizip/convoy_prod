@@ -5,6 +5,7 @@ from sqlalchemy import select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from db.base import User
+from db.serializers import profile_photo_url
 
 
 SEARCH_PAGE_SIZE = 10
@@ -208,7 +209,7 @@ async def search_truck_routes_spatial(
         user = user_result.scalar_one_or_none()
         if user:
             item["userName"] = user.name or "Unknown"
-            item["userPhoto"] = user.profile_photo
+            item["userPhoto"] = profile_photo_url(user)
             item["userMobile"] = user.mobile
 
         matches.append(item)

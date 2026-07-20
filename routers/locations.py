@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy import or_, select
+from sqlalchemy import case, or_, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -11,9 +11,23 @@ from services.google_places import fetch_place_autocomplete, fetch_place_details
 
 router = APIRouter(prefix="/locations", tags=["locations"])
 
+MAX_RESULTS = 20
 
-async def _search_db_locations(session: AsyncSession, query: str, limit: int = 5) -> list[Location]:
+
+async def _search_db_locations(session: AsyncSession, query: str, limit: int = MAX_RESULTS) -> list[Location]:
     pattern = f"%{query}%"
+    prefix_pattern = f"{query}%"
+    # Rank exact/prefix matches above incidental substring matches (e.g. a city
+    # whose state field happens to contain the query) so relevant results
+    # aren't crowded out once there are many loosely-matching rows.
+    rank = case(
+        (or_(Location.name.ilike(query), Location.state.ilike(query)), 0),
+        (Location.name.ilike(prefix_pattern), 1),
+        (Location.state.ilike(prefix_pattern), 2),
+        (Location.city.ilike(prefix_pattern), 3),
+        (Location.pincode.ilike(prefix_pattern), 4),
+        else_=5,
+    )
     result = await session.execute(
         select(Location)
         .where(
@@ -24,6 +38,7 @@ async def _search_db_locations(session: AsyncSession, query: str, limit: int = 5
                 Location.pincode.ilike(pattern),
             )
         )
+        .order_by(rank, Location.name)
         .limit(limit)
     )
     return list(result.scalars().all())
@@ -79,14 +94,14 @@ async def search_locations(
         if len(query) < 3:
             return {"success": True, "locations": []}
 
-        db_locations = await _search_db_locations(session, query, limit=5)
+        db_locations = await _search_db_locations(session, query, limit=MAX_RESULTS)
         results = [location_to_dict(loc) for loc in db_locations]
         seen_place_ids = {loc.google_place_id for loc in db_locations if loc.google_place_id}
 
-        if len(results) >= 5 or not GOOGLE_PLACES_API_KEY:
+        if len(results) >= MAX_RESULTS or not GOOGLE_PLACES_API_KEY:
             return {"success": True, "locations": results}
 
-        predictions = fetch_place_autocomplete(query, limit=5 - len(results))
+        predictions = fetch_place_autocomplete(query, limit=MAX_RESULTS - len(results))
         for prediction in predictions:
             place_id = prediction.get("place_id")
             if not place_id or place_id in seen_place_ids:
@@ -114,7 +129,7 @@ async def search_locations(
             results.append(location_to_dict(location))
             seen_place_ids.add(place_id)
 
-            if len(results) >= 5:
+            if len(results) >= MAX_RESULTS:
                 break
 
         return {"success": True, "locations": results}

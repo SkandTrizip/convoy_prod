@@ -4,6 +4,7 @@
 fastapi>=0.110.0,<1.0.0
 uvicorn[standard]>=0.25.0,<1.0.0
 python-dotenv>=1.0.0,<2.0.0
+python-multipart>=0.0.9,<1.0.0
 
 # PostgreSQL + PostGIS
 sqlalchemy[asyncio]>=2.0.0,<3.0.0
@@ -14,6 +15,9 @@ shapely>=2.0.0,<3.0.0
 # External services (Google Places, VAHAN, Expo push, Veup SMS)
 requests>=2.31.0,<3.0.0
 PyJWT>=2.8.0,<3.0.0
+
+# Azure Blob Storage (profile photos)
+azure-storage-blob>=12.19.0,<13.0.0
 
 # Tests (backend/tests/)
 pytest>=8.0.0,<10.0.0

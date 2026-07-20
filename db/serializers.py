@@ -19,12 +19,22 @@ def parse_uuid(value: str) -> uuid.UUID:
     return uuid.UUID(value)
 
 
+def profile_photo_url(user: User) -> str | None:
+    """Photos uploaded via blob storage are proxied through our API; legacy
+    rows may still hold a plain external URL, which is returned as-is."""
+    if not user.profile_photo:
+        return None
+    if user.profile_photo.startswith("http://") or user.profile_photo.startswith("https://"):
+        return user.profile_photo
+    return f"/api/user/profile-photo/{user.id}"
+
+
 def user_to_dict(user: User) -> dict:
     return {
         "_id": str(user.id),
         "mobile": user.mobile,
         "name": user.name,
-        "profilePhoto": user.profile_photo,
+        "profilePhoto": profile_photo_url(user),
         "kycStatus": user.kyc_status,
         "accountStatus": user.account_status,
         "createdDate": user.created_date,

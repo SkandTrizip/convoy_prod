@@ -1,7 +1,9 @@
 from datetime import datetime, timedelta
 from decimal import Decimal
 
-from fastapi import APIRouter, Depends, HTTPException
+from typing import Optional
+
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -93,14 +95,16 @@ async def add_vehicle(
 @router.get("/list/{user_id}")
 async def list_vehicles(
     user_id: str,
+    truckNumber: Optional[str] = Query(None),
     session: AsyncSession = Depends(get_session),
     _: User = Depends(require_path_user),
 ):
-    """Get all trucks for user"""
+    """Get all trucks for user, optionally filtered by exact truck number"""
     try:
-        result = await session.execute(
-            select(Truck).where(Truck.user_id == parse_uuid(user_id)).limit(100)
-        )
+        query = select(Truck).where(Truck.user_id == parse_uuid(user_id))
+        if truckNumber:
+            query = query.where(Truck.truck_number == truckNumber.strip().upper())
+        result = await session.execute(query.limit(100))
         trucks = result.scalars().all()
         return {
             "success": True,
