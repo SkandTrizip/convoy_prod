@@ -36,6 +36,7 @@ def user_to_dict(user: User) -> dict:
         "name": user.name,
         "profilePhoto": profile_photo_url(user),
         "kycStatus": user.kyc_status,
+        "kycStep": user.kyc_step,
         "accountStatus": user.account_status,
         "createdDate": user.created_date,
         "pushToken": user.push_token,

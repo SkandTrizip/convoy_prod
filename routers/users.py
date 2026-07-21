@@ -15,6 +15,7 @@ from services.blob_storage import (
     download_profile_photo,
     upload_profile_photo,
 )
+from services.notifications import send_expo_push_notification
 
 router = APIRouter(prefix="/user", tags=["user"])
 
@@ -114,15 +115,36 @@ async def upload_user_profile_photo(
         old_photo = user.profile_photo
         blob_name = upload_profile_photo(user_id, content, file.content_type)
 
+        # Uploading the photo is step 2 of KYC — completes it if step 1
+        # (Aadhaar verification) is already done.
+        completes_kyc = user.kyc_step == "photo"
+        update_values = {"profile_photo": blob_name}
+        if completes_kyc:
+            update_values["kyc_status"] = "approved"
+            update_values["kyc_step"] = "completed"
+
         await session.execute(
-            update(User).where(User.id == parse_uuid(user_id)).values(profile_photo=blob_name)
+            update(User).where(User.id == parse_uuid(user_id)).values(**update_values)
         )
         await session.commit()
 
         if old_photo and not old_photo.startswith("http"):
             delete_profile_photo(old_photo)
 
-        return {"success": True, "profilePhoto": f"/api/user/profile-photo/{user_id}"}
+        if completes_kyc:
+            await send_expo_push_notification(
+                user_id,
+                "KYC Approved",
+                "Your KYC is now complete. You can now add vehicles.",
+                session=session,
+            )
+
+        return {
+            "success": True,
+            "profilePhoto": f"/api/user/profile-photo/{user_id}",
+            "kycStatus": "approved" if completes_kyc else user.kyc_status,
+            "kycStep": "completed" if completes_kyc else user.kyc_step,
+        }
     except HTTPException:
         raise
     except Exception as e:

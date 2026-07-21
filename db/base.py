@@ -48,6 +48,7 @@ class User(Base):
     name: Mapped[str | None] = mapped_column(String(255), nullable=True)
     profile_photo: Mapped[str | None] = mapped_column(Text, nullable=True)
     kyc_status: Mapped[str] = mapped_column(String(32), default="pending", nullable=False)
+    kyc_step: Mapped[str] = mapped_column(String(32), default="aadhaar", nullable=False)
     account_status: Mapped[str] = mapped_column(String(32), default="active", nullable=False)
     created_date: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.utcnow)
     push_token: Mapped[str | None] = mapped_column(Text, nullable=True)
