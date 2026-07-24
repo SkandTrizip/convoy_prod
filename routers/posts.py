@@ -11,9 +11,8 @@ from db.base import Truck, TruckRoute, User, new_uuid
 from db.serializers import parse_uuid, truck_route_to_dict
 from middleware.auth import authorize_user_id, get_current_user, require_path_user
 from models import CreateTruckPostRequest, EditTruckPostRequest
-# Smart-match notifications are disabled pending multi-destination support in services/matching.py
-# (deferred to a later phase — see services/matching.py::process_smart_match_notifications).
 from services.activity import record_post_activity
+from services.matching import process_smart_match_notifications
 from services.destinations import (
     create_destinations,
     get_destinations_for_route,
@@ -90,7 +89,7 @@ async def create_truck_post(
         await record_post_activity(session, user_uuid, route.id)
 
         post_dict = truck_route_to_dict(route, destinations)
-        # Smart-match notifications disabled this phase — see import comment above.
+        await process_smart_match_notifications(session, route, destinations)
 
         return {"success": True, "post": post_dict}
     except HTTPException:
@@ -181,7 +180,7 @@ async def reactivate_post(
 
         destinations = await get_destinations_for_route(session, post.id)
         post_dict = truck_route_to_dict(post, destinations)
-        # Smart-match notifications disabled this phase — see import comment above.
+        await process_smart_match_notifications(session, post, destinations)
 
         return {
             "success": True,
@@ -290,7 +289,10 @@ async def edit_post(
 
         destinations = await get_destinations_for_route(session, post.id)
         post_dict = truck_route_to_dict(post, destinations)
-        # Smart-match notifications disabled this phase — see import comment above.
+        if edit_data.destinations:
+            # Origin can't be edited on this endpoint — only re-check matches
+            # when the destination(s) actually changed.
+            await process_smart_match_notifications(session, post, destinations)
 
         return {
             "success": True,

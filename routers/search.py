@@ -19,6 +19,62 @@ from services.spatial import SEARCH_PAGE_SIZE, search_truck_routes_spatial
 
 router = APIRouter(prefix="/search", tags=["search"])
 
+SEARCH_DEMAND_EXPIRY_HOURS = 24
+
+
+async def _upsert_search_demand(
+    session: AsyncSession, user_uuid, search_request: SearchTrucksRequest
+) -> None:
+    """Save (or refresh) a search as pending smart-match notification. Requires
+    both origin and destination — a single-sided search can't be re-matched
+    the same way search_truck_routes_spatial matches posts."""
+    if not search_request.origin or not search_request.destination:
+        return
+
+    now = datetime.utcnow()
+    result = await session.execute(
+        select(SearchDemand).where(
+            SearchDemand.user_id == user_uuid,
+            SearchDemand.expiry_timestamp > now,
+        )
+    )
+    existing_demand = next(
+        (
+            d
+            for d in result.scalars().all()
+            if d.origin.get("name") == search_request.origin.name
+            and d.destination.get("name") == search_request.destination.name
+            and d.truck_type == search_request.truckType
+        ),
+        None,
+    )
+
+    if existing_demand:
+        existing_demand.origin = search_request.origin.model_dump()
+        existing_demand.destination = search_request.destination.model_dump()
+        existing_demand.truck_type = search_request.truckType
+        existing_demand.radius_km = search_request.radius_km
+        existing_demand.capacity = search_request.capacity
+        existing_demand.search_timestamp = now
+        existing_demand.expiry_timestamp = now + timedelta(hours=SEARCH_DEMAND_EXPIRY_HOURS)
+        existing_demand.notification_status = "pending"
+    else:
+        session.add(
+            SearchDemand(
+                user_id=user_uuid,
+                origin=search_request.origin.model_dump(),
+                destination=search_request.destination.model_dump(),
+                truck_type=search_request.truckType,
+                radius_km=search_request.radius_km,
+                capacity=search_request.capacity,
+                search_timestamp=now,
+                expiry_timestamp=now + timedelta(hours=SEARCH_DEMAND_EXPIRY_HOURS),
+                notification_status="pending",
+            )
+        )
+
+    await session.commit()
+
 
 @router.post("/trucks")
 async def search_trucks(
@@ -52,6 +108,13 @@ async def search_trucks(
         search_criteria = search_request.model_dump(mode="json", exclude={"page"})
         await record_search_activity(session, current_user.id, search_criteria)
 
+        if total_count == 0:
+            # Best-effort: save this search so a matching future post can notify the user.
+            try:
+                await _upsert_search_demand(session, current_user.id, search_request)
+            except Exception as e:
+                logger.error(f"Error saving search demand: {str(e)}")
+
         return {
             "success": True,
             "posts": matching_posts,
@@ -72,55 +135,17 @@ async def track_search_demand(
     session: AsyncSession = Depends(get_session),
     _: User = Depends(require_path_user),
 ):
-    """Track failed search for smart notifications"""
+    """Explicitly track a search for smart-match notifications (the /trucks
+    endpoint above now does this automatically on zero results; this endpoint
+    remains for clients that want to trigger it directly)."""
     try:
-        if not search_request.origin or not search_request.destination or not search_request.truckType:
+        if not search_request.origin or not search_request.destination:
             raise HTTPException(
                 status_code=400,
-                detail="origin, destination, and truckType are all required to track search demand",
+                detail="origin and destination are required to track search demand",
             )
 
-        user_uuid = parse_uuid(user_id)
-        now = datetime.utcnow()
-
-        result = await session.execute(
-            select(SearchDemand).where(
-                SearchDemand.user_id == user_uuid,
-                SearchDemand.truck_type == search_request.truckType,
-                SearchDemand.expiry_timestamp > now,
-            )
-        )
-        existing_demand = next(
-            (
-                d
-                for d in result.scalars().all()
-                if d.origin.get("name") == search_request.origin.name
-                and d.destination.get("name") == search_request.destination.name
-            ),
-            None,
-        )
-
-        if existing_demand:
-            existing_demand.origin = search_request.origin.model_dump()
-            existing_demand.destination = search_request.destination.model_dump()
-            existing_demand.truck_type = search_request.truckType
-            existing_demand.search_timestamp = now
-            existing_demand.expiry_timestamp = now + timedelta(hours=48)
-            existing_demand.notification_status = "pending"
-        else:
-            session.add(
-                SearchDemand(
-                    user_id=user_uuid,
-                    origin=search_request.origin.model_dump(),
-                    destination=search_request.destination.model_dump(),
-                    truck_type=search_request.truckType,
-                    search_timestamp=now,
-                    expiry_timestamp=now + timedelta(hours=48),
-                    notification_status="pending",
-                )
-            )
-
-        await session.commit()
+        await _upsert_search_demand(session, parse_uuid(user_id), search_request)
         return {"success": True, "message": "Search demand tracked"}
     except HTTPException:
         raise
