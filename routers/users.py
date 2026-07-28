@@ -15,7 +15,7 @@ from services.blob_storage import (
     download_profile_photo,
     upload_profile_photo,
 )
-from services.notifications import send_expo_push_notification
+from services.notifications import send_push_notification
 
 router = APIRouter(prefix="/user", tags=["user"])
 
@@ -132,7 +132,7 @@ async def upload_user_profile_photo(
             delete_profile_photo(old_photo)
 
         if completes_kyc:
-            await send_expo_push_notification(
+            await send_push_notification(
                 user_id,
                 "KYC Approved",
                 "Your KYC is now complete. You can now add vehicles.",

@@ -58,6 +58,20 @@ class User(Base):
     )
 
 
+class AdminUser(Base):
+    """Back-office login — separate from User (drivers). Its own JWT namespace,
+    see middleware/admin_auth.py."""
+
+    __tablename__ = "admin_users"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=new_uuid)
+    email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False, index=True)
+    password_hash: Mapped[str] = mapped_column(Text, nullable=False)
+    name: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.utcnow)
+
+
 class UserContact(Base):
     __tablename__ = "user_contacts"
     __table_args__ = (
@@ -186,6 +200,71 @@ class SearchDemand(Base):
     search_timestamp: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.utcnow)
     expiry_timestamp: Mapped[datetime] = mapped_column(DateTime(timezone=False), nullable=False)
     notification_status: Mapped[str] = mapped_column(String(32), default="pending", nullable=False)
+
+
+class Wallet(Base):
+    """Cached balance summary — WalletTransaction is the source of truth; this
+    table is derivable from it and exists only to make reads O(1)."""
+
+    __tablename__ = "wallets"
+    __table_args__ = (
+        CheckConstraint("available_balance >= 0", name="ck_wallets_available_nonneg"),
+        CheckConstraint("reserved_balance >= 0", name="ck_wallets_reserved_nonneg"),
+    )
+
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), primary_key=True
+    )
+    available_balance: Mapped[Decimal] = mapped_column(Numeric(12, 2), default=0, nullable=False)
+    reserved_balance: Mapped[Decimal] = mapped_column(Numeric(12, 2), default=0, nullable=False)
+    status: Mapped[str] = mapped_column(String(16), default="active", nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.utcnow)
+
+
+class WalletTransaction(Base):
+    """Immutable, append-only ledger. Never updated or deleted — reversals are
+    new rows. Every row's idempotency_key is unique so retried mutating calls
+    (client timeout retries, double-taps) are safe no-ops."""
+
+    __tablename__ = "wallet_transactions"
+    __table_args__ = (
+        Index("idx_wallet_transactions_user_created", "user_id", "created_at"),
+    )
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=new_uuid)
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+    )
+    type: Mapped[str] = mapped_column(String(32), nullable=False)
+    amount: Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False)
+    available_after: Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False)
+    reserved_after: Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False)
+    reference_type: Mapped[str] = mapped_column(String(32), nullable=False)
+    reference_id: Mapped[str | None] = mapped_column(String(36), nullable=True)
+    note: Mapped[str | None] = mapped_column(Text, nullable=True)
+    idempotency_key: Mapped[str] = mapped_column(String(128), unique=True, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.utcnow)
+
+
+class RedeemRequest(Base):
+    __tablename__ = "redeem_requests"
+    __table_args__ = (
+        Index("idx_redeem_requests_status", "status"),
+        Index("idx_redeem_requests_user", "user_id"),
+    )
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=new_uuid)
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+    )
+    amount: Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False)
+    upi_id: Mapped[str] = mapped_column(String(255), nullable=False)
+    status: Mapped[str] = mapped_column(String(16), default="pending", nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.utcnow)
+    processed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=False), nullable=True)
+    processed_by: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    notes: Mapped[str | None] = mapped_column(Text, nullable=True)
 
 
 class Notification(Base):

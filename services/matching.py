@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from config import logger
 from db.base import Notification, SearchDemand, TruckRoute, TruckRouteDestination
 from services.geo import calculate_distance
-from services.notifications import send_expo_push_notification
+from services.notifications import send_push_notification
 
 
 async def process_smart_match_notifications(
@@ -78,7 +78,7 @@ async def process_smart_match_notifications(
                 f"A matching truck has been posted for your searched route "
                 f"from {route.origin_name} to {matched_destination_name}"
             )
-            await send_expo_push_notification(
+            await send_push_notification(
                 str(demand.user_id),
                 "Matching Truck Available",
                 message,

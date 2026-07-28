@@ -22,7 +22,7 @@ from services.kyc import (
     verify_aadhaar_with_smart_ocr,
     verify_kyc_with_cashfree,
 )
-from services.notifications import send_expo_push_notification
+from services.notifications import send_push_notification
 
 router = APIRouter(prefix="/kyc", tags=["kyc"])
 
@@ -237,7 +237,7 @@ async def verify_kyc_aadhaar_otp(
         )
         await session.commit()
 
-        await send_expo_push_notification(
+        await send_push_notification(
             user_id,
             "Aadhaar Verified",
             "Your Aadhaar has been verified. Upload your photo to complete KYC.",
@@ -314,7 +314,7 @@ async def verify_kyc_aadhaar_ocr(
             back_image=request.aadhaarBackImage,
         )
 
-        await send_expo_push_notification(
+        await send_push_notification(
             user_id,
             "Aadhaar Verified",
             "Your Aadhaar has been verified. Upload your photo to complete KYC.",
@@ -391,7 +391,7 @@ async def submit_kyc(
                 front_image=submission.aadhaarFrontImage,
                 back_image=submission.aadhaarBackImage,
             )
-            await send_expo_push_notification(
+            await send_push_notification(
                 user_id,
                 "Aadhaar Verified",
                 "Your Aadhaar has been verified. Upload your photo to complete KYC.",

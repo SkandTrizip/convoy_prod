@@ -4,6 +4,7 @@ from middleware.auth import get_current_user
 from routers import (
     activity,
     admin,
+    admin_auth,
     auth,
     bookings,
     contacts,
@@ -16,6 +17,7 @@ from routers import (
     users,
     vehicles,
     verification,
+    wallet,
 )
 
 api_router = APIRouter(prefix="/api")
@@ -24,7 +26,13 @@ api_router = APIRouter(prefix="/api")
 api_router.include_router(auth.router)
 api_router.include_router(misc.router)
 
-# Protected routes (Bearer JWT required)
+# Admin routes — own JWT namespace (see middleware/admin_auth.py), independent
+# of the driver JWT below. admin_auth.router's /login is public; everything
+# else under it and all of admin.router requires an admin token.
+api_router.include_router(admin_auth.router)
+api_router.include_router(admin.router)
+
+# Protected routes (driver Bearer JWT required)
 protected_router = APIRouter(dependencies=[Depends(get_current_user)])
 protected_router.include_router(users.router)
 protected_router.include_router(contacts.router)
@@ -36,6 +44,6 @@ protected_router.include_router(posts.router)
 protected_router.include_router(search.router)
 protected_router.include_router(bookings.router)
 protected_router.include_router(notifications.router)
-protected_router.include_router(admin.router)
+protected_router.include_router(wallet.router)
 protected_router.include_router(activity.router)
 api_router.include_router(protected_router)

@@ -29,7 +29,7 @@ OPENAPI_TAGS = [
     },
     {
         "name": "user",
-        "description": "User profile and Expo push notification token.",
+        "description": "User profile and FCM push notification token.",
     },
     {
         "name": "contacts",

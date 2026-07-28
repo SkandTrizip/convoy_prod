@@ -12,12 +12,21 @@ asyncpg>=0.29.0,<1.0.0
 geoalchemy2>=0.17.0,<1.0.0
 shapely>=2.0.0,<3.0.0
 
-# External services (Google Places, VAHAN, Expo push, Veup SMS)
+# External services (Google Places, VAHAN, Veup SMS)
 requests>=2.31.0,<3.0.0
 PyJWT>=2.8.0,<3.0.0
 
 # Azure Blob Storage (profile photos)
 azure-storage-blob>=12.19.0,<13.0.0
+
+# Firebase Cloud Messaging (push notifications)
+firebase-admin>=6.5.0,<7.0.0
+
+# Notification campaign scheduler (morning/afternoon/night cron jobs)
+APScheduler>=3.10.0,<4.0.0
+
+# Admin password hashing
+bcrypt>=4.1.0,<5.0.0
 
 # Tests (backend/tests/)
 pytest>=8.0.0,<10.0.0

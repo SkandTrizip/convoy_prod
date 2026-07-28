@@ -1,4 +1,5 @@
 import os
+from decimal import Decimal
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -35,8 +36,12 @@ CASHFREE_ENVIRONMENT = os.environ.get("CASHFREE_ENVIRONMENT", "production")
 JWT_SECRET = os.environ.get("JWT_SECRET", "dev-insecure-change-in-production")
 JWT_EXPIRE_HOURS = int(os.environ.get("JWT_EXPIRE_HOURS", "168"))
 
-# Admin API key (required header for destructive /api/admin/* actions, e.g. user deletion)
-ADMIN_API_KEY = os.environ.get("ADMIN_API_KEY")
+# Admin JWT (email+password login, /api/admin-auth/*) — separate secret/namespace
+# from driver JWT above, so an admin token and a driver token are never
+# interchangeable even if both happened to reuse the same subject id.
+ADMIN_JWT_SECRET = os.environ.get("ADMIN_JWT_SECRET", "dev-insecure-admin-change-in-production")
+ADMIN_JWT_EXPIRE_HOURS = int(os.environ.get("ADMIN_JWT_EXPIRE_HOURS", "24"))
+
 # ULIP (direct) — VAHAN / SARATHI verification from this server
 ULIP_BASE_URL = os.environ.get(
     "ULIP_BASE_URL", "https://www.ulip.dpiit.gov.in/ulip/v1.0.0"
@@ -50,3 +55,11 @@ ULIP_VAHAN_API = os.environ.get("ULIP_VAHAN_API", "VAHAN/04")
 AZURE_CONN_STR = os.environ.get("AZURE_CONN_STR")
 AZURE_CONTAINER_NAME = os.environ.get("AZURE_CONTAINER_NAME", "trizip")
 PROFILE_PHOTO_MAX_SIZE_MB = int(os.environ.get("PROFILE_PHOTO_MAX_SIZE_MB", "5"))
+
+# Wallet (reward/scratch-card payouts)
+MIN_REDEEM_AMOUNT_INR = Decimal(os.environ.get("MIN_REDEEM_AMOUNT_INR", "500"))
+
+# Firebase Cloud Messaging (push notifications) — service account JSON path
+FIREBASE_CREDENTIALS_PATH = os.environ.get(
+    "FIREBASE_CREDENTIALS_PATH", str(ROOT_DIR / "credentials" / "firebase-admin.json")
+)

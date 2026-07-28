@@ -14,7 +14,7 @@ from db.serializers import parse_uuid, truck_route_to_dict, truck_to_dict
 from middleware.auth import require_path_user
 from models import AddVehicleRequest
 from services.destinations import get_destinations_for_routes
-from services.notifications import send_expo_push_notification
+from services.notifications import send_push_notification
 from services.ulip import verify_vehicle_registration
 
 router = APIRouter(prefix="/vehicle", tags=["vehicle"])
@@ -77,7 +77,7 @@ async def add_vehicle(
         await session.refresh(truck)
 
         if verification_status == "verified":
-            await send_expo_push_notification(
+            await send_push_notification(
                 user_id,
                 "Vehicle Verified",
                 f"Vehicle {vehicle_data.vehicleNumber} has been verified successfully.",

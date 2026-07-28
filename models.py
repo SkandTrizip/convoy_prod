@@ -50,10 +50,53 @@ class MutualContactsRequest(BaseModel):
 
 class PushTokenRequest(BaseModel):
     model_config = ConfigDict(
-        json_schema_extra={"example": {"pushToken": "ExponentPushToken[xxxxxxxxxxxxxx]"}}
+        json_schema_extra={"example": {"pushToken": "f3Qz...:APA91bH...(FCM registration token)"}}
     )
 
-    pushToken: str = Field(..., description="Expo push notification token")
+    pushToken: str = Field(..., description="FCM registration token")
+
+
+class SendNotificationBatchRequest(BaseModel):
+    model_config = ConfigDict(
+        json_schema_extra={
+            "example": {
+                "userIds": ["3fa85f64-5717-4562-b3fc-2c963f66afa6"],
+                "title": "New Feature",
+                "body": "Check out what's new in Convoy.",
+                "data": {"type": "manual"},
+            }
+        }
+    )
+
+    userIds: list[str] = Field(..., min_length=1, description="Target user IDs")
+    title: str = Field(..., description="Push notification title")
+    body: str = Field(..., description="Push notification body")
+    data: Dict[str, Any] = Field(default_factory=dict, description="Extra payload for the app")
+
+
+class AdminLoginRequest(BaseModel):
+    model_config = ConfigDict(
+        json_schema_extra={"example": {"email": "admin@convoy.app", "password": "••••••••"}}
+    )
+
+    email: str = Field(..., description="Admin email")
+    password: str = Field(..., description="Admin password")
+
+
+class CreateAdminUserRequest(BaseModel):
+    model_config = ConfigDict(
+        json_schema_extra={
+            "example": {
+                "email": "new-admin@convoy.app",
+                "password": "••••••••",
+                "name": "New Admin",
+            }
+        }
+    )
+
+    email: str = Field(..., description="Email for the new admin account")
+    password: str = Field(..., min_length=8, description="Password (min 8 characters)")
+    name: Optional[str] = Field(None, description="Display name")
 
 
 class Location(BaseModel):
@@ -203,17 +246,27 @@ class EditTruckPostRequest(BaseModel):
     contactNumber: Optional[str] = Field(None, description="Override this post's contact number")
 
 
-class AdminKYCAction(BaseModel):
+class AdminUpdateUserRequest(BaseModel):
+    model_config = ConfigDict(json_schema_extra={"example": {"name": "Raj Kumar"}})
+
+    name: str = Field(..., description="Updated display name")
+
+
+class InitiateRedeemRequest(BaseModel):
     model_config = ConfigDict(
         json_schema_extra={
-            "example": {
-                "userId": "550e8400-e29b-41d4-a716-446655440000",
-                "action": "approve",
-                "reason": None,
-            }
+            "example": {"upiId": "9876543210@ybl", "idempotencyKey": "a1b2c3d4-..."}
         }
     )
 
-    userId: str = Field(..., description="User UUID")
-    action: str = Field(..., description="`approve` or `reject`", examples=["approve"])
-    reason: Optional[str] = Field(None, description="Required when action is reject")
+    upiId: str = Field(..., description="UPI VPA to pay out to, e.g. 9876543210@ybl")
+    idempotencyKey: str = Field(
+        ...,
+        description="Client-generated key, unique per redeem attempt. Retrying the "
+        "same request with the same key returns the original result instead of "
+        "reserving the balance twice.",
+    )
+
+
+class AdminRedeemAction(BaseModel):
+    reason: Optional[str] = Field(None, description="Required when rejecting")
