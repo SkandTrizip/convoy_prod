@@ -2,7 +2,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Any
 
 import jwt
-from fastapi import Depends, HTTPException
+from fastapi import Depends, Header, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -11,6 +11,7 @@ from config import JWT_EXPIRE_HOURS, JWT_SECRET, logger
 from database import get_session
 from db.base import User
 from db.serializers import parse_uuid
+from notifications.repositories import device_repository
 
 ALGORITHM = "HS256"
 bearer_scheme = HTTPBearer(auto_error=False)
@@ -34,6 +35,7 @@ def decode_access_token(token: str) -> dict[str, Any]:
 async def get_current_user(
     credentials: HTTPAuthorizationCredentials | None = Depends(bearer_scheme),
     session: AsyncSession = Depends(get_session),
+    x_device_id: str | None = Header(default=None, alias="X-Device-Id"),
 ) -> User:
     if credentials is None or not credentials.credentials:
         raise HTTPException(status_code=401, detail="Not authenticated")
@@ -61,6 +63,12 @@ async def get_current_user(
 
     if user.account_status == "suspended":
         raise HTTPException(status_code=403, detail="Account suspended")
+
+    # Opportunistic device-liveness signal — no dedicated "heartbeat" endpoint;
+    # any authenticated request that names its device counts as evidence the
+    # device is still in active use. Silently a no-op for requests without the
+    # header (old app versions, admin calls) or an unrecognized device_id.
+    await device_repository.touch_last_seen(session, x_device_id)
 
     return user
 

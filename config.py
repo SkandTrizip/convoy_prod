@@ -26,6 +26,14 @@ POST_EXPIRE_CHECK_INTERVAL_SECONDS = int(
     os.environ.get("POST_EXPIRE_CHECK_INTERVAL_SECONDS", "300")
 )
 
+# Stale push-device cleanup (judged on last_app_seen, not last_token_sync —
+# see db/base.py's UserDevice)
+DEVICE_CLEANUP_CHECK_INTERVAL_SECONDS = int(
+    os.environ.get("DEVICE_CLEANUP_CHECK_INTERVAL_SECONDS", str(24 * 60 * 60))
+)
+DEVICE_DEACTIVATE_AFTER_DAYS = int(os.environ.get("DEVICE_DEACTIVATE_AFTER_DAYS", "180"))
+DEVICE_DELETE_AFTER_INACTIVE_DAYS = int(os.environ.get("DEVICE_DELETE_AFTER_INACTIVE_DAYS", "90"))
+
 # Third-party API Configuration
 GOOGLE_PLACES_API_KEY = os.environ.get("GOOGLE_PLACES_API_KEY")
 CASHFREE_CLIENT_ID = os.environ.get("CASHFREE_CLIENT_ID")

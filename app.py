@@ -10,6 +10,7 @@ from middleware import RequestLoggingMiddleware
 from notifications.scheduler import start_notification_scheduler, stop_notification_scheduler
 from openapi_config import API_METADATA, OPENAPI_TAGS, get_servers
 from routers import api_router
+from services.device_cleanup import run_device_cleanup_loop
 from services.post_expiry import run_post_expiry_loop
 
 
@@ -18,22 +19,25 @@ async def lifespan(app: FastAPI):
     """Create PostGIS extension and tables on startup; close DB on shutdown."""
     logger.info("Starting Convoy API")
     expiry_task: asyncio.Task | None = None
+    device_cleanup_task: asyncio.Task | None = None
     try:
         await init_db()
         logger.info("Database initialized (PostGIS + tables)")
         expiry_task = asyncio.create_task(run_post_expiry_loop())
+        device_cleanup_task = asyncio.create_task(run_device_cleanup_loop())
         start_notification_scheduler()
     except Exception as e:
         logger.error("Error during startup: %s", e, exc_info=True)
         raise
     yield
     stop_notification_scheduler()
-    if expiry_task:
-        expiry_task.cancel()
-        try:
-            await expiry_task
-        except asyncio.CancelledError:
-            pass
+    for task in (expiry_task, device_cleanup_task):
+        if task:
+            task.cancel()
+            try:
+                await task
+            except asyncio.CancelledError:
+                pass
     logger.info("Shutting down Convoy API")
     await close_db()
 

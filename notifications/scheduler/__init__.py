@@ -1,14 +1,16 @@
-"""Decides *when* each campaign runs. Doesn't know what a campaign sends or
-to whom — that's campaigns/ and audiences/'s job."""
+"""Runs the campaign poll tick every minute — see
+services/campaigns/scheduler_tick.py for what "due" means and what running a
+campaign actually does. This file used to register three hardcoded
+morning/afternoon/night cron jobs directly; those campaigns are now regular,
+admin-editable Campaign rows (see scripts/seed_legacy_campaigns.py), so a
+single generic tick replaces all three (and everything created after them)."""
 from typing import Optional
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from apscheduler.triggers.cron import CronTrigger
+from apscheduler.triggers.interval import IntervalTrigger
 
 from config import logger
-from notifications.scheduler.afternoon import run_afternoon_campaign
-from notifications.scheduler.morning import run_morning_campaign
-from notifications.scheduler.night import run_night_campaign
+from services.campaigns.scheduler_tick import run_due_campaigns
 
 TIMEZONE = "Asia/Kolkata"
 
@@ -22,16 +24,13 @@ def start_notification_scheduler() -> AsyncIOScheduler:
 
     scheduler = AsyncIOScheduler(timezone=TIMEZONE)
     scheduler.add_job(
-        run_morning_campaign, CronTrigger(hour=7, minute=30, timezone=TIMEZONE), id="morning_campaign"
-    )
-    scheduler.add_job(
-        run_afternoon_campaign, CronTrigger(hour=13, minute=30, timezone=TIMEZONE), id="afternoon_campaign"
-    )
-    scheduler.add_job(
-        run_night_campaign, CronTrigger(hour=21, minute=0, timezone=TIMEZONE), id="night_campaign"
+        run_due_campaigns,
+        IntervalTrigger(minutes=1),
+        id="campaign_scheduler_tick",
+        max_instances=1,
     )
     scheduler.start()
-    logger.info("Notification campaign scheduler started (morning 07:30, afternoon 13:30, night 21:00 IST)")
+    logger.info("Campaign scheduler tick started (every minute)")
 
     _scheduler = scheduler
     return scheduler

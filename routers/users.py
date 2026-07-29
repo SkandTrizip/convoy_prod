@@ -8,7 +8,8 @@ from database import get_session
 from db.base import User
 from db.serializers import parse_uuid, user_to_dict
 from middleware.auth import get_current_user, require_path_user
-from models import PushTokenRequest, UserProfile
+from models import DeviceLogoutRequest, DeviceRegisterRequest, PushTokenRequest, UserProfile
+from notifications.repositories import device_repository
 from services.blob_storage import (
     ALLOWED_CONTENT_TYPES,
     delete_profile_photo,
@@ -185,13 +186,19 @@ async def update_push_token(
     session: AsyncSession = Depends(get_session),
     _: User = Depends(require_path_user),
 ):
-    """Update user's push notification token"""
+    """Legacy single-token registration, kept for un-upgraded app versions.
+    Routes into the same per-device table as /devices/register, under one
+    synthesized device slot per user — matches this endpoint's old
+    single-token-per-user behavior exactly, so an old app keeps working
+    unchanged. Superseded by /devices/register; remove once app adoption of
+    the new endpoint is confirmed."""
     try:
-        push_token = data.pushToken
-        await session.execute(
-            update(User)
-            .where(User.id == parse_uuid(user_id))
-            .values(push_token=push_token)
+        await device_repository.upsert_device(
+            session,
+            user_id=parse_uuid(user_id),
+            device_id=f"legacy-{user_id}",
+            platform="unknown",
+            fcm_token=data.pushToken,
         )
         await session.commit()
 
@@ -199,5 +206,62 @@ async def update_push_token(
     except HTTPException:
         raise
     except Exception as e:
+        await session.rollback()
         logger.error(f"Error updating push token: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/devices/register/{user_id}")
+async def register_device(
+    user_id: str,
+    data: DeviceRegisterRequest,
+    session: AsyncSession = Depends(get_session),
+    _: User = Depends(require_path_user),
+):
+    """Idempotent device sync — safe to call repeatedly (app launch with a
+    changed token, FCM's onTokenRefresh, etc). Upserts by device_id."""
+    try:
+        await device_repository.upsert_device(
+            session,
+            user_id=parse_uuid(user_id),
+            device_id=data.deviceId,
+            platform=data.platform,
+            fcm_token=data.fcmToken,
+            app_version=data.appVersion,
+            device_name=data.deviceName,
+        )
+        await session.commit()
+
+        return {"success": True, "message": "Device registered"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        await session.rollback()
+        logger.error(f"Error registering device: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/devices/logout/{user_id}")
+async def logout_device(
+    user_id: str,
+    data: DeviceLogoutRequest,
+    session: AsyncSession = Depends(get_session),
+    _: User = Depends(require_path_user),
+):
+    """Deregister push for exactly one of the user's devices — does not
+    touch the driver JWT (stateless, not revocable) or any other device."""
+    try:
+        deregistered = await device_repository.logout_device(
+            session, user_id=parse_uuid(user_id), device_id=data.deviceId
+        )
+        if not deregistered:
+            raise HTTPException(status_code=404, detail="Device not found for this user")
+        await session.commit()
+
+        return {"success": True, "message": "Device logged out"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        await session.rollback()
+        logger.error(f"Error logging out device: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))

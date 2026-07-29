@@ -49,11 +49,41 @@ class MutualContactsRequest(BaseModel):
 
 
 class PushTokenRequest(BaseModel):
+    """Legacy single-token registration — kept for un-upgraded app versions.
+    Internally routed into the same per-device table as DeviceRegisterRequest,
+    under a synthesized device id. See routers/users.py's /push-token endpoint."""
+
     model_config = ConfigDict(
         json_schema_extra={"example": {"pushToken": "f3Qz...:APA91bH...(FCM registration token)"}}
     )
 
     pushToken: str = Field(..., description="FCM registration token")
+
+
+class DeviceRegisterRequest(BaseModel):
+    """Idempotent device sync — safe to call on every token refresh/app
+    launch-if-changed. Same (device_id, platform, fcmToken) upserts in place."""
+
+    model_config = ConfigDict(
+        json_schema_extra={
+            "example": {
+                "deviceId": "b6e2f1a0-...-stable-client-generated-uuid",
+                "platform": "android",
+                "fcmToken": "f3Qz...:APA91bH...(FCM registration token)",
+                "appVersion": "1.3.1",
+            }
+        }
+    )
+
+    deviceId: str = Field(..., description="Stable client-generated device identifier, persisted across app launches")
+    platform: Literal["ios", "android", "web"] = Field(..., description="Device platform")
+    fcmToken: str = Field(..., description="Current FCM registration token")
+    appVersion: Optional[str] = Field(None, description="App version string, e.g. '1.3.1'")
+    deviceName: Optional[str] = Field(None, description="Optional human-readable device name")
+
+
+class DeviceLogoutRequest(BaseModel):
+    deviceId: str = Field(..., description="Device to deregister for push on this logout")
 
 
 class SendNotificationBatchRequest(BaseModel):
@@ -270,3 +300,66 @@ class InitiateRedeemRequest(BaseModel):
 
 class AdminRedeemAction(BaseModel):
     reason: Optional[str] = Field(None, description="Required when rejecting")
+
+
+class CampaignContentInput(BaseModel):
+    title: str = Field(..., description="Push notification title")
+    body: str = Field(..., description="Push notification body")
+    dataPayload: Dict[str, Any] = Field(default_factory=dict, description="Optional extra FCM data payload")
+
+
+class CampaignScheduleInput(BaseModel):
+    model_config = ConfigDict(
+        json_schema_extra={
+            "example": {
+                "scheduleType": "daily",
+                "timezone": "Asia/Kolkata",
+                "startDate": "2026-08-01T09:00:00",
+                "endDate": None,
+                "timeOfDay": "09:00",
+                "enabled": True,
+            }
+        }
+    )
+
+    scheduleType: str = Field(..., description="immediate | one_time | daily | weekly | monthly")
+    timezone: str = Field("Asia/Kolkata", description="IANA timezone name")
+    startDate: str = Field(..., description="Wall-clock date/time in `timezone`, ISO 8601, no offset needed")
+    endDate: Optional[str] = Field(None, description="Optional wall-clock end bound, same format as startDate")
+    timeOfDay: Optional[str] = Field(None, description="'HH:MM', required for daily/weekly/monthly")
+    dayOfWeek: Optional[int] = Field(None, ge=0, le=6, description="0=Monday..6=Sunday, weekly only")
+    dayOfMonth: Optional[int] = Field(None, ge=1, le=28, description="1-28, monthly only")
+    enabled: bool = True
+
+
+class CampaignDeliveryRulesInput(BaseModel):
+    maxPerUserPerDay: int = Field(1, ge=1, le=50)
+    minIntervalMinutes: int = Field(0, ge=0)
+    quietHoursStart: Optional[str] = Field(None, description="'HH:MM'")
+    quietHoursEnd: Optional[str] = Field(None, description="'HH:MM'")
+    respectPreferences: bool = Field(
+        True, description="Accepted but not enforced — no per-user preference model exists yet"
+    )
+
+
+class CampaignRequest(BaseModel):
+    """Shared shape for create and full-replace update."""
+
+    name: str = Field(..., min_length=1, max_length=255)
+    description: Optional[str] = None
+    campaignType: str = Field("manual", description="manual | scheduled | triggered")
+    audienceFilter: Dict[str, Any] = Field(
+        default_factory=dict, description="AND/OR condition tree — see GET .../filter-fields"
+    )
+    contents: list[CampaignContentInput] = Field(default_factory=list, min_length=0)
+    schedule: Optional[CampaignScheduleInput] = None
+    deliveryRules: Optional[CampaignDeliveryRulesInput] = None
+
+
+class CampaignTestSendRequest(BaseModel):
+    userIds: list[str] = Field(..., min_length=1, description="Send this campaign's next content to these users right now")
+
+
+class AudiencePreviewRequest(BaseModel):
+    audienceFilter: Dict[str, Any] = Field(default_factory=dict)
+    sampleSize: int = Field(10, ge=1, le=50)

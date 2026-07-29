@@ -425,23 +425,30 @@ async def admin_send_notification_batch(
     registered NotificationJob (e.g. a marketing blast to a specific list)."""
     try:
         user_uuids = [parse_uuid(uid) for uid in request.userIds]
-        tokens = await device_repository.get_tokens_for_user_ids(session, user_uuids)
+        devices_by_user = await device_repository.get_active_devices_for_user_ids(session, user_uuids)
 
         messages = [
             PreparedMessage(
                 user_id=str(uid),
-                token=tokens[str(uid)],
+                device_id=device.device_id,
+                token=device.fcm_token,
                 title=request.title,
                 body=request.body,
                 data=request.data,
             )
             for uid in user_uuids
-            if str(uid) in tokens
+            for device in devices_by_user.get(str(uid), [])
         ]
-        no_token_count = len(user_uuids) - len(messages)
+        no_token_count = len(user_uuids) - len(devices_by_user)
 
-        sent_user_ids = send_batch(messages)
-        for uid in sent_user_ids:
+        results = send_batch(messages)
+
+        invalid_device_ids = [r.device_id for r in results if r.should_deactivate]
+        if invalid_device_ids:
+            await device_repository.deactivate_devices(session, invalid_device_ids)
+
+        reached_user_ids = {r.user_id for r in results if r.success}
+        for uid in reached_user_ids:
             notification_repository.record_sent(
                 session, parse_uuid(uid), "manual", request.title, request.body
             )
@@ -450,9 +457,11 @@ async def admin_send_notification_batch(
         return {
             "success": True,
             "requested": len(user_uuids),
-            "sent": len(sent_user_ids),
+            "sent": len(reached_user_ids),
             "noPushToken": no_token_count,
-            "failed": len(messages) - len(sent_user_ids),
+            "failed": len(user_uuids) - len(reached_user_ids) - no_token_count,
+            "devicesTargeted": len(messages),
+            "devicesDelivered": sum(1 for r in results if r.success),
         }
     except HTTPException:
         raise

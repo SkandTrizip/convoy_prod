@@ -7,6 +7,7 @@ from routers import (
     admin_auth,
     auth,
     bookings,
+    campaigns,
     contacts,
     kyc,
     locations,
@@ -28,9 +29,10 @@ api_router.include_router(misc.router)
 
 # Admin routes — own JWT namespace (see middleware/admin_auth.py), independent
 # of the driver JWT below. admin_auth.router's /login is public; everything
-# else under it and all of admin.router requires an admin token.
+# else under it and all of admin.router/campaigns.router requires an admin token.
 api_router.include_router(admin_auth.router)
 api_router.include_router(admin.router)
+api_router.include_router(campaigns.router)
 
 # Protected routes (driver Bearer JWT required)
 protected_router = APIRouter(dependencies=[Depends(get_current_user)])
