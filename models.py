@@ -49,11 +49,84 @@ class MutualContactsRequest(BaseModel):
 
 
 class PushTokenRequest(BaseModel):
+    """Legacy single-token registration — kept for un-upgraded app versions.
+    Internally routed into the same per-device table as DeviceRegisterRequest,
+    under a synthesized device id. See routers/users.py's /push-token endpoint."""
+
     model_config = ConfigDict(
-        json_schema_extra={"example": {"pushToken": "ExponentPushToken[xxxxxxxxxxxxxx]"}}
+        json_schema_extra={"example": {"pushToken": "f3Qz...:APA91bH...(FCM registration token)"}}
     )
 
-    pushToken: str = Field(..., description="Expo push notification token")
+    pushToken: str = Field(..., description="FCM registration token")
+
+
+class DeviceRegisterRequest(BaseModel):
+    """Idempotent device sync — safe to call on every token refresh/app
+    launch-if-changed. Same (device_id, platform, fcmToken) upserts in place."""
+
+    model_config = ConfigDict(
+        json_schema_extra={
+            "example": {
+                "deviceId": "b6e2f1a0-...-stable-client-generated-uuid",
+                "platform": "android",
+                "fcmToken": "f3Qz...:APA91bH...(FCM registration token)",
+                "appVersion": "1.3.1",
+            }
+        }
+    )
+
+    deviceId: str = Field(..., description="Stable client-generated device identifier, persisted across app launches")
+    platform: Literal["ios", "android", "web"] = Field(..., description="Device platform")
+    fcmToken: str = Field(..., description="Current FCM registration token")
+    appVersion: Optional[str] = Field(None, description="App version string, e.g. '1.3.1'")
+    deviceName: Optional[str] = Field(None, description="Optional human-readable device name")
+
+
+class DeviceLogoutRequest(BaseModel):
+    deviceId: str = Field(..., description="Device to deregister for push on this logout")
+
+
+class SendNotificationBatchRequest(BaseModel):
+    model_config = ConfigDict(
+        json_schema_extra={
+            "example": {
+                "userIds": ["3fa85f64-5717-4562-b3fc-2c963f66afa6"],
+                "title": "New Feature",
+                "body": "Check out what's new in Convoy.",
+                "data": {"type": "manual"},
+            }
+        }
+    )
+
+    userIds: list[str] = Field(..., min_length=1, description="Target user IDs")
+    title: str = Field(..., description="Push notification title")
+    body: str = Field(..., description="Push notification body")
+    data: Dict[str, Any] = Field(default_factory=dict, description="Extra payload for the app")
+
+
+class AdminLoginRequest(BaseModel):
+    model_config = ConfigDict(
+        json_schema_extra={"example": {"email": "admin@convoy.app", "password": "••••••••"}}
+    )
+
+    email: str = Field(..., description="Admin email")
+    password: str = Field(..., description="Admin password")
+
+
+class CreateAdminUserRequest(BaseModel):
+    model_config = ConfigDict(
+        json_schema_extra={
+            "example": {
+                "email": "new-admin@convoy.app",
+                "password": "••••••••",
+                "name": "New Admin",
+            }
+        }
+    )
+
+    email: str = Field(..., description="Email for the new admin account")
+    password: str = Field(..., min_length=8, description="Password (min 8 characters)")
+    name: Optional[str] = Field(None, description="Display name")
 
 
 class Location(BaseModel):
@@ -203,17 +276,90 @@ class EditTruckPostRequest(BaseModel):
     contactNumber: Optional[str] = Field(None, description="Override this post's contact number")
 
 
-class AdminKYCAction(BaseModel):
+class AdminUpdateUserRequest(BaseModel):
+    model_config = ConfigDict(json_schema_extra={"example": {"name": "Raj Kumar"}})
+
+    name: str = Field(..., description="Updated display name")
+
+
+class InitiateRedeemRequest(BaseModel):
+    model_config = ConfigDict(
+        json_schema_extra={
+            "example": {"upiId": "9876543210@ybl", "idempotencyKey": "a1b2c3d4-..."}
+        }
+    )
+
+    upiId: str = Field(..., description="UPI VPA to pay out to, e.g. 9876543210@ybl")
+    idempotencyKey: str = Field(
+        ...,
+        description="Client-generated key, unique per redeem attempt. Retrying the "
+        "same request with the same key returns the original result instead of "
+        "reserving the balance twice.",
+    )
+
+
+class AdminRedeemAction(BaseModel):
+    reason: Optional[str] = Field(None, description="Required when rejecting")
+
+
+class CampaignContentInput(BaseModel):
+    title: str = Field(..., description="Push notification title")
+    body: str = Field(..., description="Push notification body")
+    dataPayload: Dict[str, Any] = Field(default_factory=dict, description="Optional extra FCM data payload")
+
+
+class CampaignScheduleInput(BaseModel):
     model_config = ConfigDict(
         json_schema_extra={
             "example": {
-                "userId": "550e8400-e29b-41d4-a716-446655440000",
-                "action": "approve",
-                "reason": None,
+                "scheduleType": "daily",
+                "timezone": "Asia/Kolkata",
+                "startDate": "2026-08-01T09:00:00",
+                "endDate": None,
+                "timeOfDay": "09:00",
+                "enabled": True,
             }
         }
     )
 
-    userId: str = Field(..., description="User UUID")
-    action: str = Field(..., description="`approve` or `reject`", examples=["approve"])
-    reason: Optional[str] = Field(None, description="Required when action is reject")
+    scheduleType: str = Field(..., description="immediate | one_time | daily | weekly | monthly")
+    timezone: str = Field("Asia/Kolkata", description="IANA timezone name")
+    startDate: str = Field(..., description="Wall-clock date/time in `timezone`, ISO 8601, no offset needed")
+    endDate: Optional[str] = Field(None, description="Optional wall-clock end bound, same format as startDate")
+    timeOfDay: Optional[str] = Field(None, description="'HH:MM', required for daily/weekly/monthly")
+    dayOfWeek: Optional[int] = Field(None, ge=0, le=6, description="0=Monday..6=Sunday, weekly only")
+    dayOfMonth: Optional[int] = Field(None, ge=1, le=28, description="1-28, monthly only")
+    enabled: bool = True
+
+
+class CampaignDeliveryRulesInput(BaseModel):
+    maxPerUserPerDay: int = Field(1, ge=1, le=50)
+    minIntervalMinutes: int = Field(0, ge=0)
+    quietHoursStart: Optional[str] = Field(None, description="'HH:MM'")
+    quietHoursEnd: Optional[str] = Field(None, description="'HH:MM'")
+    respectPreferences: bool = Field(
+        True, description="Accepted but not enforced — no per-user preference model exists yet"
+    )
+
+
+class CampaignRequest(BaseModel):
+    """Shared shape for create and full-replace update."""
+
+    name: str = Field(..., min_length=1, max_length=255)
+    description: Optional[str] = None
+    campaignType: str = Field("manual", description="manual | scheduled | triggered")
+    audienceFilter: Dict[str, Any] = Field(
+        default_factory=dict, description="AND/OR condition tree — see GET .../filter-fields"
+    )
+    contents: list[CampaignContentInput] = Field(default_factory=list, min_length=0)
+    schedule: Optional[CampaignScheduleInput] = None
+    deliveryRules: Optional[CampaignDeliveryRulesInput] = None
+
+
+class CampaignTestSendRequest(BaseModel):
+    userIds: list[str] = Field(..., min_length=1, description="Send this campaign's next content to these users right now")
+
+
+class AudiencePreviewRequest(BaseModel):
+    audienceFilter: Dict[str, Any] = Field(default_factory=dict)
+    sampleSize: int = Field(10, ge=1, le=50)

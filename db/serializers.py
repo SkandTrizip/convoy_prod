@@ -2,6 +2,7 @@ import uuid
 from datetime import date
 
 from db.base import (
+    AdminUser,
     Booking,
     CallLog,
     KYCRecord,
@@ -36,10 +37,20 @@ def user_to_dict(user: User) -> dict:
         "name": user.name,
         "profilePhoto": profile_photo_url(user),
         "kycStatus": user.kyc_status,
+        "kycStep": user.kyc_step,
         "accountStatus": user.account_status,
         "createdDate": user.created_date,
-        "pushToken": user.push_token,
         "verificationStatus": user.verification_status or {},
+    }
+
+
+def admin_to_dict(admin: AdminUser) -> dict:
+    return {
+        "id": str(admin.id),
+        "email": admin.email,
+        "name": admin.name,
+        "isActive": admin.is_active,
+        "createdAt": admin.created_at,
     }
 
 

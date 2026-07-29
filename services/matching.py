@@ -1,70 +1,104 @@
 from datetime import datetime
-from typing import Dict
+from typing import Iterable
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from config import logger
-from db.base import Notification, SearchDemand
+from db.base import Notification, SearchDemand, TruckRoute, TruckRouteDestination
 from services.geo import calculate_distance
-from services.notifications import send_expo_push_notification
+from services.notifications import send_push_notification
 
 
 async def process_smart_match_notifications(
-    post_id: str, truck_post: Dict, session: AsyncSession
-):
-    """Process and send smart match notifications for a new truck post"""
+    session: AsyncSession,
+    route: TruckRoute,
+    destinations: Iterable[TruckRouteDestination],
+) -> None:
+    """Notify users whose saved search (SearchDemand) this new/reactivated/edited
+    post now matches. Best-effort — never raises, so a failure here can't block
+    post creation/reactivation/edit."""
     try:
-        current_time = datetime.utcnow()
-
+        now = datetime.utcnow()
         result = await session.execute(
             select(SearchDemand).where(
-                SearchDemand.truck_type == truck_post["truckType"],
-                SearchDemand.expiry_timestamp > current_time,
+                SearchDemand.expiry_timestamp > now,
                 SearchDemand.notification_status != "sent",
             )
         )
-        search_demands = result.scalars().all()
+        demands = result.scalars().all()
+        if not demands:
+            return
 
-        for demand in search_demands:
+        origin_lat, origin_lng = route.origin["lat"], route.origin["lng"]
+        dest_points = [
+            (d.destination["lat"], d.destination["lng"], d.destination.get("name"))
+            for d in destinations
+        ]
+
+        for demand in demands:
+            if demand.truck_type and demand.truck_type != route.truck_type:
+                continue
+            if demand.capacity is not None and (
+                route.capacity is None or route.capacity < demand.capacity
+            ):
+                continue
+
             origin_distance = calculate_distance(
-                demand.origin["lat"],
-                demand.origin["lng"],
-                truck_post["origin"]["lat"],
-                truck_post["origin"]["lng"],
+                demand.origin["lat"], demand.origin["lng"], origin_lat, origin_lng
             )
+            if origin_distance > demand.radius_km:
+                continue
 
-            destination_distance = calculate_distance(
-                demand.destination["lat"],
-                demand.destination["lng"],
-                truck_post["destination"]["lat"],
-                truck_post["destination"]["lng"],
-            )
-
-            if origin_distance <= 100 and destination_distance <= 250:
-                await send_expo_push_notification(
-                    str(demand.user_id),
-                    "Matching Truck Available",
-                    f"A matching truck has been posted for your searched route from {truck_post['origin']['name']} to {truck_post['destination']['name']}",
-                    {"postId": post_id, "type": "smart_match"},
-                    session=session,
-                )
-
-                session.add(
-                    Notification(
-                        user_id=demand.user_id,
-                        type="smart_match",
-                        title="Matching Truck Available",
-                        description="A matching truck has been posted for your searched route",
-                        related_post_id=post_id,
-                        created_at=datetime.utcnow(),
-                        read_status=False,
+            matched_destination_name = next(
+                (
+                    name
+                    for (lat, lng, name) in dest_points
+                    if calculate_distance(
+                        demand.destination["lat"], demand.destination["lng"], lat, lng
                     )
-                )
+                    <= demand.radius_km
+                ),
+                None,
+            )
+            if matched_destination_name is None:
+                continue
 
-                demand.notification_status = "sent"
+            already_notified = await session.execute(
+                select(Notification).where(
+                    Notification.user_id == demand.user_id,
+                    Notification.type == "smart_match",
+                    Notification.related_post_id == str(route.id),
+                )
+            )
+            if already_notified.scalar_one_or_none():
+                continue
+
+            message = (
+                f"A matching truck has been posted for your searched route "
+                f"from {route.origin_name} to {matched_destination_name}"
+            )
+            await send_push_notification(
+                str(demand.user_id),
+                "Matching Truck Available",
+                message,
+                {"postId": str(route.id), "type": "smart_match"},
+                session=session,
+            )
+            session.add(
+                Notification(
+                    user_id=demand.user_id,
+                    type="smart_match",
+                    title="Matching Truck Available",
+                    description=message,
+                    related_post_id=str(route.id),
+                    created_at=now,
+                    read_status=False,
+                )
+            )
+            demand.notification_status = "sent"
 
         await session.commit()
-        logger.info(f"Processed smart match notifications for post {post_id}")
+        logger.info(f"Processed smart match notifications for post {route.id}")
     except Exception as e:
         logger.error(f"Error in process_smart_match_notifications: {str(e)}")

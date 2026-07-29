@@ -22,12 +22,12 @@ from services.kyc import (
     verify_aadhaar_with_smart_ocr,
     verify_kyc_with_cashfree,
 )
-from services.notifications import send_expo_push_notification
+from services.notifications import send_push_notification
 
 router = APIRouter(prefix="/kyc", tags=["kyc"])
 
 
-async def _save_approved_kyc(
+async def _save_verified_aadhaar_step(
     session: AsyncSession,
     user: User,
     kyc_record: KYCRecord | None,
@@ -38,6 +38,9 @@ async def _save_approved_kyc(
     front_image: str | None = None,
     back_image: str | None = None,
 ) -> KYCRecord:
+    """Record a successful Aadhaar verification. This is step 1 of 2 — the
+    user still has to upload their KYC photo before kyc_status becomes
+    'approved' (see POST /user/profile-photo/{user_id})."""
     now = datetime.utcnow()
     record_data = {**(extra_data or {}), "verified": verified_data}
 
@@ -72,7 +75,8 @@ async def _save_approved_kyc(
 
     await session.execute(
         update(User).where(User.id == user.id).values(
-            kyc_status="approved",
+            kyc_status="in_progress",
+            kyc_step="photo",
             name=user.name,
         )
     )
@@ -138,7 +142,9 @@ async def send_kyc_aadhaar_otp(
             )
 
         await session.execute(
-            update(User).where(User.id == user_uuid).values(kyc_status="pending")
+            update(User)
+            .where(User.id == user_uuid)
+            .values(kyc_status="pending", kyc_step="aadhaar")
         )
         await session.commit()
 
@@ -224,27 +230,30 @@ async def verify_kyc_aadhaar_otp(
 
         await session.execute(
             update(User).where(User.id == user_uuid).values(
-                kyc_status="approved",
+                kyc_status="in_progress",
+                kyc_step="photo",
                 name=user.name,
             )
         )
         await session.commit()
 
-        await send_expo_push_notification(
+        await send_push_notification(
             user_id,
-            "KYC Approved",
-            "Your Aadhaar has been verified. You can now add vehicles.",
+            "Aadhaar Verified",
+            "Your Aadhaar has been verified. Upload your photo to complete KYC.",
             session=session,
         )
 
         return {
             "success": True,
-            "status": "approved",
+            "status": "in_progress",
+            "kycStep": "photo",
             "verifiedName": verified_name,
             "kyc": kyc_to_dict(kyc_record),
             "user": {
                 "_id": str(user.id),
-                "kycStatus": "approved",
+                "kycStatus": "in_progress",
+                "kycStep": "photo",
                 "name": user.name,
             },
         }
@@ -294,7 +303,7 @@ async def verify_kyc_aadhaar_ocr(
         )
         existing_kyc = kyc_result.scalar_one_or_none()
         verified = ocr_result["verified_data"]
-        kyc_record = await _save_approved_kyc(
+        kyc_record = await _save_verified_aadhaar_step(
             session,
             user,
             existing_kyc,
@@ -305,21 +314,23 @@ async def verify_kyc_aadhaar_ocr(
             back_image=request.aadhaarBackImage,
         )
 
-        await send_expo_push_notification(
+        await send_push_notification(
             user_id,
-            "KYC Approved",
-            "Your Aadhaar has been verified. You can now add vehicles.",
+            "Aadhaar Verified",
+            "Your Aadhaar has been verified. Upload your photo to complete KYC.",
             session=session,
         )
 
         return {
             "success": True,
-            "status": "approved",
+            "status": "in_progress",
+            "kycStep": "photo",
             "verifiedName": verified.get("name"),
             "kyc": kyc_to_dict(kyc_record),
             "user": {
                 "_id": str(user.id),
-                "kycStatus": "approved",
+                "kycStatus": "in_progress",
+                "kycStep": "photo",
                 "name": user.name,
             },
         }
@@ -367,7 +378,7 @@ async def submit_kyc(
         status = verification.get("status", "under_review")
 
         if status == "approved" and verification.get("verified_data"):
-            kyc_record = await _save_approved_kyc(
+            kyc_record = await _save_verified_aadhaar_step(
                 session,
                 user,
                 existing_kyc,
@@ -380,15 +391,16 @@ async def submit_kyc(
                 front_image=submission.aadhaarFrontImage,
                 back_image=submission.aadhaarBackImage,
             )
-            await send_expo_push_notification(
+            await send_push_notification(
                 user_id,
-                "KYC Approved",
-                "Your Aadhaar has been verified. You can now add vehicles.",
+                "Aadhaar Verified",
+                "Your Aadhaar has been verified. Upload your photo to complete KYC.",
                 session=session,
             )
             return {
                 "success": True,
-                "status": "approved",
+                "status": "in_progress",
+                "kycStep": "photo",
                 "verifiedName": verification["verified_data"].get("name"),
                 "kyc": kyc_to_dict(kyc_record),
             }
@@ -443,15 +455,31 @@ async def get_kyc_status(
 ):
     """Get KYC status for user"""
     try:
+        user_uuid = parse_uuid(user_id)
+        user_result = await session.execute(select(User).where(User.id == user_uuid))
+        user = user_result.scalar_one_or_none()
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+
         result = await session.execute(
-            select(KYCRecord).where(KYCRecord.user_id == parse_uuid(user_id))
+            select(KYCRecord).where(KYCRecord.user_id == user_uuid)
         )
         kyc_record = result.scalar_one_or_none()
 
         if not kyc_record:
-            return {"success": True, "status": "pending", "data": None}
+            return {
+                "success": True,
+                "status": user.kyc_status,
+                "kycStep": user.kyc_step,
+                "data": None,
+            }
 
-        return {"success": True, "kyc": kyc_to_dict(kyc_record)}
+        return {
+            "success": True,
+            "status": user.kyc_status,
+            "kycStep": user.kyc_step,
+            "kyc": kyc_to_dict(kyc_record),
+        }
     except Exception as e:
         logger.error("Error in get_kyc_status: %s", e, exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
