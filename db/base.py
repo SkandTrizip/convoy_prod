@@ -4,6 +4,7 @@ from decimal import Decimal
 
 from geoalchemy2 import Geography
 from sqlalchemy import (
+    BigInteger,
     Boolean,
     CheckConstraint,
     DateTime,
@@ -310,6 +311,67 @@ class RedeemRequest(Base):
     processed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=False), nullable=True)
     processed_by: Mapped[str | None] = mapped_column(String(255), nullable=True)
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+
+class UserRewardStats(Base):
+    """Reward-domain satellite table — deliberately not columns on `users`,
+    same rationale as Wallet: keeps write-hot reward counters off the identity
+    table and out of its lock path."""
+
+    __tablename__ = "user_reward_stats"
+    __table_args__ = (
+        CheckConstraint("total_scratches >= 0", name="ck_reward_stats_scratches_nonneg"),
+        CheckConstraint("total_reward_received_paise >= 0", name="ck_reward_stats_reward_nonneg"),
+    )
+
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), primary_key=True
+    )
+    total_scratches: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    total_reward_received_paise: Mapped[int] = mapped_column(BigInteger, default=0, nullable=False)
+    first_scratch_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=False), nullable=True)
+    updated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=False), nullable=True)
+
+
+class ScratchCard(Base):
+    """Earned on a qualifying truck post (see services.scratch_service), one
+    per user per UTC calendar day. Reward is computed at reveal time, never at
+    creation time — see services.reward_engine."""
+
+    __tablename__ = "scratch_cards"
+    __table_args__ = (
+        Index("idx_scratch_cards_user_earned", "user_id", "earned_at"),
+        Index("idx_scratch_cards_status_expiry", "status", "expires_at"),
+        CheckConstraint(
+            "status IN ('unscratched', 'scratched', 'expired')", name="ck_scratch_cards_status"
+        ),
+    )
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=new_uuid)
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+    )
+    # Loose reference to the truck_routes row that earned this card — same
+    # pattern as Notification.related_post_id / CallLog.truck_post_id, so
+    # deleting the post later doesn't retroactively touch the card or its
+    # already-computed reward.
+    post_id: Mapped[str] = mapped_column(String(36), unique=True, nullable=False)
+    status: Mapped[str] = mapped_column(String(16), default="unscratched", nullable=False)
+    reward_amount_paise: Mapped[int | None] = mapped_column(BigInteger, nullable=True)
+    earned_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.utcnow)
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), nullable=False)
+    scratched_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=False), nullable=True)
+
+
+class PlatformStats(Base):
+    """Singleton row (id always 1) — platform-wide reward totals, used for the
+    outlier-correction average. Locked with FOR UPDATE on every reveal."""
+
+    __tablename__ = "platform_stats"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, default=1)
+    total_scratch_count: Mapped[int] = mapped_column(BigInteger, default=0, nullable=False)
+    total_reward_sum_paise: Mapped[int] = mapped_column(BigInteger, default=0, nullable=False)
 
 
 class Notification(Base):

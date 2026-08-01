@@ -1,6 +1,8 @@
 import uuid
 from datetime import date
 
+from decimal import Decimal
+
 from db.base import (
     AdminUser,
     Booking,
@@ -8,6 +10,7 @@ from db.base import (
     KYCRecord,
     Location,
     Notification,
+    ScratchCard,
     SearchDemand,
     Truck,
     TruckRoute,
@@ -167,6 +170,21 @@ def notification_to_dict(notification: Notification) -> dict:
         "relatedPostId": notification.related_post_id,
         "createdAt": notification.created_at,
         "readStatus": notification.read_status,
+    }
+
+
+def scratch_card_to_dict(card: ScratchCard) -> dict:
+    return {
+        "id": str(card.id),
+        "status": card.status,
+        "earnedAt": card.earned_at.isoformat(),
+        "expiresAt": card.expires_at.isoformat(),
+        "scratchedAt": card.scratched_at.isoformat() if card.scratched_at else None,
+        "rewardRupees": (
+            str((Decimal(card.reward_amount_paise) / 100).quantize(Decimal("0.01")))
+            if card.reward_amount_paise is not None
+            else None
+        ),
     }
 
 

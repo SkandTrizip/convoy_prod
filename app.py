@@ -12,6 +12,7 @@ from openapi_config import API_METADATA, OPENAPI_TAGS, get_servers
 from routers import api_router
 from services.device_cleanup import run_device_cleanup_loop
 from services.post_expiry import run_post_expiry_loop
+from services.scratch_service import run_scratch_card_expiry_loop
 
 
 @asynccontextmanager
@@ -20,18 +21,20 @@ async def lifespan(app: FastAPI):
     logger.info("Starting Convoy API")
     expiry_task: asyncio.Task | None = None
     device_cleanup_task: asyncio.Task | None = None
+    scratch_card_expiry_task: asyncio.Task | None = None
     try:
         await init_db()
         logger.info("Database initialized (PostGIS + tables)")
         expiry_task = asyncio.create_task(run_post_expiry_loop())
         device_cleanup_task = asyncio.create_task(run_device_cleanup_loop())
+        scratch_card_expiry_task = asyncio.create_task(run_scratch_card_expiry_loop())
         start_notification_scheduler()
     except Exception as e:
         logger.error("Error during startup: %s", e, exc_info=True)
         raise
     yield
     stop_notification_scheduler()
-    for task in (expiry_task, device_cleanup_task):
+    for task in (expiry_task, device_cleanup_task, scratch_card_expiry_task):
         if task:
             task.cancel()
             try:

@@ -298,6 +298,15 @@ class InitiateRedeemRequest(BaseModel):
     )
 
 
+class ScratchCardRevealRequest(BaseModel):
+    idempotencyKey: str = Field(
+        ...,
+        description="Client-generated key, unique per scratch attempt. Retrying the "
+        "same request with the same key returns the original result instead of "
+        "crediting the wallet twice.",
+    )
+
+
 class AdminRedeemAction(BaseModel):
     reason: Optional[str] = Field(None, description="Required when rejecting")
 

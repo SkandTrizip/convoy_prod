@@ -14,6 +14,7 @@ from routers import (
     misc,
     notifications,
     posts,
+    scratch_cards,
     search,
     users,
     vehicles,
@@ -47,5 +48,6 @@ protected_router.include_router(search.router)
 protected_router.include_router(bookings.router)
 protected_router.include_router(notifications.router)
 protected_router.include_router(wallet.router)
+protected_router.include_router(scratch_cards.router)
 protected_router.include_router(activity.router)
 api_router.include_router(protected_router)

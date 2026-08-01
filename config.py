@@ -67,6 +67,11 @@ PROFILE_PHOTO_MAX_SIZE_MB = int(os.environ.get("PROFILE_PHOTO_MAX_SIZE_MB", "5")
 # Wallet (reward/scratch-card payouts)
 MIN_REDEEM_AMOUNT_INR = Decimal(os.environ.get("MIN_REDEEM_AMOUNT_INR", "500"))
 
+# Scratch-card expiry sweep (unrevealed cards past expires_at -> "expired")
+SCRATCH_CARD_EXPIRY_CHECK_INTERVAL_SECONDS = int(
+    os.environ.get("SCRATCH_CARD_EXPIRY_CHECK_INTERVAL_SECONDS", str(60 * 60))
+)
+
 # Firebase Cloud Messaging (push notifications) — service account JSON path
 FIREBASE_CREDENTIALS_PATH = os.environ.get(
     "FIREBASE_CREDENTIALS_PATH", str(ROOT_DIR / "credentials" / "firebase-admin.json")

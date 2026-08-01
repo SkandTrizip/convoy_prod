@@ -8,11 +8,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from config import POST_EXPIRE_HOURS, logger
 from database import get_session
 from db.base import Truck, TruckRoute, User, new_uuid
-from db.serializers import parse_uuid, truck_route_to_dict
+from db.serializers import parse_uuid, scratch_card_to_dict, truck_route_to_dict
 from middleware.auth import authorize_user_id, get_current_user, require_path_user
 from models import CreateTruckPostRequest, EditTruckPostRequest
 from services.activity import record_post_activity
 from services.matching import process_smart_match_notifications
+from services.scratch_service import maybe_create_scratch_card
 from services.destinations import (
     create_destinations,
     get_destinations_for_route,
@@ -90,8 +91,14 @@ async def create_truck_post(
 
         post_dict = truck_route_to_dict(route, destinations)
         await process_smart_match_notifications(session, route, destinations)
+        scratch_card = await maybe_create_scratch_card(session, user, route)
 
-        return {"success": True, "post": post_dict}
+        return {
+            "success": True,
+            "post": post_dict,
+            "scratchCardEarned": scratch_card is not None,
+            "scratchCard": scratch_card_to_dict(scratch_card) if scratch_card else None,
+        }
     except HTTPException:
         raise
     except Exception as e:
