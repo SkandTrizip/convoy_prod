@@ -173,6 +173,10 @@ class Truck(Base):
     truck_number: Mapped[str] = mapped_column(String(32), nullable=False, index=True)
     truck_type: Mapped[str] = mapped_column(String(64), nullable=False)
     capacity: Mapped[float | None] = mapped_column(Float, nullable=True)
+    # Not every truck type specifies these — e.g. a tanker may only ever set
+    # capacity, never length/height. All three are independently nullable.
+    length_ft: Mapped[float | None] = mapped_column(Float, nullable=True)
+    height_ft: Mapped[float | None] = mapped_column(Float, nullable=True)
     verification_status: Mapped[str] = mapped_column(String(32), default="pending", nullable=False)
     vahan_data: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
     added_date: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.utcnow)
@@ -190,6 +194,11 @@ class TruckRoute(Base):
     truck_number: Mapped[str] = mapped_column(String(32), nullable=False)
     truck_type: Mapped[str] = mapped_column(String(64), nullable=False)
     capacity: Mapped[float | None] = mapped_column(Float, nullable=True)
+    # Copied from the vehicle at post-create/edit time, display-only in search
+    # results — not used as a search filter and deliberately not read by
+    # services/matching.py (smart-match stays capacity-only).
+    length_ft: Mapped[float | None] = mapped_column(Float, nullable=True)
+    height_ft: Mapped[float | None] = mapped_column(Float, nullable=True)
     contact_name: Mapped[str | None] = mapped_column(String(255), nullable=True)
     contact_number: Mapped[str | None] = mapped_column(String(20), nullable=True)
     origin_name: Mapped[str] = mapped_column(String(255), nullable=False)

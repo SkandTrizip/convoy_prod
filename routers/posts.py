@@ -70,6 +70,8 @@ async def create_truck_post(
             truck_number=truck.truck_number,
             truck_type=truck.truck_type,
             capacity=truck.capacity,
+            length_ft=truck.length_ft,
+            height_ft=truck.height_ft,
             contact_name=post_data.contactName or user.name,
             contact_number=post_data.contactNumber or user.mobile,
             origin_name=post_data.origin.name,
@@ -271,6 +273,8 @@ async def edit_post(
             post.truck_number = truck.truck_number
             post.truck_type = truck.truck_type
             post.capacity = truck.capacity
+            post.length_ft = truck.length_ft
+            post.height_ft = truck.height_ft
             
         # If editing destinations (full replace)
         if edit_data.destinations:

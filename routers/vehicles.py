@@ -68,6 +68,8 @@ async def add_vehicle(
             truck_number=vehicle_data.vehicleNumber.upper(),
             truck_type=vehicle_data.truckType,
             capacity=vehicle_data.capacity,
+            length_ft=vehicle_data.length,
+            height_ft=vehicle_data.height,
             verification_status=verification_status,
             vahan_data=vahan_data,
             added_date=datetime.utcnow(),

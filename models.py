@@ -249,6 +249,8 @@ class AddVehicleRequest(BaseModel):
     vehicleNumber: str = Field(..., examples=["MH12AB1234"])
     truckType: str = Field(..., examples=["Open Body"])
     capacity: Optional[float] = Field(None, description="Capacity in tonnes")
+    length: Optional[float] = Field(None, description="Length in feet, if applicable for this truck type")
+    height: Optional[float] = Field(None, description="Height in feet, if applicable for this truck type")
 
 
 class CreateTruckPostRequest(BaseModel):
