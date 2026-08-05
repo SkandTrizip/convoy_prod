@@ -164,9 +164,9 @@ async def initiate_redeem(
     if wallet.available_balance < MIN_REDEEM_AMOUNT_INR:
         raise HTTPException(
             status_code=400,
-            detail=f"Minimum balance of Rs.{MIN_REDEEM_AMOUNT_INR} required to redeem",
+            detail=f"Minimum balance of ₹{MIN_REDEEM_AMOUNT_INR} required to redeem",
         )
-
+    
     amount = wallet.available_balance
     wallet.available_balance = Decimal("0")
     wallet.reserved_balance = wallet.reserved_balance + amount

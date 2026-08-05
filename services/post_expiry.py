@@ -1,7 +1,8 @@
 import asyncio
+import uuid
 from datetime import datetime, timedelta
 
-from sqlalchemy import update
+from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from config import POST_EXPIRE_CHECK_INTERVAL_SECONDS, POST_EXPIRE_HOURS, logger
@@ -29,6 +30,26 @@ def apply_post_reactivation(route: TruckRoute, now: datetime | None = None) -> N
     route.status = DEFAULT_ACTIVE_STATUS
     route.created_at = now
     route.expires_at = post_expires_at(now)
+
+
+async def get_active_post_for_user(
+    session: AsyncSession, user_id: uuid.UUID, exclude_post_id: uuid.UUID | None = None
+) -> TruckRoute | None:
+    """A user may have at most one active (non-expired) post at a time — this
+    finds it, if any, so callers can reject creating/reactivating a second one.
+    Time-aware regardless of whether the background sweep has already flipped
+    a stale row's status: `expires_at > now` excludes anything actually past
+    expiry even if its `status` column hasn't caught up yet."""
+    now = datetime.utcnow()
+    stmt = select(TruckRoute).where(
+        TruckRoute.user_id == user_id,
+        TruckRoute.status.in_(ACTIVE_POST_STATUSES),
+        TruckRoute.expires_at > now,
+    )
+    if exclude_post_id is not None:
+        stmt = stmt.where(TruckRoute.id != exclude_post_id)
+    result = await session.execute(stmt)
+    return result.scalars().first()
 
 
 async def expire_overdue_posts(session: AsyncSession) -> int:

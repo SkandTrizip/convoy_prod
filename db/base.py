@@ -17,6 +17,7 @@ from sqlalchemy import (
     String,
     Text,
     UniqueConstraint,
+    text,
 )
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
@@ -151,6 +152,20 @@ class Location(Base):
 
 class KYCRecord(Base):
     __tablename__ = "kyc_records"
+    __table_args__ = (
+        # Partial index: only an *approved* record's hash counts as "taken" —
+        # pending/rejected attempts (including retries, including a user's own
+        # earlier failed attempts) never block anything. One row per user (see
+        # routers/kyc.py, always scalar_one_or_none()) means a user re-verifying
+        # their own Aadhaar just updates their own row, so this never
+        # self-conflicts — only a genuinely different user_id can collide.
+        Index(
+            "ux_kyc_records_aadhaar_hash_approved",
+            "aadhaar_hash",
+            unique=True,
+            postgresql_where=(text("status = 'approved'")),
+        ),
+    )
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=new_uuid)
     user_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), index=True, nullable=False)
@@ -163,6 +178,9 @@ class KYCRecord(Base):
     aadhaar_front_image: Mapped[str | None] = mapped_column(Text, nullable=True)
     aadhaar_back_image: Mapped[str | None] = mapped_column(Text, nullable=True)
     rejection_reason: Mapped[str | None] = mapped_column(Text, nullable=True)
+    # HMAC of the normalized Aadhaar number — never the raw number itself.
+    # Only ever set by the OTP verification flow (see services/kyc.py).
+    aadhaar_hash: Mapped[str | None] = mapped_column(String(64), nullable=True)
 
 
 class Truck(Base):

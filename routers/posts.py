@@ -26,6 +26,7 @@ from services.post_expiry import (
     EXPIRED_STATUS,
     apply_post_reactivation,
     expire_overdue_posts,
+    get_active_post_for_user,
     is_post_expired,
     post_expires_at,
 )
@@ -48,6 +49,14 @@ async def create_truck_post(
         user = result.scalar_one_or_none()
         if not user or user.kyc_status != "approved":
             raise HTTPException(status_code=403, detail="KYC must be approved")
+
+        existing_active = await get_active_post_for_user(session, user_uuid)
+        if existing_active:
+            raise HTTPException(
+                status_code=400,
+                detail="You already have an active post. Please delete the current "
+                "active post before creating a new one.",
+            )
 
         truck_uuid = parse_uuid(post_data.vehicleId)
         truck_result = await session.execute(
@@ -183,6 +192,16 @@ async def reactivate_post(
                 detail="Post is still active. Reactivation is only for expired posts.",
             )
 
+        existing_active = await get_active_post_for_user(
+            session, post.user_id, exclude_post_id=post.id
+        )
+        if existing_active:
+            raise HTTPException(
+                status_code=400,
+                detail="You already have an active post. Please delete the current "
+                "active post before reactivating this one.",
+            )
+
         apply_post_reactivation(post)
         await session.commit()
         await session.refresh(post)
@@ -256,7 +275,23 @@ async def edit_post(
             raise HTTPException(status_code=404, detail="Post not found")
             
         authorize_user_id(str(post.user_id), current_user)
-        
+
+        # edit_post unconditionally reactivates below (status -> active, expiry
+        # reset) even for an already-expired post, with no explicit "reactivate"
+        # signal from the caller — so this check only fires in that implicit-
+        # reactivation case. Editing a post that's already active is just an
+        # update to the user's one existing active post, not a second one.
+        if is_post_expired(post):
+            existing_active = await get_active_post_for_user(
+                session, post.user_id, exclude_post_id=post.id
+            )
+            if existing_active:
+                raise HTTPException(
+                    status_code=400,
+                    detail="You already have an active post. Please delete the current "
+                    "active post before reactivating this one.",
+                )
+
         # If editing vehicle
         if edit_data.vehicleId:
             truck_uuid = parse_uuid(edit_data.vehicleId)

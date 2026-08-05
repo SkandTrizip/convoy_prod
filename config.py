@@ -50,6 +50,10 @@ JWT_EXPIRE_HOURS = int(os.environ.get("JWT_EXPIRE_HOURS", "168"))
 ADMIN_JWT_SECRET = os.environ.get("ADMIN_JWT_SECRET", "dev-insecure-admin-change-in-production")
 ADMIN_JWT_EXPIRE_HOURS = int(os.environ.get("ADMIN_JWT_EXPIRE_HOURS", "24"))
 
+# HMAC key for hashing Aadhaar numbers (one-way, for cross-account duplicate
+# detection) — deliberately separate from JWT_SECRET, own rotation policy.
+AADHAAR_HASH_SECRET = os.environ.get("AADHAAR_HASH_SECRET", "dev-insecure-aadhaar-change-in-production")
+
 # ULIP (direct) — VAHAN / SARATHI verification from this server
 ULIP_BASE_URL = os.environ.get(
     "ULIP_BASE_URL", "https://www.ulip.dpiit.gov.in/ulip/v1.0.0"

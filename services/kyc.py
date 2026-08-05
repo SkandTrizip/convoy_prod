@@ -1,5 +1,7 @@
 import base64
 import binascii
+import hashlib
+import hmac
 import re
 import uuid
 from typing import Any
@@ -7,6 +9,7 @@ from typing import Any
 import requests
 
 from config import (
+    AADHAAR_HASH_SECRET,
     CASHFREE_CLIENT_ID,
     CASHFREE_CLIENT_SECRET,
     CASHFREE_ENVIRONMENT,
@@ -59,6 +62,18 @@ def normalize_aadhaar(aadhaar: str) -> str:
     if len(digits) != 12:
         raise ValueError("Aadhaar number must be 12 digits")
     return digits
+
+
+def hash_aadhaar(aadhaar_number: str) -> str:
+    """One-way HMAC of a normalized (12-digit) Aadhaar number — lets us detect
+    the same Aadhaar being used across two accounts without ever storing the
+    raw number itself. Deterministic: same input always produces same hash,
+    so it doubles as the lookup key."""
+    return hmac.new(
+        key=AADHAAR_HASH_SECRET.encode(),
+        msg=aadhaar_number.encode(),
+        digestmod=hashlib.sha256,
+    ).hexdigest()
 
 
 def _parse_cashfree_error(response: requests.Response) -> str:

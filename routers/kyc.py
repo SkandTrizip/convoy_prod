@@ -2,6 +2,7 @@ from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select, update
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from config import logger
@@ -16,6 +17,7 @@ from models import (
     KYCSubmission,
 )
 from services.kyc import (
+    hash_aadhaar,
     normalize_aadhaar,
     send_aadhaar_otp,
     verify_aadhaar_otp,
@@ -23,6 +25,24 @@ from services.kyc import (
     verify_kyc_with_cashfree,
 )
 from services.notifications import send_push_notification
+
+ALREADY_VERIFIED_MESSAGE = "This Aadhaar has already been verified with another account."
+
+
+async def _find_other_verified_owner(
+    session: AsyncSession, aadhaar_hash: str, current_user_id
+):
+    """Returns the user_id of whoever else already has an *approved*
+    kyc_records row with this Aadhaar hash, or None. Excludes the current
+    user — re-verifying your own Aadhaar is never a conflict."""
+    result = await session.execute(
+        select(KYCRecord.user_id).where(
+            KYCRecord.aadhaar_hash == aadhaar_hash,
+            KYCRecord.status == "approved",
+            KYCRecord.user_id != current_user_id,
+        )
+    )
+    return result.scalar_one_or_none()
 
 router = APIRouter(prefix="/kyc", tags=["kyc"])
 
@@ -85,6 +105,39 @@ async def _save_verified_aadhaar_step(
     return kyc_record
 
 
+@router.post("/aadhaar/check/{user_id}")
+async def check_kyc_aadhaar(
+    user_id: str,
+    request: AadhaarSendOtpRequest,
+    session: AsyncSession = Depends(get_session),
+    _: User = Depends(require_path_user),
+):
+    """Fast, side-effect-free lookup for instant frontend feedback as the user
+    finishes typing their Aadhaar number — before they even tap "Send OTP".
+    Purely a UX convenience: send-otp enforces this same check regardless, so
+    skipping this call changes nothing about what's actually allowed."""
+    try:
+        user_uuid = parse_uuid(user_id)
+        try:
+            aadhaar = normalize_aadhaar(request.aadhaarNumber)
+        except ValueError as e:
+            raise HTTPException(status_code=400, detail=str(e)) from e
+
+        aadhaar_hash = hash_aadhaar(aadhaar)
+        other_owner = await _find_other_verified_owner(session, aadhaar_hash, user_uuid)
+
+        return {
+            "success": True,
+            "available": other_owner is None,
+            "message": None if other_owner is None else ALREADY_VERIFIED_MESSAGE,
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error("Error in check_kyc_aadhaar: %s", e, exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @router.post("/aadhaar/send-otp/{user_id}")
 async def send_kyc_aadhaar_otp(
     user_id: str,
@@ -103,6 +156,13 @@ async def send_kyc_aadhaar_otp(
             aadhaar = normalize_aadhaar(request.aadhaarNumber)
         except ValueError as e:
             raise HTTPException(status_code=400, detail=str(e)) from e
+
+        aadhaar_hash = hash_aadhaar(aadhaar)
+        other_owner = await _find_other_verified_owner(session, aadhaar_hash, user_uuid)
+        if other_owner is not None:
+            # No OTP call at all — saves a paid Cashfree call for a request
+            # that's going to be rejected anyway.
+            raise HTTPException(status_code=409, detail=ALREADY_VERIFIED_MESSAGE)
 
         result = send_aadhaar_otp(aadhaar)
         if not result.get("success"):
@@ -130,6 +190,7 @@ async def send_kyc_aadhaar_otp(
             existing_kyc.reviewed_date = None
             existing_kyc.status = "pending_otp"
             existing_kyc.reviewed_by = None
+            existing_kyc.aadhaar_hash = aadhaar_hash
         else:
             session.add(
                 KYCRecord(
@@ -138,6 +199,7 @@ async def send_kyc_aadhaar_otp(
                     data=pending_data,
                     submitted_date=now,
                     status="pending_otp",
+                    aadhaar_hash=aadhaar_hash,
                 )
             )
 
@@ -214,6 +276,7 @@ async def verify_kyc_aadhaar_otp(
 
         verified = verify_result["verified_data"]
         now = datetime.utcnow()
+        aadhaar_hash = hash_aadhaar(aadhaar)
         kyc_record.method = "aadhaar_otp"
         kyc_record.data = {
             "aadhaar_last4": aadhaar[-4:],
@@ -223,6 +286,7 @@ async def verify_kyc_aadhaar_otp(
         kyc_record.submitted_date = now
         kyc_record.reviewed_date = now
         kyc_record.status = "approved"
+        kyc_record.aadhaar_hash = aadhaar_hash
 
         verified_name = verified.get("name")
         if verified_name:
@@ -235,7 +299,17 @@ async def verify_kyc_aadhaar_otp(
                 name=user.name,
             )
         )
-        await session.commit()
+        # Race-safe final gate: two users could both pass the send-otp
+        # pre-check (e.g. simultaneous attempts before either committed) and
+        # both reach here for the same Aadhaar. The partial unique index on
+        # (aadhaar_hash) WHERE status='approved' is what actually prevents
+        # both from landing — whichever commits first wins, the second's
+        # commit fails with IntegrityError and is rejected here.
+        try:
+            await session.commit()
+        except IntegrityError:
+            await session.rollback()
+            raise HTTPException(status_code=409, detail=ALREADY_VERIFIED_MESSAGE)
 
         await send_push_notification(
             user_id,
