@@ -23,6 +23,10 @@ async def search_truck_routes_spatial(
     origin_lng: float | None = None,
     destination_lat: float | None = None,
     destination_lng: float | None = None,
+    origin_state: str | None = None,
+    destination_state: str | None = None,
+    origin_is_state: bool = False,
+    destination_is_state: bool = False,
     radius_km: float = 150,
     truck_type: str | None = None,
     min_capacity: float | None = None,
@@ -35,6 +39,23 @@ async def search_truck_routes_spatial(
     When only one side is given, matching and ranking are based on that side alone,
     with no filtering on the other — e.g. an origin-only search returns posts with any
     destination, ranked by origin distance alone.
+
+    origin_state/destination_state carry the searched location's state name (present
+    for both city-level and state-level picks — Google resolves a state for either).
+    origin_is_state/destination_is_state say whether the *search* side itself is a
+    state-level pick rather than a specific city (city component missing). A route side
+    is independently considered state-level the same way — city missing, state present —
+    by reading it out of the stored origin/destination JSONB at query time. This gives
+    four combinations per side, collapsing to two filter shapes:
+      - search side is state-level: match any route whose side has the same state,
+        regardless of whether that route side is itself a city or a state (there's no
+        radius to check a whole state against, so this replaces ST_DWithin entirely).
+      - search side is a specific city: a state-level route side matches by state
+        equality (its stored point is just a state centroid, radius against it isn't
+        meaningful); a city-level route side keeps the existing ST_DWithin radius check.
+    Distance/ranking is unaffected by any of this — every route side always has a
+    stored point (a real city or a state's centroid), so ST_Distance against it stays
+    valid and is used for sorting/display the same way in both cases.
 
     sort_by can request "nearest_origin" or "nearest_destination" to rank by just that
     side instead of the combined default. If the requested side wasn't actually part of
@@ -70,16 +91,32 @@ async def search_truck_routes_spatial(
     # parameter that's sometimes NULL (origin-only/destination-only searches) and only
     # ever used inside a function call can fail with "could not determine data type". Note:
     # `:param::text` (no CAST) trips up SQLAlchemy's text() bind-parameter parser instead.
-    origin_filter = (
-        "AND ST_DWithin(tr.origin_location, ST_GeogFromText(CAST(:origin_point AS text)), :radius_m)"
-        if has_origin
-        else ""
-    )
-    dest_filter = (
-        "AND ST_DWithin(d.destination_location, ST_GeogFromText(CAST(:dest_point AS text)), :radius_m)"
-        if has_destination
-        else ""
-    )
+    # A route side is "state-level" the same way a search side is: its stored city is
+    # missing but its state is present (a state-only pick still has a real geocoded
+    # point — the state's centroid — so origin_location/destination_location are never
+    # null; only the city component is absent).
+    route_origin_is_state = "(tr.origin->>'city' IS NULL AND tr.origin->>'state' IS NOT NULL)"
+    route_dest_is_state = "(d.destination->>'city' IS NULL AND d.destination->>'state' IS NOT NULL)"
+
+    if has_origin and origin_is_state:
+        origin_filter = "AND tr.origin->>'state' = :origin_state"
+    elif has_origin:
+        origin_filter = f"""AND (
+            ({route_origin_is_state} AND tr.origin->>'state' = :origin_state)
+            OR (NOT {route_origin_is_state} AND ST_DWithin(tr.origin_location, ST_GeogFromText(CAST(:origin_point AS text)), :radius_m))
+        )"""
+    else:
+        origin_filter = ""
+
+    if has_destination and destination_is_state:
+        dest_filter = "AND d.destination->>'state' = :dest_state"
+    elif has_destination:
+        dest_filter = f"""AND (
+            ({route_dest_is_state} AND d.destination->>'state' = :dest_state)
+            OR (NOT {route_dest_is_state} AND ST_DWithin(d.destination_location, ST_GeogFromText(CAST(:dest_point AS text)), :radius_m))
+        )"""
+    else:
+        dest_filter = ""
     truck_type_filter = "AND tr.truck_type = :truck_type" if truck_type else ""
     # NULL capacity trucks are excluded whenever a minimum is requested — `NULL >= x` is
     # never true in SQL, which is the right call: an unspecified capacity can't be
@@ -100,6 +137,8 @@ async def search_truck_routes_spatial(
     params: dict[str, Any] = {
         "origin_point": origin_point,
         "dest_point": dest_point,
+        "origin_state": origin_state,
+        "dest_state": destination_state,
         "radius_m": radius_m,
         "max_matches": SEARCH_MAX_MATCHES,
         "offset": (page - 1) * SEARCH_PAGE_SIZE,

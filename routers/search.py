@@ -92,6 +92,16 @@ async def search_trucks(
             origin_lng=search_request.origin.lng if search_request.origin else None,
             destination_lat=search_request.destination.lat if search_request.destination else None,
             destination_lng=search_request.destination.lng if search_request.destination else None,
+            origin_state=search_request.origin.state if search_request.origin else None,
+            destination_state=search_request.destination.state if search_request.destination else None,
+            origin_is_state=bool(
+                search_request.origin and not search_request.origin.city and search_request.origin.state
+            ),
+            destination_is_state=bool(
+                search_request.destination
+                and not search_request.destination.city
+                and search_request.destination.state
+            ),
             radius_km=search_request.radius_km,
             truck_type=search_request.truckType,
             min_capacity=search_request.capacity,
