@@ -6,6 +6,15 @@
       "runtimeExecutable": ".venv/bin/uvicorn",
       "runtimeArgs": ["app:app", "--host", "0.0.0.0", "--port", "8000", "--reload"],
       "port": 8000
+    },
+    {
+      "name": "convoy-admin-ui",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-c",
+        "cd /Users/ankit/Documents/sharkship-others/convoy-admin && npx ng serve --port 4300"
+      ],
+      "port": 4300
     }
   ]
 }

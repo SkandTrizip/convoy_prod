@@ -19,7 +19,7 @@ from sqlalchemy import (
     UniqueConstraint,
     text,
 )
-from sqlalchemy.dialects.postgresql import JSONB, UUID
+from sqlalchemy.dialects.postgresql import ARRAY, JSONB, UUID
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -59,6 +59,27 @@ class User(Base):
     contacts_last_updated: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=False), nullable=True
     )
+
+
+class UserFollow(Base):
+    """`follower_id` follows `followee_id`. Counts are computed from this table
+    (both directions are indexed), not denormalized onto users, so they can't
+    drift — account deletion needs no counter fix-ups, the FKs cascade."""
+
+    __tablename__ = "user_follows"
+    __table_args__ = (
+        Index("idx_user_follows_followee_created", "followee_id", "created_at"),
+        Index("idx_user_follows_follower_created", "follower_id", "created_at"),
+        CheckConstraint("follower_id <> followee_id", name="ck_user_follows_not_self"),
+    )
+
+    follower_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), primary_key=True
+    )
+    followee_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), primary_key=True
+    )
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.utcnow)
 
 
 class UserDevice(Base):
@@ -582,3 +603,177 @@ class CampaignNotificationLog(Base):
     user_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), index=True, nullable=False)
     status: Mapped[str] = mapped_column(String(16), nullable=False)  # sent | failed | no_token | skipped
     sent_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.utcnow)
+
+
+class Video(Base):
+    """A short vertical video ('reel'). Storage/transcoding/delivery is handled
+    entirely by Bunny Stream — `bunny_video_id` is the only link to it, and
+    `playback_url`/`thumbnail_url` are Bunny's own public CDN URLs, populated
+    only once encoding finishes and the video is confirmed within the duration
+    cap (see services/videos.py)."""
+
+    __tablename__ = "videos"
+    __table_args__ = (
+        Index("idx_videos_user_created", "user_id", "created_at"),
+        Index("idx_videos_status_created", "status", "created_at"),
+        Index("idx_videos_user_status_created", "user_id", "status", "created_at"),
+        Index("idx_videos_hashtags", "hashtags", postgresql_using="gin"),
+        Index("idx_videos_location", "location", postgresql_using="gist"),
+        CheckConstraint(
+            "status IN ('pending_upload', 'processing', 'ready', 'rejected', 'failed')",
+            name="ck_videos_status",
+        ),
+    )
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=new_uuid)
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+    )
+    bunny_video_id: Mapped[str] = mapped_column(String(64), unique=True, nullable=False)
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    description: Mapped[str | None] = mapped_column(Text, nullable=True)
+    status: Mapped[str] = mapped_column(String(16), default="pending_upload", nullable=False)
+    duration_seconds: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    playback_url: Mapped[str | None] = mapped_column(Text, nullable=True)
+    thumbnail_url: Mapped[str | None] = mapped_column(Text, nullable=True)
+    rejection_reason: Mapped[str | None] = mapped_column(Text, nullable=True)
+    # Free-form discovery tags, normalized lowercase without '#' (see
+    # services/reel_social.normalize_hashtags). Curated categories live in
+    # video_categories instead.
+    hashtags: Mapped[list[str]] = mapped_column(
+        ARRAY(String(50)), default=list, server_default=text("'{}'"), nullable=False
+    )
+    # Uploader's GPS at posting time. Exact point is never returned to clients —
+    # only the reverse-geocoded city/state labels below are.
+    location: Mapped[str | None] = mapped_column(Geography(geometry_type="POINT", srid=4326), nullable=True)
+    location_city: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    location_state: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    # Denormalized counters, kept in step with video_likes/video_comments/
+    # video_shares by atomic UPDATE ... SET n = n + 1 in services/reel_social.py.
+    like_count: Mapped[int] = mapped_column(Integer, default=0, server_default=text("0"), nullable=False)
+    comment_count: Mapped[int] = mapped_column(Integer, default=0, server_default=text("0"), nullable=False)
+    share_count: Mapped[int] = mapped_column(Integer, default=0, server_default=text("0"), nullable=False)
+    # Updated in batches by services/view_counter.py, so it lags real views by
+    # up to REEL_VIEW_FLUSH_INTERVAL_SECONDS. Only exposed to the reel's owner.
+    view_count: Mapped[int] = mapped_column(BigInteger, default=0, server_default=text("0"), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=False), default=datetime.utcnow, onupdate=datetime.utcnow
+    )
+
+
+class ReelCategory(Base):
+    """Admin-curated reel category (fixed list, unlike free-form hashtags).
+    Deactivated rather than deleted, so existing reels keep their tags."""
+
+    __tablename__ = "reel_categories"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=new_uuid)
+    slug: Mapped[str] = mapped_column(String(64), unique=True, nullable=False)
+    name: Mapped[str] = mapped_column(String(128), nullable=False)
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True, server_default=text("true"), nullable=False)
+    sort_order: Mapped[int] = mapped_column(Integer, default=0, server_default=text("0"), nullable=False)
+    # server_default so raw-SQL inserts (the migration's seed rows) work too.
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=False), default=datetime.utcnow, server_default=text("NOW()")
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=False), default=datetime.utcnow, onupdate=datetime.utcnow, server_default=text("NOW()")
+    )
+
+
+class VideoCategory(Base):
+    __tablename__ = "video_categories"
+    __table_args__ = (Index("idx_video_categories_category", "category_id", "video_id"),)
+
+    video_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("videos.id", ondelete="CASCADE"), primary_key=True
+    )
+    category_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("reel_categories.id", ondelete="CASCADE"), primary_key=True
+    )
+
+
+class VideoLike(Base):
+    __tablename__ = "video_likes"
+    __table_args__ = (Index("idx_video_likes_user_created", "user_id", "created_at"),)
+
+    video_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("videos.id", ondelete="CASCADE"), primary_key=True
+    )
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), primary_key=True
+    )
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.utcnow)
+
+
+class VideoComment(Base):
+    """Flat comments (no replies). Deletable by the commenter or the reel's owner."""
+
+    __tablename__ = "video_comments"
+    __table_args__ = (
+        Index("idx_video_comments_video_created", "video_id", "created_at"),
+        Index("idx_video_comments_user", "user_id"),
+    )
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=new_uuid)
+    video_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("videos.id", ondelete="CASCADE"), nullable=False
+    )
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+    )
+    body: Mapped[str] = mapped_column(Text, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.utcnow)
+
+
+class VideoShare(Base):
+    """One row per share-sheet use (repeat shares by the same user all count),
+    kept as an event log for recommendations, not just the counter."""
+
+    __tablename__ = "video_shares"
+    __table_args__ = (
+        Index("idx_video_shares_video_created", "video_id", "created_at"),
+        Index("idx_video_shares_user_created", "user_id", "created_at"),
+    )
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=new_uuid)
+    video_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("videos.id", ondelete="CASCADE"), nullable=False
+    )
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+    )
+    channel: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.utcnow)
+
+
+class OneToOneCall(Base):
+    """A 1:1 video call room: one host (camera+mic) and at most one guest
+    (mic-only audience-of-one). `guest_user_id` is set the moment the single
+    slot is claimed (see services/one_to_one_calls.py) — a second, different
+    user's join is rejected rather than ever overwriting it."""
+
+    __tablename__ = "one_to_one_calls"
+    __table_args__ = (
+        Index("idx_one_to_one_calls_status_started", "status", "started_at"),
+        CheckConstraint("status IN ('live', 'ended')", name="ck_one_to_one_calls_status"),
+    )
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=new_uuid)
+    host_user_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    guest_user_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("users.id", ondelete="SET NULL"), nullable=True, index=True
+    )
+    channel_name: Mapped[str] = mapped_column(String(64), unique=True, nullable=False)
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    host_name: Mapped[str] = mapped_column(String(255), nullable=False)
+    status: Mapped[str] = mapped_column(String(16), default="live", nullable=False)
+    started_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.utcnow)
+    ended_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=False), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=False), default=datetime.utcnow, onupdate=datetime.utcnow
+    )

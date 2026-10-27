@@ -80,3 +80,36 @@ SCRATCH_CARD_EXPIRY_CHECK_INTERVAL_SECONDS = int(
 FIREBASE_CREDENTIALS_PATH = os.environ.get(
     "FIREBASE_CREDENTIALS_PATH", str(ROOT_DIR / "credentials" / "firebase-admin.json")
 )
+
+# Bunny Stream (video reels) — not configured -> upload/sync endpoints fail with a
+# clear 503 rather than crashing at import time, matching this repo's other
+# "not configured -> graceful failure/dev mode" integrations.
+BUNNY_STREAM_API_KEY = os.environ.get("BUNNY_STREAM_API_KEY")
+BUNNY_STREAM_LIBRARY_ID = os.environ.get("BUNNY_STREAM_LIBRARY_ID")
+BUNNY_CDN_HOSTNAME = os.environ.get("BUNNY_CDN_HOSTNAME")
+MAX_VIDEO_DURATION_SECONDS = int(os.environ.get("MAX_VIDEO_DURATION_SECONDS", "30"))
+
+# Agora (1:1 video calls) — same not-configured -> 503 behavior as Bunny above.
+AGORA_APP_ID = os.environ.get("AGORA_APP_ID")
+AGORA_APP_CERTIFICATE = os.environ.get("AGORA_APP_CERTIFICATE")
+AGORA_TOKEN_EXPIRATION_SECONDS = int(os.environ.get("AGORA_TOKEN_EXPIRATION_SECONDS", "3600"))
+# Hard cap on a call's lifetime: no token minted for a call (host or guest, at
+# start or on join) outlives `started_at + this`, regardless of when it's
+# requested — see services/agora_client.py.
+AGORA_MAX_CALL_SECONDS = int(os.environ.get("AGORA_MAX_CALL_SECONDS", "3600"))
+
+# Video feed prefetch caching (Redis cache/locks + RabbitMQ job queue consumed by
+# worker.py). Best-effort only — a missing/unreachable Redis or RabbitMQ degrades
+# to "always fetch from Bunny directly", never breaks playback.
+REDIS_URL = os.environ.get("REDIS_URL")
+RABBITMQ_URL = os.environ.get("RABBITMQ_URL")
+PREFETCH_NEIGHBOR_WINDOW = int(os.environ.get("PREFETCH_NEIGHBOR_WINDOW", "3"))
+PREFETCH_SEGMENT_COUNT = int(os.environ.get("PREFETCH_SEGMENT_COUNT", "1"))
+PREFETCH_CACHE_TTL_SECONDS = int(os.environ.get("PREFETCH_CACHE_TTL_SECONDS", "120"))
+PREFETCH_LOCK_TTL_SECONDS = int(os.environ.get("PREFETCH_LOCK_TTL_SECONDS", "30"))
+
+# Reel view counting (services/view_counter.py): views are buffered in Redis and
+# flushed to videos.view_count in batches. Repeat reports of the same user+reel
+# inside the dedupe window are ignored (client retry / replay-loop protection).
+REEL_VIEW_FLUSH_INTERVAL_SECONDS = int(os.environ.get("REEL_VIEW_FLUSH_INTERVAL_SECONDS", "10"))
+REEL_VIEW_DEDUPE_SECONDS = int(os.environ.get("REEL_VIEW_DEDUPE_SECONDS", "30"))

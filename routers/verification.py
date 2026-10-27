@@ -1,3 +1,4 @@
+import asyncio
 from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -51,7 +52,11 @@ async def verify_vehicle(
     """Verify vehicle registration via ULIP VAHAN API."""
     try:
         await _get_user_or_404(session, user_id)
-        result = verify_vehicle_registration(request.vehicleNumber)
+        # services.ulip's VAHAN/SARATHI calls use the synchronous `requests`
+        # library — run them in a worker thread so a slow ULIP call doesn't
+        # stall every other concurrent request on this process's single event
+        # loop.
+        result = await asyncio.to_thread(verify_vehicle_registration, request.vehicleNumber)
 
         if not result.get("verified"):
             raise HTTPException(
@@ -80,7 +85,7 @@ async def verify_dl(
     try:
         user = await _get_user_or_404(session, user_id)
         validate_dl_dob(request.dob)
-        result = verify_driving_license(request.dlnumber, request.dob)
+        result = await asyncio.to_thread(verify_driving_license, request.dlnumber, request.dob)
 
         _save_dl_verification(user, request.dlnumber, result)
         await session.commit()
@@ -122,12 +127,12 @@ async def batch_verify(
                 dob = doc.data.get("dob", "")
                 dl_number = doc.data.get("dlNumber") or doc.data.get("dlnumber", "")
                 validate_dl_dob(dob)
-                result = verify_driving_license(dl_number, dob)
+                result = await asyncio.to_thread(verify_driving_license, dl_number, dob)
                 _save_dl_verification(user, dl_number, result)
                 results.append({"type": "dl", **to_api_response(result)})
             elif doc_type == "vehicle":
                 vehicle_number = doc.data.get("vehicleNumber", "")
-                result = verify_vehicle_registration(vehicle_number)
+                result = await asyncio.to_thread(verify_vehicle_registration, vehicle_number)
                 results.append({"type": "vehicle", **to_api_response(result)})
             else:
                 results.append({

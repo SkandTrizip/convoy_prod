@@ -13,6 +13,7 @@ from routers import api_router
 from services.device_cleanup import run_device_cleanup_loop
 from services.post_expiry import run_post_expiry_loop
 from services.scratch_service import run_scratch_card_expiry_loop
+from services.view_counter import run_view_flush_loop
 
 
 @asynccontextmanager
@@ -22,19 +23,21 @@ async def lifespan(app: FastAPI):
     expiry_task: asyncio.Task | None = None
     device_cleanup_task: asyncio.Task | None = None
     scratch_card_expiry_task: asyncio.Task | None = None
+    view_flush_task: asyncio.Task | None = None
     try:
         await init_db()
         logger.info("Database initialized (PostGIS + tables)")
         expiry_task = asyncio.create_task(run_post_expiry_loop())
         device_cleanup_task = asyncio.create_task(run_device_cleanup_loop())
         scratch_card_expiry_task = asyncio.create_task(run_scratch_card_expiry_loop())
+        view_flush_task = asyncio.create_task(run_view_flush_loop())
         start_notification_scheduler()
     except Exception as e:
         logger.error("Error during startup: %s", e, exc_info=True)
         raise
     yield
     stop_notification_scheduler()
-    for task in (expiry_task, device_cleanup_task, scratch_card_expiry_task):
+    for task in (expiry_task, device_cleanup_task, scratch_card_expiry_task, view_flush_task):
         if task:
             task.cancel()
             try:
@@ -78,6 +81,11 @@ def _configure_openapi_security() -> None:
         if path.startswith("/api/auth/") or path in ("/api/", "/api/truck-types"):
             continue
         if path == "/api/admin-auth/login":
+            continue
+        # Bunny's webhook can't send our JWT; the two playback endpoints are
+        # fetched directly by an HLS player, which can't attach one either —
+        # both are genuinely public (see routers/__init__.py).
+        if path.startswith("/api/webhooks/") or path.endswith(("/preview-segment", "/fast-start.m3u8")):
             continue
         security_scheme = (
             "AdminBearerAuth" if path.startswith(("/api/admin/", "/api/admin-auth/")) else "BearerAuth"

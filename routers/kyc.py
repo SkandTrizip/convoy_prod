@@ -1,3 +1,4 @@
+import asyncio
 from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -164,7 +165,10 @@ async def send_kyc_aadhaar_otp(
             # that's going to be rejected anyway.
             raise HTTPException(status_code=409, detail=ALREADY_VERIFIED_MESSAGE)
 
-        result = send_aadhaar_otp(aadhaar)
+        # services.kyc's Cashfree calls use the synchronous `requests` library
+        # — run them in a worker thread so a slow Cashfree call doesn't stall
+        # every other concurrent request on this process's single event loop.
+        result = await asyncio.to_thread(send_aadhaar_otp, aadhaar)
         if not result.get("success"):
             raise HTTPException(
                 status_code=400,
@@ -267,7 +271,7 @@ async def verify_kyc_aadhaar_otp(
                 detail="Aadhaar number does not match the OTP request",
             )
 
-        verify_result = verify_aadhaar_otp(request.refId, request.otp)
+        verify_result = await asyncio.to_thread(verify_aadhaar_otp, request.refId, request.otp)
         if not verify_result.get("success"):
             raise HTTPException(
                 status_code=400,
@@ -360,7 +364,8 @@ async def verify_kyc_aadhaar_ocr(
             except ValueError as e:
                 raise HTTPException(status_code=400, detail=str(e)) from e
 
-        ocr_result = verify_aadhaar_with_smart_ocr(
+        ocr_result = await asyncio.to_thread(
+            verify_aadhaar_with_smart_ocr,
             front_image=request.aadhaarFrontImage,
             back_image=request.aadhaarBackImage,
             user_id=str(user_uuid),
@@ -441,7 +446,8 @@ async def submit_kyc(
         )
         existing_kyc = result.scalar_one_or_none()
 
-        verification = verify_kyc_with_cashfree(
+        verification = await asyncio.to_thread(
+            verify_kyc_with_cashfree,
             submission.data,
             {
                 "front": submission.aadhaarFrontImage,

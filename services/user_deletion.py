@@ -13,6 +13,7 @@ from db.base import (
     User,
     UserActivity,
 )
+from services import reel_social
 
 
 async def delete_user_cascade(session: AsyncSession, user: User) -> dict[str, int]:
@@ -63,9 +64,13 @@ async def delete_user_cascade(session: AsyncSession, user: User) -> dict[str, in
         "recentActivity": (
             await session.execute(delete(UserActivity).where(UserActivity.user_id == user_id))
         ).rowcount,
+        # Their likes/comments on other people's reels: removed explicitly so those
+        # reels' counters are decremented too (the FK cascade alone wouldn't).
+        **(await reel_social.release_user_interactions(session, user_id)),
     }
 
-    # Cascades to user_contacts via ON DELETE CASCADE.
+    # Cascades to user_contacts, and to their own videos/likes/comments/shares,
+    # via ON DELETE CASCADE.
     await session.execute(delete(User).where(User.id == user_id))
 
     return deleted

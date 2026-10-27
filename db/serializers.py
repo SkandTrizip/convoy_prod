@@ -10,12 +10,16 @@ from db.base import (
     KYCRecord,
     Location,
     Notification,
+    OneToOneCall,
+    ReelCategory,
     ScratchCard,
     SearchDemand,
     Truck,
     TruckRoute,
     TruckRouteDestination,
     User,
+    Video,
+    VideoComment,
 )
 
 
@@ -198,4 +202,131 @@ def call_log_to_dict(log: CallLog) -> dict:
         "userId": str(log.user_id),
         "truckPostId": log.truck_post_id,
         "timestamp": log.timestamp,
+    }
+
+
+def video_to_dict(video: Video) -> dict:
+    return {
+        "id": str(video.id),
+        "userId": str(video.user_id),
+        "title": video.title,
+        "description": video.description,
+        "status": video.status,
+        "durationSeconds": video.duration_seconds,
+        "playbackUrl": video.playback_url,
+        "thumbnailUrl": video.thumbnail_url,
+        "rejectionReason": video.rejection_reason,
+        "hashtags": list(video.hashtags or []),
+        # City/state label only — the exact GPS point is never exposed.
+        "location": (
+            {"city": video.location_city, "state": video.location_state}
+            if video.location_city or video.location_state
+            else None
+        ),
+        "likeCount": video.like_count,
+        "commentCount": video.comment_count,
+        "shareCount": video.share_count,
+        # Path clients should actually play, in place of playbackUrl — same
+        # video, but segment 0 comes from the prefetch cache when it's warm.
+        # Only meaningful once encoding has finished.
+        "streamUrl": f"/api/videos/{video.id}/fast-start.m3u8" if video.status == "ready" else None,
+        "createdAt": video.created_at.isoformat(),
+        "updatedAt": video.updated_at.isoformat(),
+    }
+
+
+def reel_author_to_dict(author: User | None) -> dict | None:
+    if author is None:
+        return None
+    return {
+        "id": str(author.id),
+        "name": author.name,
+        "profilePhoto": profile_photo_url(author),
+    }
+
+
+def follow_user_to_dict(user: User, followed_by_me: bool, viewer_id: uuid.UUID) -> dict:
+    return {
+        **reel_author_to_dict(user),
+        "followedByMe": followed_by_me,
+        "isMe": user.id == viewer_id,
+    }
+
+
+def reel_category_to_dict(category: ReelCategory) -> dict:
+    return {
+        "id": str(category.id),
+        "slug": category.slug,
+        "name": category.name,
+        "sortOrder": category.sort_order,
+        "isActive": category.is_active,
+    }
+
+
+def reel_to_dict(
+    video: Video,
+    author: User | None,
+    categories: list[ReelCategory] | None = None,
+    liked_by_me: bool = False,
+    followed_by_me: bool = False,
+    author_follower_count: int = 0,
+    viewer_id: uuid.UUID | None = None,
+) -> dict:
+    """Pass the pieces from services.reel_social.load_reel_context."""
+    author_dict = reel_author_to_dict(author)
+    if author_dict is not None:
+        author_dict.update(
+            followedByMe=followed_by_me,
+            followerCount=author_follower_count,
+            isMe=author is not None and author.id == viewer_id,
+        )
+    return {
+        **video_to_dict(video),
+        "author": author_dict,
+        "categories": [
+            {"id": str(c.id), "slug": c.slug, "name": c.name} for c in (categories or [])
+        ],
+        "likedByMe": liked_by_me,
+        "postedAt": video.created_at.isoformat(),
+    }
+
+
+def creator_reel_to_dict(video: Video, include_views: bool) -> dict:
+    """Compact grid item for a creator's profile. `viewCount` is owner-only."""
+    item = {
+        "id": str(video.id),
+        "title": video.title,
+        "thumbnailUrl": video.thumbnail_url,
+        "durationSeconds": video.duration_seconds,
+        "likeCount": video.like_count,
+        "commentCount": video.comment_count,
+        "postedAt": video.created_at.isoformat(),
+    }
+    if include_views:
+        item["viewCount"] = video.view_count
+    return item
+
+
+def reel_comment_to_dict(comment: VideoComment, author: User | None, can_delete: bool) -> dict:
+    return {
+        "id": str(comment.id),
+        "reelId": str(comment.video_id),
+        "body": comment.body,
+        "author": reel_author_to_dict(author),
+        "canDelete": can_delete,
+        "createdAt": comment.created_at.isoformat(),
+    }
+
+
+def one_to_one_call_to_dict(call: OneToOneCall) -> dict:
+    return {
+        "id": str(call.id),
+        "hostUserId": str(call.host_user_id),
+        "hostName": call.host_name,
+        "guestUserId": str(call.guest_user_id) if call.guest_user_id else None,
+        "channelName": call.channel_name,
+        "title": call.title,
+        "status": call.status,
+        "startedAt": call.started_at.isoformat(),
+        "endedAt": call.ended_at.isoformat() if call.ended_at else None,
     }

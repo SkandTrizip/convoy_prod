@@ -6,6 +6,7 @@ from config import GOOGLE_PLACES_API_KEY, logger
 
 AUTocomplete_URL = "https://maps.googleapis.com/maps/api/place/autocomplete/json"
 DETAILS_URL = "https://maps.googleapis.com/maps/api/place/details/json"
+GEOCODE_URL = "https://maps.googleapis.com/maps/api/geocode/json"
 
 
 def _parse_address_components(components: list[dict]) -> dict[str, str | None]:
@@ -77,3 +78,33 @@ def fetch_place_details(place_id: str) -> dict[str, Any] | None:
         "google_place_id": place_id,
         "source": "google",
     }
+
+
+def fetch_reverse_geocode(lat: float, lng: float) -> dict[str, str | None] | None:
+    """City/state for a GPS point. Synchronous like the rest of this module —
+    call via asyncio.to_thread from async code."""
+    if not GOOGLE_PLACES_API_KEY:
+        return None
+
+    response = requests.get(
+        GEOCODE_URL,
+        params={
+            "latlng": f"{lat},{lng}",
+            "key": GOOGLE_PLACES_API_KEY,
+            "result_type": "locality|administrative_area_level_2|administrative_area_level_1",
+        },
+        timeout=5,
+    )
+    if response.status_code != 200:
+        logger.error(f"Google reverse geocode error: {response.text}")
+        return None
+
+    payload = response.json()
+    results = payload.get("results") or []
+    if not results:
+        if payload.get("status") not in ("OK", "ZERO_RESULTS"):
+            logger.error(f"Google reverse geocode error: {payload.get('status')} {payload.get('error_message')}")
+        return None
+
+    address = _parse_address_components(results[0].get("address_components", []))
+    return {"city": address["city"], "state": address["state"]}

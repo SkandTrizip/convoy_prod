@@ -1,3 +1,5 @@
+import asyncio
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -25,7 +27,11 @@ async def send_otp(
         otp = generate_otp(mobile)
 
         await store_otp(session, mobile, otp)
-        sms_sent = send_otp_sms(mobile, otp)
+        # send_otp_sms uses the synchronous `requests` library (and makes two
+        # HTTP round-trips: token fetch + send) — run it in a worker thread so
+        # a slow Veup call doesn't stall every other concurrent request on
+        # this process's single event loop.
+        sms_sent = await asyncio.to_thread(send_otp_sms, mobile, otp)
 
         logger.info(f"OTP generated for {mobile}")
 

@@ -1,0 +1,18 @@
+[Unit]
+Description=Convoy video prefetch worker (consumes video_prefetch_jobs from RabbitMQ)
+After=network.target rabbitmq-server.service redis-server.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=azureuser
+Group=azureuser
+WorkingDirectory=/home/azureuser/convoy_prod
+Environment=PATH=/home/azureuser/convoy_prod/venv/bin
+EnvironmentFile=-/home/azureuser/convoy_prod/.env
+ExecStart=/home/azureuser/convoy_prod/venv/bin/python worker.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

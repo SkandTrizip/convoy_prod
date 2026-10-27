@@ -1,3 +1,4 @@
+import asyncio
 from datetime import datetime, timedelta
 from decimal import Decimal
 
@@ -47,7 +48,10 @@ async def add_vehicle(
         if existing.scalar_one_or_none():
             raise HTTPException(status_code=400, detail="Vehicle already exists")
 
-        ulip_result = verify_vehicle_registration(vehicle_data.vehicleNumber)
+        # services.ulip's VAHAN call uses the synchronous `requests` library —
+        # run it in a worker thread so a slow ULIP call doesn't stall every
+        # other concurrent request on this process's single event loop.
+        ulip_result = await asyncio.to_thread(verify_vehicle_registration, vehicle_data.vehicleNumber)
         if not ulip_result.get("verified"):
             raise HTTPException(
                 status_code=400,

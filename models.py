@@ -1,4 +1,4 @@
-from typing import Any, Dict, Literal, Optional
+from typing import Any, Dict, List, Literal, Optional
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
@@ -374,3 +374,53 @@ class CampaignTestSendRequest(BaseModel):
 class AudiencePreviewRequest(BaseModel):
     audienceFilter: Dict[str, Any] = Field(default_factory=dict)
     sampleSize: int = Field(10, ge=1, le=50)
+
+
+class CreateVideoRequest(BaseModel):
+    """Creator identity is the caller's own JWT — unlike BONUT's original POC,
+    there's no client-supplied user_id."""
+
+    title: str = Field(..., min_length=1, max_length=255)
+    description: Optional[str] = Field(None, max_length=2000)
+    categoryIds: List[str] = Field(..., min_length=1, max_length=5, description="IDs from GET /api/reel-categories")
+    hashtags: Optional[List[str]] = Field(None, max_length=10, description="With or without leading '#'")
+    latitude: Optional[float] = Field(None, ge=-90, le=90, description="Uploader's GPS at posting time")
+    longitude: Optional[float] = Field(None, ge=-180, le=180)
+
+    @model_validator(mode="after")
+    def location_pair(self):
+        if (self.latitude is None) != (self.longitude is None):
+            raise ValueError("latitude and longitude must be sent together")
+        return self
+
+
+class CreateReelCommentRequest(BaseModel):
+    body: str = Field(..., min_length=1, max_length=1000)
+
+
+class ShareReelRequest(BaseModel):
+    channel: Optional[str] = Field(
+        None, max_length=32, description="Where it was shared, e.g. 'whatsapp', 'copy_link' (analytics only)"
+    )
+
+
+class ReelCategoryRequest(BaseModel):
+    slug: str = Field(..., min_length=1, max_length=64, pattern=r"^[a-z0-9]+(-[a-z0-9]+)*$")
+    name: str = Field(..., min_length=1, max_length=128)
+    sortOrder: int = 0
+    isActive: bool = True
+
+
+class UpdateReelCategoryRequest(BaseModel):
+    name: Optional[str] = Field(None, min_length=1, max_length=128)
+    sortOrder: Optional[int] = None
+    isActive: Optional[bool] = None
+
+
+class ReportWatchingRequest(BaseModel):
+    feedPosition: int = Field(..., ge=0, description="Index of the video currently being watched in the feed")
+
+
+class StartOneToOneCallRequest(BaseModel):
+    title: str = Field(..., min_length=1, max_length=255)
+    hostName: str = Field(..., min_length=1, max_length=255)

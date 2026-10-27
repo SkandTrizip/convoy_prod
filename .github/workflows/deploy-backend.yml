@@ -97,6 +97,23 @@ jobs:
             sudo journalctl -u convoy-api -n 40 --no-pager || true
             exit 1
           fi
+
+          # convoy-video-worker (video prefetch caching) is only present once
+          # scripts/server-setup.sh has been re-run on this host — skip it
+          # rather than failing the whole deploy if it isn't installed yet.
+          if systemctl list-unit-files convoy-video-worker.service >/dev/null 2>&1; then
+            sudo systemctl restart convoy-video-worker
+            sleep 3
+            if ! sudo systemctl is-active --quiet convoy-video-worker; then
+              echo "convoy-video-worker failed to start. Recent logs:"
+              sudo systemctl status convoy-video-worker --no-pager || true
+              sudo journalctl -u convoy-video-worker -n 40 --no-pager || true
+              exit 1
+            fi
+          else
+            echo "convoy-video-worker.service not installed yet — run scripts/server-setup.sh to add it."
+          fi
+
           echo "Backend deployed and convoy-api is running."
           EOF
 

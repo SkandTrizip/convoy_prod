@@ -1,3 +1,5 @@
+import asyncio
+
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import case, or_, select
 from sqlalchemy.exc import IntegrityError
@@ -101,7 +103,13 @@ async def search_locations(
         if len(results) >= MAX_RESULTS or not GOOGLE_PLACES_API_KEY:
             return {"success": True, "locations": results}
 
-        predictions = fetch_place_autocomplete(query, limit=MAX_RESULTS - len(results))
+        # fetch_place_autocomplete/fetch_place_details use the synchronous
+        # `requests` library — run them in a worker thread so a slow Google
+        # Places call doesn't stall every other concurrent request on this
+        # process's single event loop.
+        predictions = await asyncio.to_thread(
+            fetch_place_autocomplete, query, limit=MAX_RESULTS - len(results)
+        )
         for prediction in predictions:
             place_id = prediction.get("place_id")
             if not place_id or place_id in seen_place_ids:
@@ -113,7 +121,7 @@ async def search_locations(
                 seen_place_ids.add(place_id)
                 continue
 
-            details = fetch_place_details(place_id)
+            details = await asyncio.to_thread(fetch_place_details, place_id)
             if not details:
                 continue
 
