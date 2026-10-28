@@ -146,12 +146,39 @@ Query (all optional):
 | `limit`, `offset` | pagination |
 | `category` | category **id or slug** (new). Repeat it (`?category=a&category=b`) or comma-separate for several; a reel matching **any** is returned. Unknown value gives `400`. |
 | `hashtag` | one hashtag, with or without `#`, case-insensitive (new) |
+| `sort` | `latest` (default, newest first) or `popular` (trending, see below). Anything else gives `422`. (new) |
+| `h3Cell` | only the reels of one **Reels-heatmap hotspot** (new, see "Area feed" below) |
 
-`category` and `hashtag` together mean reels matching both. Response `200`:
+`category`, `hashtag` and `h3Cell` together mean reels matching all of them. Response `200`:
 ```json
 { "success": true, "reels": [ /* reel objects */ ], "total": 120, "limit": 20, "offset": 0 }
 ```
 Without any filter you get the unfiltered feed. The feed chips come from `GET /reel-categories`.
+
+#### `sort=popular` (trending)
+Engagement divided by an age factor, so a good new reel can beat an old big one:
+`(1 + likes + 2*comments + 3*shares + 0.2*views) / (ageHours + 2) ^ 1.2`. The `1 +` means reels nobody has
+touched still order by recency. Ties are broken by newest, then id, so paging by `offset` is stable. The
+formula (and the plain `latest` order) live in one place, `services/reel_ranking.py`: that is where the
+upcoming reels algorithm plugs in, and every feed that sorts follows it.
+
+#### Area feed: `h3Cell`
+Pass an `h3Cell` taken from a cell of `GET /api/heatmap/reels` (resolution **3 to 7**) to get exactly the reels
+that made that cell glow on the heatmap: `ready`, posted **with a location**, within the last
+`HEATMAP_REEL_WINDOW_DAYS` days (30), exactly inside the H3 cell. As in the main feed, **the caller's own reels
+are left out** (the heatmap does count them, so a cell's number can be higher than its feed by the caller's
+own reels). The app asks for `sort=popular` here.
+
+The response then also has an `area` object:
+```json
+{ "success": true, "reels": [ ... ], "total": 68, "limit": 10, "offset": 0,
+  "area": { "h3Cell": "8642c084fffffff", "resolution": 6, "label": "Kandla, Gujarat", "total": 68, "capped": false } }
+```
+`label` is the most common "City, State" among the area's reels (null if none has one); `total` is also the
+top-level `total`; `capped` is `true` only if the area is so busy that the 2,000 best-ranked reels were
+examined instead of all of them. A valid cell nobody posted in is `200` with no reels and `total: 0`.
+Errors: `400` if `h3Cell` isn't an H3 cell or isn't at resolution 3 to 7 (finer cells are refused on purpose, they
+could pinpoint one reel). No exact coordinates are ever returned.
 
 ### `GET /api/videos` (CHANGED)
 Same data, same filters and the same own-reels exclusion as `/reels`, but the list key is `videos` instead

@@ -9,7 +9,7 @@ services.videos.list_feed.
 JWT namespace — see routers/__init__.py.
 """
 
-from typing import Annotated
+from typing import Annotated, Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.exc import IntegrityError
@@ -55,25 +55,61 @@ async def list_reels(
         Query(description="Category id or slug; repeat or comma-separate for several (matches any)"),
     ] = None,
     hashtag: Annotated[str | None, Query(description="With or without leading '#'")] = None,
+    h3_cell: Annotated[
+        str | None,
+        Query(
+            alias="h3Cell",
+            description=(
+                "Only reels of one Reels-heatmap cell (an `h3Cell` from GET /heatmap/reels, resolution 3 to 7): "
+                "exactly the reels that made that cell glow (ready, posted with a location, last "
+                "HEATMAP_REEL_WINDOW_DAYS days). The response then also carries an `area` object."
+            ),
+        ),
+    ] = None,
+    sort: Annotated[
+        Literal["latest", "popular"],
+        Query(description="`latest` = newest first (default). `popular` = trending: engagement weighted by recency."),
+    ] = "latest",
 ):
-    """Most recent ready reels, newest first, optionally filtered by category
-    and/or hashtag."""
+    """Ready reels, newest first by default, optionally filtered by category,
+    hashtag and/or heatmap area (`h3Cell`), and optionally ranked by popularity."""
     try:
-        items, total = await videos.list_feed(
-            session,
-            limit=limit,
-            offset=offset,
-            category=category,
-            hashtag=hashtag,
-            exclude_user_id=current_user.id,
-        )
-        return {
+        area = None
+        if h3_cell is not None:
+            items, area = await videos.list_area_feed(
+                session,
+                h3_cell=h3_cell,
+                limit=limit,
+                offset=offset,
+                category=category,
+                hashtag=hashtag,
+                exclude_user_id=current_user.id,
+                sort=sort,
+            )
+            total = area["total"]
+        else:
+            items, total = await videos.list_feed(
+                session,
+                limit=limit,
+                offset=offset,
+                category=category,
+                hashtag=hashtag,
+                exclude_user_id=current_user.id,
+                sort=sort,
+            )
+        response = {
             "success": True,
             "reels": await reel_social.serialize_reels(session, items, current_user.id),
             "total": total,
             "limit": limit,
             "offset": offset,
         }
+        if area is not None:
+            response["area"] = area
+        return response
+    except ValueError as e:
+        # An h3Cell we won't serve (not a cell, or too fine). Raised before any query.
+        raise HTTPException(status_code=400, detail=str(e))
     except HTTPException:
         raise
     except Exception as e:

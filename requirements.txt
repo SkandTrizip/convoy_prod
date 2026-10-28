@@ -12,6 +12,9 @@ asyncpg>=0.29.0,<1.0.0
 geoalchemy2>=0.17.0,<1.0.0
 shapely>=2.0.0,<3.0.0
 
+# Heatmap: H3 hexagonal grid cells for aggregating truck/reel locations
+h3>=4.0.0,<5.0.0
+
 # External services (Google Places, VAHAN, Veup SMS)
 requests>=2.31.0,<3.0.0
 PyJWT>=2.8.0,<3.0.0

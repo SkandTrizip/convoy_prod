@@ -12,6 +12,7 @@ from routers import (
     contacts,
     creator_reels,
     follows,
+    heatmap,
     kyc,
     locations,
     misc,
@@ -66,6 +67,7 @@ protected_router.include_router(activity.router)
 protected_router.include_router(videos.router)
 protected_router.include_router(reels.router)
 protected_router.include_router(follows.router)
+protected_router.include_router(heatmap.router)
 protected_router.include_router(creator_reels.router)
 protected_router.include_router(calls.router)
 api_router.include_router(protected_router)

@@ -9,15 +9,15 @@ logic here.
 """
 
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 from fastapi import HTTPException
-from sqlalchemy import func, or_, select
+from sqlalchemy import Text, cast, func, literal_column, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from config import MAX_VIDEO_DURATION_SECONDS
+from config import HEATMAP_REEL_WINDOW_DAYS, MAX_VIDEO_DURATION_SECONDS
 from db.base import ReelCategory, Video, VideoCategory
-from services import bunny_stream, reel_social
+from services import bunny_stream, reel_area, reel_ranking, reel_social
 
 
 async def create_upload(
@@ -109,6 +109,31 @@ async def resolve_filter_categories(session: AsyncSession, values: list[str]) ->
     return [c.id for c in rows]
 
 
+async def _feed_conditions(
+    session: AsyncSession,
+    *,
+    category: list[str] | None,
+    hashtag: str | None,
+    exclude_user_id: uuid.UUID | None,
+) -> list:
+    """WHERE conditions shared by every feed read: ready reels, not the viewer's own,
+    optionally narrowed by category and/or hashtag."""
+    conditions = [Video.status == "ready"]
+    if exclude_user_id is not None:
+        # A viewer's own uploads never appear in their watch feed.
+        conditions.append(Video.user_id != exclude_user_id)
+    if category:
+        category_ids = await resolve_filter_categories(session, category)
+        if category_ids:
+            conditions.append(
+                Video.id.in_(select(VideoCategory.video_id).where(VideoCategory.category_id.in_(category_ids)))
+            )
+    if hashtag:
+        tag = hashtag.strip().lstrip("#").lower()
+        conditions.append(Video.hashtags.contains([tag]))
+    return conditions
+
+
 async def list_feed(
     session: AsyncSession,
     *,
@@ -117,26 +142,81 @@ async def list_feed(
     category: list[str] | None = None,
     hashtag: str | None = None,
     exclude_user_id: uuid.UUID | None = None,
+    sort: reel_ranking.ReelSort = "latest",
 ) -> tuple[list[Video], int]:
     """`category`: category ids and/or slugs (a reel matching ANY of them is
     included); `hashtag` is matched after the same normalization applied on
-    upload (case-insensitive, leading '#' ignored)."""
-    base = select(Video).where(Video.status == "ready")
-    if exclude_user_id is not None:
-        # A viewer's own uploads never appear in their watch feed.
-        base = base.where(Video.user_id != exclude_user_id)
-    if category:
-        category_ids = await resolve_filter_categories(session, category)
-        if category_ids:
-            base = base.where(
-                Video.id.in_(select(VideoCategory.video_id).where(VideoCategory.category_id.in_(category_ids)))
-            )
-    if hashtag:
-        tag = hashtag.strip().lstrip("#").lower()
-        base = base.where(Video.hashtags.contains([tag]))
+    upload (case-insensitive, leading '#' ignored). `sort` is decided in
+    services/reel_ranking.py."""
+    conditions = await _feed_conditions(
+        session, category=category, hashtag=hashtag, exclude_user_id=exclude_user_id
+    )
+    base = select(Video).where(*conditions)
     total = await session.scalar(select(func.count()).select_from(base.subquery()))
-    result = await session.execute(base.order_by(Video.created_at.desc()).limit(limit).offset(offset))
+    ordering = reel_ranking.order_by(sort, datetime.utcnow())
+    result = await session.execute(base.order_by(*ordering).limit(limit).offset(offset))
     return list(result.scalars().all()), total or 0
+
+
+async def list_area_feed(
+    session: AsyncSession,
+    *,
+    h3_cell: str,
+    limit: int,
+    offset: int,
+    category: list[str] | None = None,
+    hashtag: str | None = None,
+    exclude_user_id: uuid.UUID | None = None,
+    sort: reel_ranking.ReelSort = "popular",
+) -> tuple[list[Video], dict]:
+    """The reels of one heatmap cell, ranked by `sort`, plus an `area` summary.
+
+    Same reels the Reels heatmap counted for that cell: ready, posted with a
+    location, inside the heatmap's recency window, exactly in the H3 cell. (The
+    viewer's own reels are left out, like the main feed; the heat does count them.)
+    Raises ValueError (client-safe message) for a cell we won't serve.
+    """
+    cell, resolution = reel_area.parse_area_cell(h3_cell)
+    center_lat, center_lng, radius_m = reel_area.cell_geometry(cell)
+    now = datetime.utcnow()
+
+    conditions = await _feed_conditions(
+        session, category=category, hashtag=hashtag, exclude_user_id=exclude_user_id
+    )
+    center = cast(literal_column(f"'SRID=4326;POINT({center_lng:.7f} {center_lat:.7f})'"), Text)
+    conditions += [
+        Video.location.isnot(None),
+        Video.created_at >= now - timedelta(days=HEATMAP_REEL_WINDOW_DAYS),
+        func.ST_DWithin(Video.location, func.ST_GeogFromText(center), radius_m),
+    ]
+    candidates_query = (
+        select(
+            Video.id,
+            literal_column("ST_Y(videos.location::geometry)").label("lat"),
+            literal_column("ST_X(videos.location::geometry)").label("lng"),
+            Video.location_city,
+            Video.location_state,
+        )
+        .where(*conditions)
+        .order_by(*reel_ranking.order_by(sort, now))
+        .limit(reel_area.MAX_CANDIDATES)
+    )
+    rows = (await session.execute(candidates_query)).all()
+
+    # Exact H3 membership, keeping the ranked order.
+    matched = [r for r in rows if reel_area.in_cell(float(r.lat), float(r.lng), cell, resolution)]
+    label = reel_area.area_label((r.location_city, r.location_state) for r in matched)
+    info = reel_area.area_info(
+        cell, resolution, label, total=len(matched), capped=len(rows) >= reel_area.MAX_CANDIDATES
+    )
+
+    page_ids = [r.id for r in matched[offset : offset + limit]]
+    if not page_ids:
+        return [], info
+    videos = {
+        v.id: v for v in (await session.execute(select(Video).where(Video.id.in_(page_ids)))).scalars().all()
+    }
+    return [videos[i] for i in page_ids if i in videos], info
 
 
 async def list_for_user(

@@ -113,3 +113,9 @@ PREFETCH_LOCK_TTL_SECONDS = int(os.environ.get("PREFETCH_LOCK_TTL_SECONDS", "30"
 # inside the dedupe window are ignored (client retry / replay-loop protection).
 REEL_VIEW_FLUSH_INTERVAL_SECONDS = int(os.environ.get("REEL_VIEW_FLUSH_INTERVAL_SECONDS", "10"))
 REEL_VIEW_DEDUPE_SECONDS = int(os.environ.get("REEL_VIEW_DEDUPE_SECONDS", "30"))
+
+# Heatmap (services/heatmap.py): the reels heatmap only counts reels posted
+# within this many days, so it reflects current activity rather than every
+# reel ever posted. The trucks heatmap needs no window — it only ever counts
+# live (unexpired) posts.
+HEATMAP_REEL_WINDOW_DAYS = int(os.environ.get("HEATMAP_REEL_WINDOW_DAYS", "30"))

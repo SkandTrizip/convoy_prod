@@ -4486,3 +4486,1335 @@ WHERE users.id = $1::UUID]
 2026-10-23 15:25:57 | INFO     | convoy.access | POST /api/reels/03caec1c-86d6-4b47-904f-7e59e181c7df/view | status=202 | 145.9ms | client=192.168.1.55
 2026-10-23 15:26:02 | INFO     | convoy.access | GET /api/videos/03caec1c-86d6-4b47-904f-7e59e181c7df/preview-segment | status=200 | 91.0ms | client=192.168.1.55
 2026-10-26 14:34:18 | INFO     | convoy.access | GET /health | status=404 | 74.7ms | client=127.0.0.1
+2026-10-27 10:30:38 | INFO     | convoy.access | GET /api/ | status=200 | 1.1ms | client=127.0.0.1
+2026-10-27 10:30:38 | INFO     | convoy.access | GET /api/heatmap/trucks | status=401 | 2.1ms | client=127.0.0.1
+2026-10-27 10:30:38 | INFO     | convoy.access | POST /api/auth/send-otp | status=200 | 7.8ms | client=127.0.0.1
+2026-10-27 10:30:38 | INFO     | convoy.access | POST /api/auth/verify-otp | status=200 | 9.1ms | client=127.0.0.1
+2026-10-27 10:30:46 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=3 | status=200 | 19.0ms | client=127.0.0.1
+2026-10-27 10:30:46 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=4 | status=200 | 21.6ms | client=127.0.0.1
+2026-10-27 10:30:46 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=5 | status=200 | 19.6ms | client=127.0.0.1
+2026-10-27 10:30:46 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=6 | status=200 | 8.0ms | client=127.0.0.1
+2026-10-27 10:30:46 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=7 | status=200 | 8.8ms | client=127.0.0.1
+2026-10-27 10:30:46 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=8 | status=200 | 6.0ms | client=127.0.0.1
+2026-10-27 10:30:46 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=9 | status=200 | 5.2ms | client=127.0.0.1
+2026-10-27 10:30:46 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=3 | status=200 | 6.5ms | client=127.0.0.1
+2026-10-27 10:30:46 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=4 | status=200 | 6.2ms | client=127.0.0.1
+2026-10-27 10:30:46 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=5 | status=200 | 9.4ms | client=127.0.0.1
+2026-10-27 10:30:46 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=6 | status=200 | 8.1ms | client=127.0.0.1
+2026-10-27 10:30:46 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=7 | status=200 | 10.1ms | client=127.0.0.1
+2026-10-27 10:30:46 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=8 | status=200 | 5.3ms | client=127.0.0.1
+2026-10-27 10:30:46 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=9 | status=200 | 4.9ms | client=127.0.0.1
+2026-10-27 10:30:46 | INFO     | convoy.access | GET /api/heatmap/trucks | status=200 | 10.3ms | client=127.0.0.1
+2026-10-27 10:30:46 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=2 | status=422 | 2.1ms | client=127.0.0.1
+2026-10-27 10:30:46 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=10 | status=422 | 1.5ms | client=127.0.0.1
+2026-10-27 10:30:46 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=x | status=422 | 1.5ms | client=127.0.0.1
+2026-10-27 10:30:46 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=6 | status=200 | 6.9ms | client=127.0.0.1
+2026-10-27 10:31:01 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=7 | status=200 | 18.2ms | client=127.0.0.1
+2026-10-27 10:31:01 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=8 | status=200 | 6.1ms | client=127.0.0.1
+2026-10-27 10:31:01 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=9 | status=200 | 6.0ms | client=127.0.0.1
+2026-10-27 10:31:01 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=7 | status=200 | 10.5ms | client=127.0.0.1
+2026-10-27 10:31:01 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=8 | status=200 | 10.2ms | client=127.0.0.1
+2026-10-27 10:31:01 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=9 | status=200 | 7.4ms | client=127.0.0.1
+2026-10-27 10:47:59 | INFO     | convoy.access | GET /api/ | status=200 | 4.6ms | client=127.0.0.1
+2026-10-27 10:50:02 | INFO     | convoy.access | GET /api/user/profile/64d0a701-2ff1-40a3-8d19-c9decea5a373 | status=401 | 266.0ms | client=127.0.0.1
+2026-10-27 10:50:02 | INFO     | convoy.access | POST /api/contacts/sync/64d0a701-2ff1-40a3-8d19-c9decea5a373 | status=401 | 67.6ms | client=127.0.0.1
+2026-10-27 10:51:38 | INFO     | convoy.access | POST /api/auth/send-otp | status=200 | 234.3ms | client=127.0.0.1
+2026-10-27 10:51:52 | INFO     | convoy.access | POST /api/auth/verify-otp | status=200 | 44.8ms | client=127.0.0.1
+2026-10-27 10:51:53 | INFO     | convoy.access | GET /api/user/profile/124903ae-d261-4ce3-959d-a325b23d3326 | status=200 | 20.1ms | client=127.0.0.1
+2026-10-27 10:51:53 | INFO     | convoy.access | GET /api/user/profile-photo/124903ae-d261-4ce3-959d-a325b23d3326 | status=404 | 7.7ms | client=127.0.0.1
+2026-10-27 10:51:54 | INFO     | convoy.access | POST /api/contacts/sync/124903ae-d261-4ce3-959d-a325b23d3326 | status=200 | 35.3ms | client=127.0.0.1
+2026-10-27 10:52:03 | INFO     | convoy.access | GET /api/user/profile/124903ae-d261-4ce3-959d-a325b23d3326 | status=200 | 241.1ms | client=127.0.0.1
+2026-10-27 10:52:03 | INFO     | convoy.access | PUT /api/user/profile/124903ae-d261-4ce3-959d-a325b23d3326 | status=200 | 251.1ms | client=127.0.0.1
+2026-10-27 10:52:03 | INFO     | convoy.access | GET /api/user/profile-photo/124903ae-d261-4ce3-959d-a325b23d3326 | status=404 | 11.2ms | client=127.0.0.1
+2026-10-27 10:52:04 | INFO     | convoy.access | GET /api/user/profile/124903ae-d261-4ce3-959d-a325b23d3326 | status=200 | 9.6ms | client=127.0.0.1
+2026-10-27 10:52:04 | INFO     | convoy.access | GET /api/history?type=post | status=200 | 19.8ms | client=127.0.0.1
+2026-10-27 10:52:04 | INFO     | convoy.access | GET /api/reels?limit=10&offset=0 | status=200 | 54.3ms | client=127.0.0.1
+2026-10-27 10:52:04 | INFO     | convoy.access | GET /api/user/profile-photo/124903ae-d261-4ce3-959d-a325b23d3326 | status=404 | 3.8ms | client=127.0.0.1
+2026-10-27 10:52:13 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=4 | status=200 | 34.0ms | client=127.0.0.1
+2026-10-27 10:52:23 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=4 | status=200 | 35.9ms | client=127.0.0.1
+2026-10-27 10:52:41 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=5 | status=200 | 36.7ms | client=127.0.0.1
+2026-10-27 10:52:57 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=6 | status=200 | 33.9ms | client=127.0.0.1
+2026-10-27 10:52:57 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=7 | status=200 | 18.5ms | client=127.0.0.1
+2026-10-27 10:52:57 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=8 | status=200 | 8.5ms | client=127.0.0.1
+2026-10-27 10:54:32 | INFO     | convoy.access | GET /api/user/profile/124903ae-d261-4ce3-959d-a325b23d3326 | status=200 | 45.2ms | client=127.0.0.1
+2026-10-27 10:54:33 | INFO     | convoy.access | GET /api/user/profile-photo/124903ae-d261-4ce3-959d-a325b23d3326 | status=404 | 5.9ms | client=127.0.0.1
+2026-10-27 10:54:35 | INFO     | convoy.access | GET /api/user/profile/124903ae-d261-4ce3-959d-a325b23d3326 | status=200 | 12.1ms | client=127.0.0.1
+2026-10-27 10:54:35 | INFO     | convoy.access | GET /api/history?type=post | status=200 | 18.6ms | client=127.0.0.1
+2026-10-27 10:54:35 | INFO     | convoy.access | GET /api/reels?limit=10&offset=0 | status=200 | 64.7ms | client=127.0.0.1
+2026-10-27 10:54:36 | INFO     | convoy.access | GET /api/user/profile-photo/124903ae-d261-4ce3-959d-a325b23d3326 | status=404 | 3.8ms | client=127.0.0.1
+2026-10-27 10:54:48 | INFO     | convoy.access | GET /api/kyc/status/124903ae-d261-4ce3-959d-a325b23d3326 | status=200 | 32.2ms | client=127.0.0.1
+2026-10-27 10:54:48 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=4 | status=200 | 23.7ms | client=127.0.0.1
+2026-10-27 10:55:12 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=5 | status=200 | 38.7ms | client=127.0.0.1
+2026-10-27 10:55:59 | INFO     | convoy.access | GET /api/ | status=200 | 1.3ms | client=127.0.0.1
+2026-10-27 10:56:00 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=5 | status=200 | 88.6ms | client=127.0.0.1
+2026-10-27 11:05:13 | INFO     | convoy.access | GET /api/user/profile/d9bde70a-6649-476e-8ff1-76389f578ba9 | status=200 | 313.8ms | client=192.168.1.49
+2026-10-27 11:05:14 | INFO     | convoy.access | POST /api/contacts/sync/d9bde70a-6649-476e-8ff1-76389f578ba9 | status=200 | 765.0ms | client=192.168.1.49
+2026-10-27 11:05:15 | INFO     | convoy.access | GET /api/user/profile/d9bde70a-6649-476e-8ff1-76389f578ba9 | status=200 | 269.1ms | client=192.168.1.49
+2026-10-27 11:05:15 | INFO     | convoy.access | GET /api/history?type=post | status=200 | 311.4ms | client=192.168.1.49
+2026-10-27 11:05:15 | INFO     | convoy.access | GET /api/reels?limit=10&offset=0 | status=200 | 893.9ms | client=192.168.1.49
+2026-10-27 11:05:19 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=4 | status=200 | 222.2ms | client=192.168.1.49
+2026-10-27 11:05:32 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=6 | status=200 | 189.3ms | client=192.168.1.49
+2026-10-27 11:05:36 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=6 | status=200 | 182.5ms | client=192.168.1.49
+2026-10-27 11:05:42 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=5 | status=200 | 192.5ms | client=192.168.1.49
+2026-10-27 11:05:42 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=4 | status=200 | 176.9ms | client=192.168.1.49
+2026-10-27 11:05:52 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=7 | status=200 | 174.4ms | client=192.168.1.49
+2026-10-27 11:05:54 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=8 | status=200 | 185.0ms | client=192.168.1.49
+2026-10-27 11:05:55 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=7 | status=200 | 178.9ms | client=192.168.1.49
+2026-10-27 11:06:00 | INFO     | convoy.access | GET /api/user/profile-photo/64d0a701-2ff1-40a3-8d19-c9decea5a373 | status=401 | 4.5ms | client=192.168.1.49
+2026-10-27 11:06:00 | INFO     | convoy.access | GET /api/reel-categories | status=200 | 175.8ms | client=192.168.1.49
+2026-10-27 11:06:06 | INFO     | convoy.access | GET /api/user/profile-photo/64d0a701-2ff1-40a3-8d19-c9decea5a373 | status=401 | 1.7ms | client=192.168.1.49
+2026-10-27 11:06:13 | INFO     | convoy.access | GET /api/user/profile-photo/64d0a701-2ff1-40a3-8d19-c9decea5a373 | status=401 | 2.4ms | client=192.168.1.49
+2026-10-27 11:06:14 | INFO     | convoy.access | GET /api/user/profile-photo/64d0a701-2ff1-40a3-8d19-c9decea5a373 | status=401 | 0.9ms | client=192.168.1.49
+2026-10-27 11:06:27 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=8 | status=200 | 142.3ms | client=192.168.1.49
+2026-10-27 11:06:28 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=9 | status=200 | 196.2ms | client=192.168.1.49
+2026-10-27 11:11:16 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=6 | status=200 | 437.7ms | client=192.168.1.49
+2026-10-27 11:11:19 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=5 | status=200 | 430.5ms | client=192.168.1.49
+2026-10-27 11:11:21 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=4 | status=200 | 423.3ms | client=192.168.1.49
+2026-10-27 11:11:30 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=7 | status=200 | 228.0ms | client=192.168.1.49
+2026-10-27 11:11:34 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=8 | status=200 | 214.9ms | client=192.168.1.49
+2026-10-27 11:11:36 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=9 | status=200 | 195.6ms | client=192.168.1.49
+2026-10-27 11:12:08 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=4 | status=200 | 275.7ms | client=192.168.1.49
+2026-10-27 11:12:13 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=5 | status=200 | 233.1ms | client=192.168.1.49
+2026-10-27 11:12:14 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=6 | status=200 | 225.7ms | client=192.168.1.49
+2026-10-27 11:12:16 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=7 | status=200 | 198.2ms | client=192.168.1.49
+2026-10-27 11:12:21 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=8 | status=200 | 183.2ms | client=192.168.1.49
+2026-10-27 11:21:18 | INFO     | convoy.access | GET /api/ | status=200 | 1.4ms | client=127.0.0.1
+2026-10-27 11:21:18 | INFO     | convoy.access | POST /api/auth/send-otp | status=200 | 8.4ms | client=127.0.0.1
+2026-10-27 11:21:18 | INFO     | convoy.access | POST /api/auth/verify-otp | status=200 | 9.4ms | client=127.0.0.1
+2026-10-27 11:21:18 | INFO     | convoy.access | GET /api/heatmap/trucks/pins?minLat=28.40&minLng=77.00&maxLat=28.90&maxLng=77.45 | status=200 | 21.3ms | client=127.0.0.1
+2026-10-27 11:21:18 | INFO     | convoy.access | GET /api/heatmap/trucks/pins?minLat=28.40&minLng=77.00&maxLat=28.90&maxLng=77.45&limit=5 | status=200 | 28.4ms | client=127.0.0.1
+2026-10-27 11:21:18 | INFO     | convoy.access | GET /api/heatmap/trucks/pins?minLat=29&minLng=77&maxLat=28&maxLng=78 | status=400 | 2.7ms | client=127.0.0.1
+2026-10-27 11:21:18 | INFO     | convoy.access | GET /api/heatmap/trucks/pins?minLat=29&minLng=77&maxLat=28&maxLng=78 | status=400 | 2.0ms | client=127.0.0.1
+2026-10-27 11:21:18 | INFO     | convoy.access | GET /api/heatmap/trucks/pins?minLat=8&minLng=68&maxLat=30&maxLng=90 | status=400 | 2.0ms | client=127.0.0.1
+2026-10-27 11:21:18 | INFO     | convoy.access | GET /api/heatmap/trucks/pins | status=422 | 3.3ms | client=127.0.0.1
+2026-10-27 11:21:18 | INFO     | convoy.access | GET /api/heatmap/trucks/pins?minLat=-95&minLng=0&maxLat=1&maxLng=1 | status=422 | 1.9ms | client=127.0.0.1
+2026-10-27 11:21:18 | INFO     | convoy.access | GET /api/heatmap/trucks/pins?minLat=5&minLng=85&maxLat=6&maxLng=86 | status=200 | 12.9ms | client=127.0.0.1
+2026-10-27 11:21:18 | INFO     | convoy.access | GET /api/heatmap/trucks/posts/c605a83a-9df0-419e-bc1c-54d6262d35e6 | status=200 | 25.1ms | client=127.0.0.1
+2026-10-27 11:21:18 | INFO     | convoy.access | GET /api/heatmap/trucks/posts/11111111-1111-1111-1111-111111111111 | status=404 | 3.0ms | client=127.0.0.1
+2026-10-27 11:21:18 | INFO     | convoy.access | GET /api/heatmap/trucks/posts/not-a-uuid | status=400 | 1.8ms | client=127.0.0.1
+2026-10-27 11:21:25 | INFO     | convoy.access | GET /api/heatmap/trucks/posts/698e35ad-5956-4674-afe5-78ce49092cb3 | status=404 | 3.9ms | client=127.0.0.1
+2026-10-27 11:21:32 | INFO     | convoy.access | GET /api/heatmap/trucks/pins?minLat=1&minLng=1&maxLat=2&maxLng=2 | status=401 | 1.4ms | client=127.0.0.1
+2026-10-27 11:25:43 | INFO     | convoy.access | GET /api/ | status=200 | 3.6ms | client=127.0.0.1
+2026-10-27 11:26:40 | INFO     | convoy.access | GET /api/user/profile/124903ae-d261-4ce3-959d-a325b23d3326 | status=401 | 41.4ms | client=127.0.0.1
+2026-10-27 11:27:10 | INFO     | convoy.access | POST /api/auth/send-otp | status=200 | 40.9ms | client=127.0.0.1
+2026-10-27 11:27:21 | INFO     | convoy.access | POST /api/auth/verify-otp | status=200 | 12.7ms | client=127.0.0.1
+2026-10-27 11:27:21 | INFO     | convoy.access | GET /api/user/profile/9d581ea1-1290-4667-bb96-c4aec7438381 | status=200 | 9.4ms | client=127.0.0.1
+2026-10-27 11:27:22 | INFO     | convoy.access | GET /api/user/profile-photo/9d581ea1-1290-4667-bb96-c4aec7438381 | status=404 | 5.9ms | client=127.0.0.1
+2026-10-27 11:27:22 | INFO     | convoy.access | POST /api/contacts/sync/9d581ea1-1290-4667-bb96-c4aec7438381 | status=200 | 29.2ms | client=127.0.0.1
+2026-10-27 11:27:30 | INFO     | convoy.access | GET /api/user/profile/9d581ea1-1290-4667-bb96-c4aec7438381 | status=200 | 13.8ms | client=127.0.0.1
+2026-10-27 11:27:30 | INFO     | convoy.access | PUT /api/user/profile/9d581ea1-1290-4667-bb96-c4aec7438381 | status=200 | 11.7ms | client=127.0.0.1
+2026-10-27 11:27:31 | INFO     | convoy.access | GET /api/user/profile-photo/9d581ea1-1290-4667-bb96-c4aec7438381 | status=404 | 9.1ms | client=127.0.0.1
+2026-10-27 11:27:31 | INFO     | convoy.access | GET /api/user/profile/9d581ea1-1290-4667-bb96-c4aec7438381 | status=200 | 15.2ms | client=127.0.0.1
+2026-10-27 11:27:31 | INFO     | convoy.access | GET /api/history?type=post | status=200 | 77.5ms | client=127.0.0.1
+2026-10-27 11:27:31 | INFO     | convoy.access | GET /api/reels?limit=10&offset=0 | status=200 | 42.8ms | client=127.0.0.1
+2026-10-27 11:27:32 | INFO     | convoy.access | GET /api/user/profile-photo/9d581ea1-1290-4667-bb96-c4aec7438381 | status=404 | 3.4ms | client=127.0.0.1
+2026-10-27 11:27:43 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=4 | status=200 | 88.6ms | client=127.0.0.1
+2026-10-27 11:28:07 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=5 | status=200 | 80.0ms | client=127.0.0.1
+2026-10-27 11:28:07 | INFO     | convoy.access | GET /api/heatmap/trucks/pins?minLat=22.427402989321955&minLng=78.75500337577162&maxLat=22.759108710470088&maxLng=78.99010175540124&limit=1000 | status=200 | 16.5ms | client=127.0.0.1
+2026-10-27 11:28:07 | INFO     | convoy.access | GET /api/heatmap/trucks/pins?minLat=22.536773223924953&minLng=78.8068701417469&maxLat=22.69400107636418&maxLng=78.91832418838611&limit=1000 | status=200 | 15.1ms | client=127.0.0.1
+2026-10-27 11:28:29 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=7 | status=200 | 55.1ms | client=127.0.0.1
+2026-10-27 11:28:29 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=7 | status=200 | 51.5ms | client=127.0.0.1
+2026-10-27 11:28:51 | INFO     | convoy.access | GET /api/heatmap/trucks/pins?minLat=28.093903132366854&minLng=77.6291964479101&maxLat=28.371911599135387&maxLng=77.83567973431543&limit=1000 | status=200 | 29.9ms | client=127.0.0.1
+2026-10-27 11:28:51 | INFO     | convoy.access | GET /api/heatmap/trucks/pins?minLat=28.15767257008458&minLng=77.67604023776882&maxLat=28.30773428630387&maxLng=77.78749428440803&limit=1000 | status=200 | 14.3ms | client=127.0.0.1
+2026-10-27 11:29:32 | INFO     | convoy.access | GET /api/heatmap/trucks/pins?minLat=28.469462404460813&minLng=77.17387432917019&maxLat=28.746487758623317&maxLng=77.38035761557552&limit=1000 | status=200 | 25.2ms | client=127.0.0.1
+2026-10-27 11:29:48 | INFO     | convoy.access | GET /api/heatmap/trucks/posts/d9f0eb1e-97fe-4db4-821c-306851ee2342 | status=200 | 85.3ms | client=127.0.0.1
+2026-10-27 11:32:15 | INFO     | convoy.access | GET /api/user/profile/9d581ea1-1290-4667-bb96-c4aec7438381 | status=200 | 68.5ms | client=127.0.0.1
+2026-10-27 11:32:15 | INFO     | convoy.access | GET /api/user/profile-photo/9d581ea1-1290-4667-bb96-c4aec7438381 | status=404 | 5.5ms | client=127.0.0.1
+2026-10-27 11:32:17 | INFO     | convoy.access | GET /api/user/profile/9d581ea1-1290-4667-bb96-c4aec7438381 | status=200 | 16.0ms | client=127.0.0.1
+2026-10-27 11:32:17 | INFO     | convoy.access | GET /api/history?type=post | status=200 | 23.1ms | client=127.0.0.1
+2026-10-27 11:32:17 | INFO     | convoy.access | GET /api/reels?limit=10&offset=0 | status=200 | 25.0ms | client=127.0.0.1
+2026-10-27 11:32:18 | INFO     | convoy.access | GET /api/user/profile-photo/9d581ea1-1290-4667-bb96-c4aec7438381 | status=404 | 3.0ms | client=127.0.0.1
+2026-10-27 11:32:33 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=4 | status=200 | 80.1ms | client=127.0.0.1
+2026-10-27 11:32:46 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=5 | status=200 | 54.3ms | client=127.0.0.1
+2026-10-27 11:32:46 | INFO     | convoy.access | GET /api/heatmap/trucks/pins?minLat=30.966469244099624&minLng=76.16740374609797&maxLat=31.2982596295094&maxLng=76.42104578564015&limit=1000 | status=200 | 17.9ms | client=127.0.0.1
+2026-10-27 11:32:47 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=7 | status=200 | 100.6ms | client=127.0.0.1
+2026-10-27 11:32:47 | INFO     | convoy.access | GET /api/heatmap/trucks/pins?minLat=31.084045861713168&minLng=76.25886383471533&maxLat=31.180372313683694&maxLng=76.33250184619533&limit=1000 | status=200 | 13.2ms | client=127.0.0.1
+2026-10-27 11:33:11 | INFO     | convoy.access | GET /api/heatmap/trucks/pins?minLat=31.01746847768853&minLng=76.2022482590251&maxLat=31.247169695821754&maxLng=76.37784659409276&limit=1000 | status=200 | 19.1ms | client=127.0.0.1
+2026-10-27 11:33:41 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=6 | status=200 | 50.2ms | client=127.0.0.1
+2026-10-27 11:34:30 | INFO     | convoy.access | GET /api/heatmap/trucks/pins?minLat=28.456060770379686&minLng=76.79525110396966&maxLat=28.800897108684616&maxLng=77.05232815106754&limit=1000 | status=200 | 23.8ms | client=127.0.0.1
+2026-10-27 11:34:30 | INFO     | convoy.access | GET /api/heatmap/trucks/pins?minLat=28.559618494117807&minLng=76.86365517139686&maxLat=28.700685727200366&maxLng=76.96882305430054&limit=1000 | status=200 | 14.5ms | client=127.0.0.1
+2026-10-27 11:34:59 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=7 | status=200 | 122.7ms | client=127.0.0.1
+2026-10-27 11:35:46 | INFO     | convoy.access | GET /api/heatmap/trucks/pins?minLat=28.463000601847064&minLng=77.08980464267383&maxLat=28.775396231776284&maxLng=77.32267638338915&limit=1000 | status=200 | 37.2ms | client=127.0.0.1
+2026-10-27 11:35:46 | INFO     | convoy.access | GET /api/heatmap/trucks/pins?minLat=28.50275148956269&minLng=77.11485171114212&maxLat=28.732940759557884&maxLng=77.28644141482708&limit=1000 | status=200 | 19.4ms | client=127.0.0.1
+2026-10-27 11:35:46 | INFO     | convoy.access | GET /api/heatmap/trucks/pins?minLat=28.538629667795806&minLng=77.1445892124447&maxLat=28.694831211709033&maxLng=77.26102508280233&limit=1000 | status=200 | 16.0ms | client=127.0.0.1
+2026-10-27 11:36:03 | INFO     | convoy.access | GET /api/heatmap/trucks/posts/3ed9c13d-45e3-4276-aa60-dfe2d901a903 | status=200 | 15.1ms | client=127.0.0.1
+2026-10-27 11:40:01 | INFO     | convoy.access | GET /api/user/profile/d9bde70a-6649-476e-8ff1-76389f578ba9 | status=200 | 314.6ms | client=192.168.1.49
+2026-10-27 11:40:02 | INFO     | convoy.access | GET /api/user/profile/d9bde70a-6649-476e-8ff1-76389f578ba9 | status=200 | 217.5ms | client=192.168.1.49
+2026-10-27 11:40:02 | INFO     | convoy.access | GET /api/history?type=post | status=200 | 314.2ms | client=192.168.1.49
+2026-10-27 11:40:02 | INFO     | convoy.access | GET /api/reels?limit=10&offset=0 | status=200 | 919.1ms | client=192.168.1.49
+2026-10-27 11:41:18 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=4 | status=200 | 402.2ms | client=192.168.1.49
+2026-10-27 11:41:21 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=4 | status=200 | 391.8ms | client=192.168.1.49
+2026-10-27 11:45:23 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=5 | status=200 | 436.1ms | client=192.168.1.49
+2026-10-27 11:48:01 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=7 | status=200 | 658.2ms | client=192.168.1.49
+2026-10-27 11:48:01 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=9 | status=200 | 1822.0ms | client=192.168.1.49
+2026-10-27 11:48:02 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=7 | status=200 | 971.9ms | client=192.168.1.49
+2026-10-27 11:48:02 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=6 | status=200 | 1920.6ms | client=192.168.1.49
+2026-10-27 11:48:02 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=6 | status=200 | 1835.7ms | client=192.168.1.49
+2026-10-27 11:48:03 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=9 | status=200 | 1990.6ms | client=192.168.1.49
+2026-10-27 11:48:03 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=8 | status=200 | 2037.6ms | client=192.168.1.49
+2026-10-27 11:48:03 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=8 | status=200 | 2016.1ms | client=192.168.1.49
+2026-10-27 11:48:03 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=7 | status=200 | 335.8ms | client=192.168.1.49
+2026-10-27 11:48:03 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=6 | status=200 | 1873.6ms | client=192.168.1.49
+2026-10-27 11:48:06 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=5 | status=200 | 244.5ms | client=192.168.1.49
+2026-10-27 11:49:11 | INFO     | convoy.access | GET /api/user/profile/d9bde70a-6649-476e-8ff1-76389f578ba9 | status=200 | 267.0ms | client=192.168.1.49
+2026-10-27 11:49:12 | INFO     | convoy.access | GET /api/user/profile/d9bde70a-6649-476e-8ff1-76389f578ba9 | status=200 | 177.3ms | client=192.168.1.49
+2026-10-27 11:49:12 | INFO     | convoy.access | GET /api/history?type=post | status=200 | 217.4ms | client=192.168.1.49
+2026-10-27 11:49:13 | INFO     | convoy.access | GET /api/reels?limit=10&offset=0 | status=200 | 943.7ms | client=192.168.1.49
+2026-10-27 11:53:24 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=4 | status=200 | 405.9ms | client=192.168.1.49
+2026-10-27 11:53:27 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=5 | status=200 | 474.7ms | client=192.168.1.49
+2026-10-27 11:53:28 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=6 | status=200 | 204.3ms | client=192.168.1.49
+2026-10-27 11:53:30 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=7 | status=200 | 293.5ms | client=192.168.1.49
+2026-10-27 11:53:31 | INFO     | convoy.access | GET /api/heatmap/trucks/pins?minLat=28.44837884182234&minLng=77.08259236428306&maxLat=28.804438264187425&maxLng=77.33622124462828&limit=1000 | status=200 | 211.6ms | client=192.168.1.49
+2026-10-27 11:53:36 | INFO     | convoy.access | GET /api/heatmap/trucks/posts/c4bb3b13-16cf-4dc3-a7a1-6666b0510ea6 | status=200 | 368.3ms | client=192.168.1.49
+2026-10-27 11:56:36 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=4 | status=200 | 410.2ms | client=192.168.1.49
+2026-10-27 11:56:38 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=5 | status=200 | 299.5ms | client=192.168.1.49
+2026-10-27 11:56:38 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=5 | status=200 | 233.9ms | client=192.168.1.49
+2026-10-27 11:56:40 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=6 | status=200 | 218.4ms | client=192.168.1.49
+2026-10-27 11:56:40 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=6 | status=200 | 288.8ms | client=192.168.1.49
+2026-10-27 11:56:41 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=7 | status=200 | 388.1ms | client=192.168.1.49
+2026-10-27 11:56:45 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=8 | status=200 | 212.1ms | client=192.168.1.49
+2026-10-27 11:56:52 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=9 | status=200 | 324.5ms | client=192.168.1.49
+2026-10-27 11:56:52 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=9 | status=200 | 191.2ms | client=192.168.1.49
+2026-10-27 11:57:02 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=5 | status=200 | 302.3ms | client=192.168.1.49
+2026-10-27 11:57:21 | INFO     | convoy.access | GET /api/reel-categories | status=200 | 253.2ms | client=192.168.1.49
+2026-10-27 12:07:22 | INFO     | convoy.access | GET /api/ | status=200 | 1.3ms | client=127.0.0.1
+2026-10-27 12:07:22 | INFO     | convoy.access | POST /api/auth/send-otp | status=200 | 10.0ms | client=127.0.0.1
+2026-10-27 12:07:22 | INFO     | convoy.access | POST /api/auth/verify-otp | status=200 | 10.4ms | client=127.0.0.1
+2026-10-27 12:07:22 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=4 | status=200 | 33.3ms | client=127.0.0.1
+2026-10-27 12:07:22 | INFO     | convoy.access | GET /api/reels?h3Cell=84608b5ffffffff&sort=popular&limit=100 | status=200 | 86.6ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/reels?h3Cell=843da11ffffffff&sort=popular&limit=100 | status=200 | 60.5ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/reels?h3Cell=843cf2dffffffff&sort=popular&limit=100 | status=200 | 34.9ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/reels?h3Cell=846031bffffffff&sort=popular&limit=100 | status=200 | 10.2ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/reels?h3Cell=846033bffffffff&sort=popular&limit=100 | status=200 | 8.7ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/reels?h3Cell=84618e7ffffffff&sort=popular&limit=100 | status=200 | 7.6ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/reels?h3Cell=8461993ffffffff&sort=popular&limit=100 | status=200 | 13.0ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=5 | status=200 | 29.7ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/reels?h3Cell=853da117fffffff&sort=popular&limit=100 | status=200 | 19.4ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/reels?h3Cell=85424927fffffff&sort=popular&limit=100 | status=200 | 15.6ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/reels?h3Cell=8542c087fffffff&sort=popular&limit=100 | status=200 | 15.6ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/reels?h3Cell=853d986ffffffff&sort=popular&limit=100 | status=200 | 7.2ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/reels?h3Cell=853d9a37fffffff&sort=popular&limit=100 | status=200 | 8.6ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/reels?h3Cell=85619ab7fffffff&sort=popular&limit=100 | status=200 | 7.1ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/reels?h3Cell=85619abbfffffff&sort=popular&limit=100 | status=200 | 7.1ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=6 | status=200 | 40.7ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/reels?h3Cell=8642c084fffffff&sort=popular&limit=100 | status=200 | 57.8ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/reels?h3Cell=863da219fffffff&sort=popular&limit=100 | status=200 | 13.7ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/reels?h3Cell=864249277ffffff&sort=popular&limit=100 | status=200 | 13.1ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/reels?h3Cell=863c19827ffffff&sort=popular&limit=100 | status=200 | 6.3ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/reels?h3Cell=863c198a7ffffff&sort=popular&limit=100 | status=200 | 6.0ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/reels?h3Cell=86619ad4fffffff&sort=popular&limit=100 | status=200 | 6.0ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/reels?h3Cell=86619bd17ffffff&sort=popular&limit=100 | status=200 | 6.0ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=7 | status=200 | 48.2ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/reels?h3Cell=8742c084dffffff&sort=popular&limit=100 | status=200 | 14.6ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/reels?h3Cell=8760968d1ffffff&sort=popular&limit=100 | status=200 | 16.2ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/reels?h3Cell=873da219bffffff&sort=popular&limit=100 | status=200 | 11.7ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/reels?h3Cell=873d9bd82ffffff&sort=popular&limit=100 | status=200 | 7.1ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/reels?h3Cell=873da024affffff&sort=popular&limit=100 | status=200 | 8.6ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/reels?h3Cell=87619ad49ffffff&sort=popular&limit=100 | status=200 | 8.4ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/reels?h3Cell=87619bd11ffffff&sort=popular&limit=100 | status=200 | 7.5ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=6 | status=200 | 37.1ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/reels?h3Cell=8642c084fffffff&sort=popular&limit=100 | status=200 | 13.2ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/reels?h3Cell=8642c084fffffff&sort=latest&limit=100 | status=200 | 13.4ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/reels?h3Cell=8642c084fffffff&sort=popular&limit=7&offset=0 | status=200 | 7.4ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/reels?h3Cell=8642c084fffffff&sort=popular&limit=7&offset=7 | status=200 | 7.6ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/reels?h3Cell=8642c084fffffff&sort=popular&limit=7&offset=14 | status=200 | 7.5ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/reels?h3Cell=8642c084fffffff&sort=popular&limit=7&offset=21 | status=200 | 6.6ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/reels?h3Cell=8642c084fffffff&sort=popular&limit=7&offset=28 | status=200 | 6.5ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/reels?h3Cell=8642c084fffffff&sort=popular&limit=7&offset=35 | status=200 | 6.0ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/reels?h3Cell=8642c084fffffff&sort=popular&limit=7&offset=42 | status=200 | 6.0ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/reels?h3Cell=8642c084fffffff&sort=popular&limit=7&offset=49 | status=200 | 5.9ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/reels?h3Cell=8642c084fffffff&sort=popular&limit=7&offset=56 | status=200 | 6.0ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/reels?h3Cell=8642c084fffffff&sort=popular&limit=7&offset=63 | status=200 | 6.3ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/reels?h3Cell=8642c084fffffff&sort=popular&limit=7&offset=70 | status=200 | 3.0ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/reels?h3Cell=8642c084fffffff&sort=popular&limit=100 | status=200 | 11.3ms | client=127.0.0.1
+2026-10-27 12:07:23 | INFO     | convoy.access | GET /api/reels?h3Cell=8642c084fffffff&sort=popular&limit=7&offset=100000 | status=200 | 2.9ms | client=127.0.0.1
+2026-10-27 12:07:41 | INFO     | convoy.access | GET /api/reels?h3Cell=abc | status=400 | 5.6ms | client=127.0.0.1
+2026-10-27 12:07:41 | INFO     | convoy.access | GET /api/reels?h3Cell= | status=400 | 2.0ms | client=127.0.0.1
+2026-10-27 12:07:41 | INFO     | convoy.access | GET /api/reels?h3Cell=883da1155bfffff | status=400 | 1.7ms | client=127.0.0.1
+2026-10-27 12:07:41 | INFO     | convoy.access | GET /api/reels?h3Cell=893da1155a3ffff | status=400 | 1.5ms | client=127.0.0.1
+2026-10-27 12:07:41 | INFO     | convoy.access | GET /api/reels?h3Cell=823da7fffffffff | status=400 | 1.5ms | client=127.0.0.1
+2026-10-27 12:07:41 | INFO     | convoy.access | GET /api/reels?sort=hot | status=422 | 2.0ms | client=127.0.0.1
+2026-10-27 12:07:41 | INFO     | convoy.access | GET /api/reels?h3Cell=867c65077ffffff | status=200 | 4.1ms | client=127.0.0.1
+2026-10-27 12:07:41 | INFO     | convoy.access | GET /api/reels?limit=5 | status=200 | 9.8ms | client=127.0.0.1
+2026-10-27 12:07:41 | INFO     | convoy.access | GET /api/reels?limit=5&sort=popular | status=200 | 14.0ms | client=127.0.0.1
+2026-10-27 12:07:41 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=6 | status=200 | 36.3ms | client=127.0.0.1
+2026-10-27 12:07:41 | INFO     | convoy.access | GET /api/reels?h3Cell=863da219fffffff&hashtag=nonexistenttag | status=200 | 4.1ms | client=127.0.0.1
+2026-10-27 12:07:41 | INFO     | convoy.access | GET /api/reels?h3Cell=863da219fffffff&category=not-a-real-category | status=400 | 2.8ms | client=127.0.0.1
+2026-10-27 12:12:36 | INFO     | convoy.access | GET /api/ | status=200 | 1.9ms | client=127.0.0.1
+2026-10-27 12:13:52 | INFO     | convoy.access | GET /api/user/profile/9d581ea1-1290-4667-bb96-c4aec7438381 | status=401 | 52.3ms | client=127.0.0.1
+2026-10-27 12:14:22 | INFO     | convoy.access | POST /api/auth/send-otp | status=200 | 43.2ms | client=127.0.0.1
+2026-10-27 12:14:33 | INFO     | convoy.access | POST /api/auth/verify-otp | status=200 | 43.4ms | client=127.0.0.1
+2026-10-27 12:14:34 | INFO     | convoy.access | GET /api/user/profile/6e52edc6-d3cd-4729-bd17-1c24eb028e0c | status=200 | 6.6ms | client=127.0.0.1
+2026-10-27 12:14:34 | INFO     | convoy.access | GET /api/user/profile-photo/6e52edc6-d3cd-4729-bd17-1c24eb028e0c | status=404 | 6.6ms | client=127.0.0.1
+2026-10-27 12:14:35 | INFO     | convoy.access | POST /api/contacts/sync/6e52edc6-d3cd-4729-bd17-1c24eb028e0c | status=200 | 93.6ms | client=127.0.0.1
+2026-10-27 12:14:45 | INFO     | convoy.access | GET /api/user/profile/6e52edc6-d3cd-4729-bd17-1c24eb028e0c | status=200 | 18.4ms | client=127.0.0.1
+2026-10-27 12:14:45 | INFO     | convoy.access | PUT /api/user/profile/6e52edc6-d3cd-4729-bd17-1c24eb028e0c | status=200 | 22.7ms | client=127.0.0.1
+2026-10-27 12:14:45 | INFO     | convoy.access | GET /api/user/profile-photo/6e52edc6-d3cd-4729-bd17-1c24eb028e0c | status=404 | 7.9ms | client=127.0.0.1
+2026-10-27 12:14:46 | INFO     | convoy.access | GET /api/user/profile/6e52edc6-d3cd-4729-bd17-1c24eb028e0c | status=200 | 14.8ms | client=127.0.0.1
+2026-10-27 12:14:46 | INFO     | convoy.access | GET /api/history?type=post | status=200 | 23.0ms | client=127.0.0.1
+2026-10-27 12:14:46 | INFO     | convoy.access | GET /api/reels?limit=10&offset=0 | status=200 | 33.2ms | client=127.0.0.1
+2026-10-27 12:14:46 | INFO     | convoy.access | GET /api/user/profile-photo/6e52edc6-d3cd-4729-bd17-1c24eb028e0c | status=404 | 3.1ms | client=127.0.0.1
+2026-10-27 12:14:53 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=4 | status=200 | 107.9ms | client=127.0.0.1
+2026-10-27 12:15:06 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=4 | status=200 | 43.3ms | client=127.0.0.1
+2026-10-27 12:15:11 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=5 | status=200 | 51.9ms | client=127.0.0.1
+2026-10-27 12:15:12 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=7 | status=200 | 83.1ms | client=127.0.0.1
+2026-10-27 12:15:35 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=6 | status=200 | 74.4ms | client=127.0.0.1
+2026-10-27 12:15:49 | INFO     | convoy.access | GET /api/reel-categories | status=200 | 14.4ms | client=127.0.0.1
+2026-10-27 12:15:49 | INFO     | convoy.access | GET /api/reels?limit=10&offset=0&h3Cell=843da11ffffffff&sort=popular | status=200 | 33.2ms | client=127.0.0.1
+2026-10-27 12:15:52 | INFO     | convoy.access | GET /api/videos/09d1fffa-8a51-4fb2-8542-b91d1c9c6782/fast-start.m3u8 | status=502 | 999.3ms | client=127.0.0.1
+2026-10-27 12:16:05 | INFO     | convoy.access | GET /api/videos/c5f22c50-1577-48f1-839a-c3708b39ee2e/fast-start.m3u8 | status=502 | 700.7ms | client=127.0.0.1
+2026-10-27 14:40:45 | INFO     | convoy.access | GET /openapi.json | status=200 | 56.7ms | client=127.0.0.1
+2026-10-27 16:42:38 | INFO     | convoy.access | GET /api/user/profile/6e52edc6-d3cd-4729-bd17-1c24eb028e0c | status=401 | 352.0ms | client=192.168.1.78
+2026-10-27 18:03:23 | INFO     | convoy.access | POST /api/auth/send-otp | status=200 | 1316.9ms | client=192.168.1.78
+2026-10-27 18:03:25 | INFO     | convoy.access | POST /api/auth/verify-otp | status=200 | 111.4ms | client=192.168.1.78
+2026-10-27 18:03:26 | INFO     | convoy.access | GET /api/user/profile/64d0a701-2ff1-40a3-8d19-c9decea5a373 | status=200 | 364.9ms | client=192.168.1.78
+2026-10-27 18:03:27 | INFO     | convoy.access | GET /api/user/profile-photo/64d0a701-2ff1-40a3-8d19-c9decea5a373 | status=200 | 764.4ms | client=192.168.1.78
+2026-10-27 18:03:27 | INFO     | convoy.access | POST /api/contacts/sync/64d0a701-2ff1-40a3-8d19-c9decea5a373 | status=200 | 1221.3ms | client=192.168.1.78
+2026-10-27 18:03:27 | INFO     | convoy.access | POST /api/auth/verify-otp | status=200 | 142.2ms | client=192.168.1.78
+2026-10-27 18:03:32 | INFO     | convoy.access | GET /api/user/profile/64d0a701-2ff1-40a3-8d19-c9decea5a373 | status=200 | 292.2ms | client=192.168.1.78
+2026-10-27 18:03:32 | INFO     | convoy.access | GET /api/history?type=post | status=200 | 543.7ms | client=192.168.1.78
+2026-10-27 18:03:33 | INFO     | convoy.access | GET /api/user/profile/64d0a701-2ff1-40a3-8d19-c9decea5a373 | status=200 | 1044.2ms | client=192.168.1.78
+2026-10-27 18:03:33 | INFO     | convoy.access | POST /api/contacts/sync/64d0a701-2ff1-40a3-8d19-c9decea5a373 | status=200 | 1124.8ms | client=192.168.1.78
+2026-10-27 18:03:33 | INFO     | convoy.access | GET /api/reels?limit=10&offset=0 | status=200 | 1397.9ms | client=192.168.1.78
+2026-10-27 18:03:40 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=4 | status=200 | 454.0ms | client=192.168.1.78
+2026-10-27 18:04:15 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=5 | status=200 | 492.9ms | client=192.168.1.78
+2026-10-27 18:04:17 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=6 | status=200 | 438.1ms | client=192.168.1.78
+2026-10-27 18:04:18 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=6 | status=200 | 462.5ms | client=192.168.1.78
+2026-10-27 18:04:23 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=7 | status=200 | 243.6ms | client=192.168.1.78
+2026-10-27 18:29:41 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=7 | status=200 | 402.8ms | client=192.168.1.78
+2026-10-27 18:29:49 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=7 | status=200 | 433.4ms | client=192.168.1.78
+2026-10-28 10:02:51 | INFO     | convoy.access | GET /api/user/profile/d9bde70a-6649-476e-8ff1-76389f578ba9 | status=200 | 399.6ms | client=192.168.1.49
+2026-10-28 10:02:52 | INFO     | convoy.access | GET /api/user/profile/d9bde70a-6649-476e-8ff1-76389f578ba9 | status=200 | 206.3ms | client=192.168.1.49
+2026-10-28 10:02:52 | INFO     | convoy.access | GET /api/history?type=post | status=200 | 343.6ms | client=192.168.1.49
+2026-10-28 10:02:53 | INFO     | convoy.access | GET /api/reels?limit=10&offset=0 | status=200 | 873.1ms | client=192.168.1.49
+2026-10-28 10:02:59 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=4 | status=200 | 394.5ms | client=192.168.1.49
+2026-10-28 10:03:11 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=5 | status=200 | 316.9ms | client=192.168.1.49
+2026-10-28 10:03:15 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=6 | status=200 | 286.5ms | client=192.168.1.49
+2026-10-28 10:03:38 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=7 | status=200 | 312.8ms | client=192.168.1.49
+2026-10-28 10:06:06 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=5 | status=200 | 219.2ms | client=192.168.1.49
+2026-10-28 10:06:07 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=5 | status=200 | 385.0ms | client=192.168.1.49
+2026-10-28 10:06:09 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=6 | status=200 | 563.0ms | client=192.168.1.49
+2026-10-28 10:06:09 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=7 | status=200 | 205.2ms | client=192.168.1.49
+2026-10-28 10:06:14 | INFO     | convoy.access | GET /api/heatmap/trucks/pins?minLat=26.658741932422394&minLng=75.63863432638885&maxLat=27.025971904174966&maxLng=75.89597212736726&limit=1000 | status=200 | 236.9ms | client=192.168.1.49
+2026-10-28 10:06:20 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=7 | status=200 | 267.2ms | client=192.168.1.49
+2026-10-28 10:06:24 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=6 | status=200 | 377.7ms | client=192.168.1.49
+2026-10-28 10:06:25 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=6 | status=200 | 516.5ms | client=192.168.1.49
+2026-10-28 10:06:27 | INFO     | convoy.access | GET /api/reel-categories | status=200 | 198.0ms | client=192.168.1.49
+2026-10-28 10:06:28 | INFO     | convoy.access | GET /api/reels?limit=10&offset=0&h3Cell=873da219bffffff&sort=popular | status=200 | 1127.1ms | client=192.168.1.49
+2026-10-28 10:06:38 | INFO     | convoy.access | GET /api/reels?limit=10&offset=0&category=222de9a5-40f4-4018-9395-c110d30cdff1 | status=200 | 349.3ms | client=192.168.1.49
+2026-10-28 10:06:40 | INFO     | convoy.access | GET /api/reels?limit=10&offset=0&category=b0c32a7c-28c9-4eab-a0fc-f0e20df8ac8c | status=200 | 452.8ms | client=192.168.1.49
+2026-10-28 10:06:52 | INFO     | convoy.access | GET /api/user/profile/64d0a701-2ff1-40a3-8d19-c9decea5a373 | status=200 | 152.9ms | client=192.168.1.78
+2026-10-28 10:06:53 | INFO     | convoy.access | GET /api/user/profile-photo/64d0a701-2ff1-40a3-8d19-c9decea5a373 | status=200 | 784.0ms | client=192.168.1.78
+2026-10-28 10:06:58 | INFO     | convoy.access | GET /api/user/profile/64d0a701-2ff1-40a3-8d19-c9decea5a373 | status=200 | 148.5ms | client=192.168.1.78
+2026-10-28 10:06:58 | INFO     | convoy.access | GET /api/history?type=post | status=200 | 261.0ms | client=192.168.1.78
+2026-10-28 10:06:58 | INFO     | convoy.access | GET /api/reels?limit=10&offset=0 | status=200 | 447.8ms | client=192.168.1.78
+2026-10-28 10:07:06 | INFO     | convoy.access | POST /api/reels/a21a0b71-bfeb-4751-a2b0-5fc1ff8fbfd1/like | status=200 | 506.1ms | client=192.168.1.49
+2026-10-28 10:07:07 | INFO     | convoy.access | GET /api/reels?limit=10&offset=0 | status=200 | 608.8ms | client=192.168.1.49
+2026-10-28 10:07:07 | INFO     | convoy.access | GET /api/reels?limit=10&offset=0&category=222de9a5-40f4-4018-9395-c110d30cdff1 | status=200 | 211.0ms | client=192.168.1.49
+2026-10-28 10:07:11 | INFO     | convoy.access | GET /api/reels?limit=10&offset=10 | status=200 | 335.7ms | client=192.168.1.49
+2026-10-28 10:07:15 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=8 | status=200 | 235.2ms | client=192.168.1.78
+2026-10-28 10:07:15 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=4 | status=200 | 214.5ms | client=192.168.1.78
+2026-10-28 10:07:17 | INFO     | convoy.access | GET /api/vehicle/list/d9bde70a-6649-476e-8ff1-76389f578ba9 | status=200 | 209.5ms | client=192.168.1.49
+2026-10-28 10:07:19 | INFO     | convoy.access | GET /api/posts/my-posts/d9bde70a-6649-476e-8ff1-76389f578ba9 | status=200 | 307.0ms | client=192.168.1.49
+2026-10-28 10:07:21 | INFO     | convoy.access | GET /api/users/d9bde70a-6649-476e-8ff1-76389f578ba9/reels?limit=100&offset=0 | status=200 | 280.2ms | client=192.168.1.49
+2026-10-28 10:07:21 | INFO     | convoy.access | GET /api/users/d9bde70a-6649-476e-8ff1-76389f578ba9/videos?limit=100&offset=0 | status=200 | 810.0ms | client=192.168.1.49
+2026-10-28 10:09:45 | INFO     | convoy.access | POST /api/videos | status=201 | 1798.4ms | client=192.168.1.49
+2026-10-28 10:10:51 | INFO     | convoy.access | GET /api/users/d9bde70a-6649-476e-8ff1-76389f578ba9/reels?limit=100&offset=0 | status=200 | 308.3ms | client=192.168.1.49
+2026-10-28 10:10:51 | INFO     | convoy.access | GET /api/users/d9bde70a-6649-476e-8ff1-76389f578ba9/videos?limit=100&offset=0 | status=200 | 476.1ms | client=192.168.1.49
+2026-10-28 10:10:51 | INFO     | convoy.access | GET /api/reels?limit=10&offset=0 | status=200 | 604.1ms | client=192.168.1.49
+2026-10-28 10:10:51 | INFO     | convoy.access | POST /api/videos/0bc67cef-ecb8-4a5e-aa02-8e1787fad4b8/sync-status | status=200 | 1318.3ms | client=192.168.1.49
+2026-10-28 10:10:54 | INFO     | convoy.access | GET /api/reels?limit=10&offset=0 | status=200 | 372.9ms | client=192.168.1.49
+2026-10-28 10:10:55 | INFO     | convoy.access | POST /api/videos/0bc67cef-ecb8-4a5e-aa02-8e1787fad4b8/sync-status | status=200 | 976.8ms | client=192.168.1.49
+2026-10-28 10:10:57 | INFO     | convoy.access | GET /api/users/d9bde70a-6649-476e-8ff1-76389f578ba9/reels?limit=100&offset=0 | status=200 | 252.9ms | client=192.168.1.49
+2026-10-28 10:10:57 | INFO     | convoy.access | GET /api/users/d9bde70a-6649-476e-8ff1-76389f578ba9/videos?limit=100&offset=0 | status=200 | 596.8ms | client=192.168.1.49
+2026-10-28 10:11:01 | INFO     | convoy.access | POST /api/videos/0bc67cef-ecb8-4a5e-aa02-8e1787fad4b8/sync-status | status=200 | 926.9ms | client=192.168.1.49
+2026-10-28 10:11:08 | INFO     | convoy.access | POST /api/videos/0bc67cef-ecb8-4a5e-aa02-8e1787fad4b8/sync-status | status=200 | 1107.8ms | client=192.168.1.49
+2026-10-28 10:11:36 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=6 | status=200 | 351.3ms | client=192.168.1.49
+2026-10-28 10:11:49 | INFO     | convoy.access | GET /api/users/d9bde70a-6649-476e-8ff1-76389f578ba9/reels?limit=100&offset=0 | status=200 | 248.2ms | client=192.168.1.49
+2026-10-28 10:11:50 | INFO     | convoy.access | GET /api/users/d9bde70a-6649-476e-8ff1-76389f578ba9/videos?limit=100&offset=0 | status=200 | 693.2ms | client=192.168.1.49
+2026-10-28 10:12:00 | INFO     | convoy.access | GET /api/reels?limit=10&offset=0 | status=200 | 352.0ms | client=192.168.1.49
+2026-10-28 10:12:03 | INFO     | convoy.access | GET /api/reels?limit=10&offset=0 | status=200 | 340.3ms | client=192.168.1.49
+2026-10-28 10:12:05 | INFO     | convoy.access | GET /api/reels?limit=10&offset=0 | status=200 | 633.1ms | client=192.168.1.49
+2026-10-28 10:12:10 | INFO     | convoy.access | GET /api/reels?limit=10&offset=10 | status=200 | 371.7ms | client=192.168.1.49
+2026-10-28 10:12:14 | INFO     | convoy.access | GET /api/reels?limit=10&offset=20 | status=200 | 599.5ms | client=192.168.1.49
+2026-10-28 10:12:19 | INFO     | convoy.access | GET /api/reels?limit=10&offset=30 | status=200 | 532.0ms | client=192.168.1.49
+2026-10-28 10:12:23 | INFO     | convoy.access | GET /api/reels?limit=10&offset=40 | status=200 | 572.8ms | client=192.168.1.49
+2026-10-28 10:12:36 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=6 | status=200 | 197.4ms | client=192.168.1.49
+2026-10-28 10:12:38 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=5 | status=200 | 201.4ms | client=192.168.1.49
+2026-10-28 10:12:38 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=4 | status=200 | 181.4ms | client=192.168.1.49
+2026-10-28 10:13:57 | INFO     | convoy.access | GET /api/user/profile/d9bde70a-6649-476e-8ff1-76389f578ba9 | status=200 | 168.2ms | client=192.168.1.49
+2026-10-28 10:13:58 | INFO     | convoy.access | GET /api/user/profile/d9bde70a-6649-476e-8ff1-76389f578ba9 | status=200 | 140.3ms | client=192.168.1.49
+2026-10-28 10:13:59 | INFO     | convoy.access | GET /api/history?type=post | status=200 | 288.1ms | client=192.168.1.49
+2026-10-28 10:13:59 | INFO     | convoy.access | GET /api/reels?limit=10&offset=0 | status=200 | 385.7ms | client=192.168.1.49
+2026-10-28 10:14:01 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=8 | status=200 | 201.7ms | client=192.168.1.49
+2026-10-28 10:14:01 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=4 | status=200 | 198.3ms | client=192.168.1.49
+2026-10-28 10:14:09 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=5 | status=200 | 185.4ms | client=192.168.1.49
+2026-10-28 10:14:27 | INFO     | convoy.access | GET /api/reel-categories | status=200 | 223.2ms | client=192.168.1.49
+2026-10-28 10:14:38 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=6 | status=200 | 248.7ms | client=192.168.1.49
+2026-10-28 10:14:38 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=6 | status=200 | 183.5ms | client=192.168.1.49
+2026-10-28 10:14:39 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=7 | status=200 | 200.1ms | client=192.168.1.49
+2026-10-28 10:14:42 | INFO     | convoy.access | GET /api/heatmap/trucks/pins?minLat=28.362434145743865&minLng=77.1557728167876&maxLat=28.72282408207241&maxLng=77.41228197277367&limit=1000 | status=200 | 322.9ms | client=192.168.1.49
+2026-10-28 10:14:42 | INFO     | convoy.access | GET /api/heatmap/trucks/pins?minLat=28.482610747586286&minLng=77.23752111794164&maxLat=28.608141173455103&maxLng=77.32687024091416&limit=1000 | status=200 | 197.6ms | client=192.168.1.49
+2026-10-28 10:14:52 | INFO     | convoy.access | GET /api/heatmap/trucks/pins?minLat=28.409795545856966&minLng=77.17256275546531&maxLat=28.689626762287396&maxLng=77.37174722176091&limit=1000 | status=200 | 307.5ms | client=192.168.1.49
+2026-10-28 10:14:58 | INFO     | convoy.access | GET /api/heatmap/trucks/pins?minLat=28.499314185650306&minLng=77.05372633807802&maxLat=28.86826488696409&maxLng=77.31668184045047&limit=1000 | status=200 | 197.9ms | client=192.168.1.49
+2026-10-28 10:15:06 | INFO     | convoy.access | GET /api/heatmap/trucks/pins?minLat=28.425445683586027&minLng=77.12777402770081&maxLat=28.665685353483447&maxLng=77.29877039643395&limit=1000 | status=200 | 182.1ms | client=192.168.1.49
+2026-10-28 10:15:07 | INFO     | convoy.access | GET /api/heatmap/trucks/pins?minLat=28.436410384088443&minLng=77.08123985964711&maxLat=28.676625068498435&maxLng=77.25223622838026&limit=1000 | status=200 | 188.5ms | client=192.168.1.49
+2026-10-28 10:15:14 | INFO     | convoy.access | GET /api/heatmap/trucks/pins?minLat=28.341733540305164&minLng=76.97098602757218&maxLat=28.704124718469394&maxLng=77.22887136486726&limit=1000 | status=200 | 207.6ms | client=192.168.1.49
+2026-10-28 10:15:17 | INFO     | convoy.access | GET /api/heatmap/trucks/posts/171f61cf-bddb-4c8b-8960-598bbe31ac0c | status=200 | 398.3ms | client=192.168.1.49
+2026-10-28 10:16:42 | INFO     | convoy.access | GET /api/heatmap/trucks/posts/171f61cf-bddb-4c8b-8960-598bbe31ac0c | status=200 | 357.4ms | client=192.168.1.49
+2026-10-28 10:27:35 | ERROR    | convoy.access | GET /api/user/profile/d9bde70a-6649-476e-8ff1-76389f578ba9 | status=500 | 31429.1ms | client=192.168.1.89
+OSError: [Errno 49] Can't assign requested address
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 848, in _start_transaction
+    await self._transaction.start()
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/asyncpg/transaction.py", line 146, in start
+    await self._connection.execute(query)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/asyncpg/connection.py", line 354, in execute
+    result = await self._protocol.query(query, timeout)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 369, in query
+asyncpg.exceptions.ConnectionDoesNotExistError: connection was closed in the middle of operation
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1969, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 585, in execute
+    self._adapt_connection.await_(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._prepare_and_execute(operation, parameters)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 520, in _prepare_and_execute
+    await adapt_connection._start_transaction()
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 850, in _start_transaction
+    self._handle_exception(error)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 797, in _handle_exception
+    raise translated_error from error
+sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.Error: <class 'asyncpg.exceptions.ConnectionDoesNotExistError'>: connection was closed in the middle of operation
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/middleware/logging.py", line 21, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2683, in app
+    await route.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1753, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2738, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1764, in _handle_selected
+    await route.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1753, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2738, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1764, in _handle_selected
+    await route.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1753, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2738, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1773, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1264, in handle
+    await app(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 150, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 136, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 473, in app
+    solved_result = await solve_dependencies(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/dependencies/utils.py", line 678, in solve_dependencies
+    solved = await call(**solved_result.values)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/middleware/auth.py", line 59, in get_current_user
+    result = await session.execute(select(User).where(User.id == user_uuid))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/ext/asyncio/session.py", line 448, in execute
+    result = await greenlet_spawn(
+             ^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 203, in greenlet_spawn
+    result = context.switch(value)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/orm/session.py", line 2373, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/orm/session.py", line 2271, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<4 lines>...
+        conn,
+        ^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/orm/context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+        statement, params or {}, execution_options=execution_options
+    )
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1421, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/sql/elements.py", line 526, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1643, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1848, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1988, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 2365, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1969, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 585, in execute
+    self._adapt_connection.await_(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._prepare_and_execute(operation, parameters)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 520, in _prepare_and_execute
+    await adapt_connection._start_transaction()
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 850, in _start_transaction
+    self._handle_exception(error)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 797, in _handle_exception
+    raise translated_error from error
+sqlalchemy.exc.DBAPIError: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.ConnectionDoesNotExistError'>: connection was closed in the middle of operation
+[SQL: SELECT users.id, users.mobile, users.name, users.profile_photo, users.kyc_status, users.kyc_step, users.account_status, users.created_date, users.push_token, users.verification_status, users.contacts_last_updated 
+FROM users 
+WHERE users.id = $1::UUID]
+[parameters: (UUID('d9bde70a-6649-476e-8ff1-76389f578ba9'),)]
+(Background on this error at: https://sqlalche.me/e/20/dbapi)
+2026-10-28 10:27:38 | ERROR    | convoy.access | GET /api/user/profile/d9bde70a-6649-476e-8ff1-76389f578ba9 | status=500 | 18607.8ms | client=192.168.1.89
+OSError: [Errno 49] Can't assign requested address
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 848, in _start_transaction
+    await self._transaction.start()
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/asyncpg/transaction.py", line 146, in start
+    await self._connection.execute(query)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/asyncpg/connection.py", line 354, in execute
+    result = await self._protocol.query(query, timeout)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 369, in query
+asyncpg.exceptions.ConnectionDoesNotExistError: connection was closed in the middle of operation
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1969, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 585, in execute
+    self._adapt_connection.await_(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._prepare_and_execute(operation, parameters)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 520, in _prepare_and_execute
+    await adapt_connection._start_transaction()
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 850, in _start_transaction
+    self._handle_exception(error)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 797, in _handle_exception
+    raise translated_error from error
+sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.Error: <class 'asyncpg.exceptions.ConnectionDoesNotExistError'>: connection was closed in the middle of operation
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/middleware/logging.py", line 21, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2683, in app
+    await route.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1753, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2738, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1764, in _handle_selected
+    await route.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1753, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2738, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1764, in _handle_selected
+    await route.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1753, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2738, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1773, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1264, in handle
+    await app(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 150, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 136, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 473, in app
+    solved_result = await solve_dependencies(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/dependencies/utils.py", line 678, in solve_dependencies
+    solved = await call(**solved_result.values)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/middleware/auth.py", line 59, in get_current_user
+    result = await session.execute(select(User).where(User.id == user_uuid))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/ext/asyncio/session.py", line 448, in execute
+    result = await greenlet_spawn(
+             ^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 203, in greenlet_spawn
+    result = context.switch(value)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/orm/session.py", line 2373, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/orm/session.py", line 2271, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<4 lines>...
+        conn,
+        ^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/orm/context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+        statement, params or {}, execution_options=execution_options
+    )
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1421, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/sql/elements.py", line 526, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1643, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1848, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1988, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 2365, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1969, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 585, in execute
+    self._adapt_connection.await_(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._prepare_and_execute(operation, parameters)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 520, in _prepare_and_execute
+    await adapt_connection._start_transaction()
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 850, in _start_transaction
+    self._handle_exception(error)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 797, in _handle_exception
+    raise translated_error from error
+sqlalchemy.exc.DBAPIError: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.ConnectionDoesNotExistError'>: connection was closed in the middle of operation
+[SQL: SELECT users.id, users.mobile, users.name, users.profile_photo, users.kyc_status, users.kyc_step, users.account_status, users.created_date, users.push_token, users.verification_status, users.contacts_last_updated 
+FROM users 
+WHERE users.id = $1::UUID]
+[parameters: (UUID('d9bde70a-6649-476e-8ff1-76389f578ba9'),)]
+(Background on this error at: https://sqlalche.me/e/20/dbapi)
+2026-10-28 10:27:42 | ERROR    | convoy.access | GET /api/reels?limit=10&offset=0 | status=500 | 21652.5ms | client=192.168.1.89
+OSError: [Errno 49] Can't assign requested address
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 848, in _start_transaction
+    await self._transaction.start()
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/asyncpg/transaction.py", line 146, in start
+    await self._connection.execute(query)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/asyncpg/connection.py", line 354, in execute
+    result = await self._protocol.query(query, timeout)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 369, in query
+asyncpg.exceptions.ConnectionDoesNotExistError: connection was closed in the middle of operation
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1969, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 585, in execute
+    self._adapt_connection.await_(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._prepare_and_execute(operation, parameters)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 520, in _prepare_and_execute
+    await adapt_connection._start_transaction()
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 850, in _start_transaction
+    self._handle_exception(error)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 797, in _handle_exception
+    raise translated_error from error
+sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.Error: <class 'asyncpg.exceptions.ConnectionDoesNotExistError'>: connection was closed in the middle of operation
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/middleware/logging.py", line 21, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2683, in app
+    await route.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1753, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2738, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1764, in _handle_selected
+    await route.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1753, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2738, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1764, in _handle_selected
+    await route.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1753, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2738, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1773, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1264, in handle
+    await app(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 150, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 136, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 473, in app
+    solved_result = await solve_dependencies(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/dependencies/utils.py", line 678, in solve_dependencies
+    solved = await call(**solved_result.values)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/middleware/auth.py", line 59, in get_current_user
+    result = await session.execute(select(User).where(User.id == user_uuid))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/ext/asyncio/session.py", line 448, in execute
+    result = await greenlet_spawn(
+             ^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 203, in greenlet_spawn
+    result = context.switch(value)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/orm/session.py", line 2373, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/orm/session.py", line 2271, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<4 lines>...
+        conn,
+        ^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/orm/context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+        statement, params or {}, execution_options=execution_options
+    )
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1421, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/sql/elements.py", line 526, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1643, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1848, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1988, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 2365, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1969, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 585, in execute
+    self._adapt_connection.await_(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._prepare_and_execute(operation, parameters)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 520, in _prepare_and_execute
+    await adapt_connection._start_transaction()
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 850, in _start_transaction
+    self._handle_exception(error)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 797, in _handle_exception
+    raise translated_error from error
+sqlalchemy.exc.DBAPIError: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.ConnectionDoesNotExistError'>: connection was closed in the middle of operation
+[SQL: SELECT users.id, users.mobile, users.name, users.profile_photo, users.kyc_status, users.kyc_step, users.account_status, users.created_date, users.push_token, users.verification_status, users.contacts_last_updated 
+FROM users 
+WHERE users.id = $1::UUID]
+[parameters: (UUID('d9bde70a-6649-476e-8ff1-76389f578ba9'),)]
+(Background on this error at: https://sqlalche.me/e/20/dbapi)
+2026-10-28 10:27:47 | INFO     | convoy.access | GET /api/user/profile/d9bde70a-6649-476e-8ff1-76389f578ba9 | status=200 | 677.0ms | client=192.168.1.89
+2026-10-28 10:27:48 | INFO     | convoy.access | GET /api/user/profile/d9bde70a-6649-476e-8ff1-76389f578ba9 | status=200 | 579.1ms | client=192.168.1.89
+2026-10-28 10:27:48 | INFO     | convoy.access | GET /api/history?type=post | status=200 | 774.7ms | client=192.168.1.89
+2026-10-28 10:27:49 | INFO     | convoy.access | GET /api/reels?limit=10&offset=0 | status=200 | 1281.1ms | client=192.168.1.89
+2026-10-28 10:27:57 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=8 | status=200 | 335.0ms | client=192.168.1.89
+2026-10-28 10:27:57 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=4 | status=200 | 343.7ms | client=192.168.1.89
+2026-10-28 10:28:05 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=6 | status=200 | 317.6ms | client=192.168.1.89
+2026-10-28 10:28:06 | ERROR    | convoy.access | GET /api/history?type=post | status=500 | 46382.3ms | client=192.168.1.89
+OSError: [Errno 49] Can't assign requested address
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 848, in _start_transaction
+    await self._transaction.start()
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/asyncpg/transaction.py", line 146, in start
+    await self._connection.execute(query)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/asyncpg/connection.py", line 354, in execute
+    result = await self._protocol.query(query, timeout)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 369, in query
+asyncpg.exceptions.ConnectionDoesNotExistError: connection was closed in the middle of operation
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1969, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 585, in execute
+    self._adapt_connection.await_(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._prepare_and_execute(operation, parameters)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 520, in _prepare_and_execute
+    await adapt_connection._start_transaction()
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 850, in _start_transaction
+    self._handle_exception(error)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 797, in _handle_exception
+    raise translated_error from error
+sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.Error: <class 'asyncpg.exceptions.ConnectionDoesNotExistError'>: connection was closed in the middle of operation
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/middleware/logging.py", line 21, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2683, in app
+    await route.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1753, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2738, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1764, in _handle_selected
+    await route.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1753, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2738, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1764, in _handle_selected
+    await route.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1753, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2738, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1773, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1264, in handle
+    await app(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 150, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 136, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 473, in app
+    solved_result = await solve_dependencies(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/dependencies/utils.py", line 678, in solve_dependencies
+    solved = await call(**solved_result.values)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/middleware/auth.py", line 59, in get_current_user
+    result = await session.execute(select(User).where(User.id == user_uuid))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/ext/asyncio/session.py", line 448, in execute
+    result = await greenlet_spawn(
+             ^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 203, in greenlet_spawn
+    result = context.switch(value)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/orm/session.py", line 2373, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/orm/session.py", line 2271, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<4 lines>...
+        conn,
+        ^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/orm/context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+        statement, params or {}, execution_options=execution_options
+    )
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1421, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/sql/elements.py", line 526, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1643, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1848, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1988, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 2365, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1969, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 585, in execute
+    self._adapt_connection.await_(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._prepare_and_execute(operation, parameters)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 520, in _prepare_and_execute
+    await adapt_connection._start_transaction()
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 850, in _start_transaction
+    self._handle_exception(error)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 797, in _handle_exception
+    raise translated_error from error
+sqlalchemy.exc.DBAPIError: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class 'asyncpg.exceptions.ConnectionDoesNotExistError'>: connection was closed in the middle of operation
+[SQL: SELECT users.id, users.mobile, users.name, users.profile_photo, users.kyc_status, users.kyc_step, users.account_status, users.created_date, users.push_token, users.verification_status, users.contacts_last_updated 
+FROM users 
+WHERE users.id = $1::UUID]
+[parameters: (UUID('d9bde70a-6649-476e-8ff1-76389f578ba9'),)]
+(Background on this error at: https://sqlalche.me/e/20/dbapi)
+2026-10-28 10:28:12 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=7 | status=200 | 207.5ms | client=192.168.1.89
+2026-10-28 10:28:13 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=7 | status=200 | 212.4ms | client=192.168.1.89
+2026-10-28 10:28:15 | INFO     | convoy.access | GET /api/heatmap/trucks/pins?minLat=28.323945384997486&minLng=76.96351768043557&maxLat=28.688298206689957&maxLng=77.22275764909078&limit=1000 | status=200 | 319.1ms | client=192.168.1.89
+2026-10-28 10:28:18 | INFO     | convoy.access | GET /api/heatmap/trucks/posts/24a40881-d05e-4896-8176-eba68f1f440d | status=200 | 481.6ms | client=192.168.1.89
+2026-10-28 10:41:02 | INFO     | convoy.access | GET /api/user/profile/d9bde70a-6649-476e-8ff1-76389f578ba9 | status=200 | 163.2ms | client=192.168.1.89
+2026-10-28 10:41:04 | INFO     | convoy.access | GET /api/user/profile/d9bde70a-6649-476e-8ff1-76389f578ba9 | status=200 | 147.4ms | client=192.168.1.89
+2026-10-28 10:41:04 | INFO     | convoy.access | GET /api/history?type=post | status=200 | 221.1ms | client=192.168.1.89
+2026-10-28 10:41:04 | INFO     | convoy.access | GET /api/reels?limit=10&offset=0 | status=200 | 909.5ms | client=192.168.1.89
+2026-10-28 10:41:06 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=4 | status=200 | 187.5ms | client=192.168.1.89
+2026-10-28 10:41:07 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=8 | status=200 | 416.3ms | client=192.168.1.89
+2026-10-28 10:41:09 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=5 | status=200 | 207.5ms | client=192.168.1.89
+2026-10-28 10:41:12 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=6 | status=200 | 411.2ms | client=192.168.1.89
+2026-10-28 10:41:12 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=7 | status=200 | 407.4ms | client=192.168.1.89
+2026-10-28 10:41:15 | INFO     | convoy.access | GET /api/heatmap/trucks/pins?minLat=28.395267372423223&minLng=77.07289345128677&maxLat=28.75639093603829&maxLng=77.33000584898664&limit=1000 | status=200 | 196.3ms | client=192.168.1.89
+2026-10-28 10:41:16 | INFO     | convoy.access | GET /api/heatmap/trucks/posts/66b9d671-af46-4cde-9fef-fe89f336fabf | status=200 | 344.1ms | client=192.168.1.89
+2026-10-28 10:42:16 | INFO     | convoy.access | GET /api/heatmap/trucks/pins?minLat=28.48950254630904&minLng=77.16133535348229&maxLat=28.64941243395006&maxLng=77.27518088177277&limit=1000 | status=200 | 303.0ms | client=192.168.1.89
+2026-10-28 10:45:40 | INFO     | convoy.access | GET /api/user/profile/64d0a701-2ff1-40a3-8d19-c9decea5a373 | status=200 | 451.4ms | client=192.168.1.83
+2026-10-28 10:45:41 | INFO     | convoy.access | GET /api/user/profile-photo/64d0a701-2ff1-40a3-8d19-c9decea5a373 | status=200 | 824.9ms | client=192.168.1.83
+2026-10-28 10:45:46 | INFO     | convoy.access | GET /api/user/profile/64d0a701-2ff1-40a3-8d19-c9decea5a373 | status=200 | 147.6ms | client=192.168.1.83
+2026-10-28 10:45:46 | INFO     | convoy.access | GET /api/history?type=post | status=200 | 361.0ms | client=192.168.1.83
+2026-10-28 10:45:46 | INFO     | convoy.access | GET /api/reels?limit=10&offset=0 | status=200 | 825.7ms | client=192.168.1.83
+2026-10-28 10:46:02 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=8 | status=200 | 620.8ms | client=192.168.1.83
+2026-10-28 10:46:02 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=4 | status=200 | 568.2ms | client=192.168.1.83
+2026-10-28 10:47:00 | INFO     | convoy.access | GET /api/heatmap/trucks/pins?minLat=28.48715737754748&minLng=77.1635588989567&maxLat=28.647070826414964&maxLng=77.27740442724718&limit=1000 | status=200 | 167.0ms | client=192.168.1.89
+2026-10-28 10:47:27 | INFO     | convoy.access | GET /api/user/profile/d9bde70a-6649-476e-8ff1-76389f578ba9 | status=200 | 162.6ms | client=192.168.1.89
+2026-10-28 10:47:28 | INFO     | convoy.access | GET /api/user/profile/d9bde70a-6649-476e-8ff1-76389f578ba9 | status=200 | 133.1ms | client=192.168.1.89
+2026-10-28 10:47:28 | INFO     | convoy.access | GET /api/history?type=post | status=200 | 188.1ms | client=192.168.1.89
+2026-10-28 10:47:29 | INFO     | convoy.access | GET /api/reels?limit=10&offset=0 | status=200 | 424.2ms | client=192.168.1.89
+2026-10-28 10:47:34 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=8 | status=200 | 231.3ms | client=192.168.1.89
+2026-10-28 10:47:34 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=4 | status=200 | 331.7ms | client=192.168.1.89
+2026-10-28 10:47:36 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=4 | status=200 | 291.4ms | client=192.168.1.89
+2026-10-28 10:53:27 | INFO     | convoy.access | GET /api/user/profile/64d0a701-2ff1-40a3-8d19-c9decea5a373 | status=200 | 156.8ms | client=192.168.1.83
+2026-10-28 10:53:28 | INFO     | convoy.access | GET /api/user/profile-photo/64d0a701-2ff1-40a3-8d19-c9decea5a373 | status=200 | 492.8ms | client=192.168.1.83
+2026-10-28 10:53:32 | INFO     | convoy.access | GET /api/user/profile/64d0a701-2ff1-40a3-8d19-c9decea5a373 | status=200 | 162.0ms | client=192.168.1.83
+2026-10-28 10:53:33 | INFO     | convoy.access | GET /api/reels?limit=10&offset=0 | status=200 | 820.1ms | client=192.168.1.83
+2026-10-28 10:53:46 | INFO     | convoy.access | GET /api/history?type=search | status=200 | 326.7ms | client=192.168.1.83
+2026-10-28 10:54:11 | INFO     | convoy.access | GET /api/history?type=post | status=200 | 254.4ms | client=192.168.1.83
+2026-10-28 10:56:30 | INFO     | convoy.access | GET /api/user/profile/d9bde70a-6649-476e-8ff1-76389f578ba9 | status=200 | 192.0ms | client=192.168.1.89
+2026-10-28 10:56:31 | INFO     | convoy.access | GET /api/user/profile/d9bde70a-6649-476e-8ff1-76389f578ba9 | status=200 | 158.5ms | client=192.168.1.89
+2026-10-28 10:56:32 | INFO     | convoy.access | GET /api/reels?limit=10&offset=0 | status=200 | 853.8ms | client=192.168.1.89
+2026-10-28 10:56:38 | INFO     | convoy.access | GET /api/history?type=search | status=200 | 172.6ms | client=192.168.1.89
+2026-10-28 10:56:46 | INFO     | convoy.access | GET /api/history?type=post | status=200 | 176.6ms | client=192.168.1.89
+2026-10-28 10:56:47 | INFO     | convoy.access | GET /api/history?type=post | status=200 | 240.1ms | client=192.168.1.89
+2026-10-28 10:58:39 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=8 | status=200 | 201.0ms | client=192.168.1.89
+2026-10-28 10:58:39 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=4 | status=200 | 293.5ms | client=192.168.1.89
+2026-10-28 10:59:55 | INFO     | convoy.access | GET /api/reel-categories | status=200 | 186.0ms | client=192.168.1.89
+2026-10-28 11:07:17 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=4 | status=200 | 311.0ms | client=192.168.1.89
+2026-10-28 11:07:18 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=4 | status=200 | 247.2ms | client=192.168.1.89
+2026-10-28 11:07:28 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=5 | status=200 | 212.8ms | client=192.168.1.89
+2026-10-28 11:07:28 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=5 | status=200 | 258.2ms | client=192.168.1.89
+2026-10-28 11:07:41 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=5 | status=200 | 373.3ms | client=192.168.1.89
+2026-10-28 11:07:42 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=5 | status=200 | 248.2ms | client=192.168.1.89
+2026-10-28 11:07:43 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=6 | status=200 | 382.3ms | client=192.168.1.89
+2026-10-28 11:07:44 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=5 | status=200 | 302.3ms | client=192.168.1.89
+2026-10-28 11:07:44 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=5 | status=200 | 296.5ms | client=192.168.1.89
+2026-10-28 11:07:52 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=6 | status=200 | 226.5ms | client=192.168.1.89
+2026-10-28 11:09:37 | INFO     | convoy.access | GET /api/user/profile/d9bde70a-6649-476e-8ff1-76389f578ba9 | status=200 | 173.9ms | client=192.168.1.89
+2026-10-28 11:09:38 | INFO     | convoy.access | POST /api/contacts/sync/d9bde70a-6649-476e-8ff1-76389f578ba9 | status=200 | 592.7ms | client=192.168.1.89
+2026-10-28 11:09:38 | INFO     | convoy.access | GET /api/user/profile/d9bde70a-6649-476e-8ff1-76389f578ba9 | status=200 | 168.2ms | client=192.168.1.89
+2026-10-28 11:09:38 | INFO     | convoy.access | GET /api/reels?limit=10&offset=0 | status=200 | 355.2ms | client=192.168.1.89
+2026-10-28 11:09:41 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=8 | status=200 | 186.2ms | client=192.168.1.89
+2026-10-28 11:09:41 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=4 | status=200 | 182.0ms | client=192.168.1.89
+2026-10-28 11:10:02 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=5 | status=200 | 252.9ms | client=192.168.1.89
+2026-10-28 11:10:03 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=5 | status=200 | 198.0ms | client=192.168.1.89
+2026-10-28 11:10:25 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=6 | status=200 | 201.6ms | client=192.168.1.89
+2026-10-28 11:10:27 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=7 | status=200 | 238.3ms | client=192.168.1.89
+2026-10-28 11:10:33 | INFO     | convoy.access | GET /api/heatmap/trucks/pins?minLat=28.364288106227242&minLng=77.15857163463514&maxLat=28.715485530748907&maxLng=77.41183041674216&limit=1000 | status=200 | 214.3ms | client=192.168.1.89
+2026-10-28 11:10:33 | INFO     | convoy.access | GET /api/heatmap/trucks/pins?minLat=28.43706123145683&minLng=77.21240677307223&maxLat=28.63881483834323&maxLng=77.35789447527974&limit=1000 | status=200 | 286.6ms | client=192.168.1.89
+2026-10-28 11:11:56 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=4 | status=200 | 207.5ms | client=192.168.1.89
+2026-10-28 11:12:01 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=4 | status=200 | 294.0ms | client=192.168.1.89
+2026-10-28 11:12:05 | INFO     | convoy.access | GET /api/reel-categories | status=200 | 225.8ms | client=192.168.1.89
+2026-10-28 11:12:06 | INFO     | convoy.access | GET /api/history?type=search | status=200 | 239.3ms | client=192.168.1.89
+2026-10-28 12:27:09 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=8 | status=200 | 345.9ms | client=192.168.1.83
+2026-10-28 12:27:09 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=4 | status=200 | 279.2ms | client=192.168.1.83
+2026-10-28 12:27:21 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=5 | status=200 | 392.9ms | client=192.168.1.83
+2026-10-28 12:27:25 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=6 | status=200 | 559.2ms | client=192.168.1.83
+2026-10-28 12:27:34 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=7 | status=200 | 214.4ms | client=192.168.1.83
+2026-10-28 12:27:47 | INFO     | convoy.access | GET /api/heatmap/trucks/pins?minLat=28.45029789695305&minLng=77.19243399194205&maxLat=28.688223883887307&maxLng=77.37212081743492&limit=1000 | status=200 | 232.7ms | client=192.168.1.83
+2026-10-28 12:27:47 | INFO     | convoy.access | GET /api/heatmap/trucks/pins?minLat=28.45302896929297&minLng=77.19486665391902&maxLat=28.68366450154259&maxLng=77.36904605491146&limit=1000 | status=200 | 197.3ms | client=192.168.1.83
+2026-10-28 15:50:05 | INFO     | convoy.access | GET /api/heatmap/reels?resolution=7 | status=200 | 3391.9ms | client=192.168.1.83
+2026-10-28 15:50:05 | INFO     | convoy.access | GET /api/heatmap/trucks?resolution=7 | status=200 | 3379.7ms | client=192.168.1.83

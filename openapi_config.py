@@ -76,6 +76,10 @@ OPENAPI_TAGS = [
         "description": "Admin KYC review and analytics dashboard.",
     },
     {
+        "name": "heatmap",
+        "description": "Aggregated H3-cell heatmaps of live truck locations and reel posting locations.",
+    },
+    {
         "name": "history",
         "description": "Recent activity: last 10 searches and last 10 posts for the logged-in user.",
     },

@@ -136,6 +136,90 @@ Run all commands from the project root (`convoy_prod/`). `psql` is at
 - [ ] Open scalability items in `docs/SCALABILITY_ROADMAP.md` (Firebase sends block the server, no DB pool
   sizing, no rate limiting).
 
+## Part G: Heatmap (Trucks + Reels tabs in the app)
+
+**Migrations: none.** The only new backend dependency is the `h3` package. Full API reference for the app
+developer: [`docs/HEATMAP_API.md`](docs/HEATMAP_API.md).
+
+- [ ] **Step G1: Install the new dependency locally.**
+  ```bash
+  .venv/bin/pip install -r requirements.txt
+  ```
+  Production needs nothing extra: the deploy workflow already runs `pip install -r requirements.txt`.
+
+- [ ] **Step G2: Run the heatmap unit tests** (no database needed). Expect `16 passed`.
+  ```bash
+  .venv/bin/python -m pytest tests/test_heatmap.py -q
+  ```
+
+- [x] **Step G3: Dummy data is IN the shared dev database right now** (seeded 2026-10-27: about 3,000 live trucks and
+  4,000 reels, spread over ~70 cities, 22 highway corridors and 14 transport hubs across India, owned by 60 fake users
+  whose mobile starts with `hm-dummy-`). Because local and production share this database, real users can also see them
+  until removed: dummy truck posts show in truck search, and dummy reels (no playable video) show in the reels feed.
+  The seed script refuses a non-local database unless you pass `--allow-remote`.
+  ```bash
+  .venv/bin/python scripts/seed_heatmap_dummy.py --status --allow-remote    # how many dummy rows exist
+  .venv/bin/python scripts/seed_heatmap_dummy.py --reset --allow-remote     # replace them with a fresh set
+  .venv/bin/python scripts/seed_heatmap_dummy.py --trucks 10000 --reels 15000 --reset --allow-remote   # more data
+  ```
+
+  Each dummy truck post now has 1 to 3 destinations and a contact name plus a clearly fake `0000…` number, so tapping
+  a pin in the app shows a full details sheet. (Re-seeded 2026-10-27: 3,154 posts, 6,321 destinations.)
+
+- [ ] **Step G3b: Try the real truck pins in the app.** Open the Heatmap tab, stay on **Trucks**, zoom in until a city
+  fills the screen (zoom 12 or more): the heat becomes truck pins, nearby ones grouped in numbered bubbles. Tap a bubble
+  to zoom in, tap a pin for the poster, route, truck and contact. Delhi, Mumbai and the hub areas have the most data.
+
+- [ ] **Step G3c: Try "tap a Reels hotspot".** Heatmap tab, **Reels**, tap a red/orange blob: the app jumps to the Reels
+  tab showing an orange area chip (for example "Delhi, Delhi ✕") and that area's reels, most popular first. Tap the
+  chip's ✕ to go back to the normal feed. On the Reels heatmap you can't zoom in past a city. The dummy reels now have
+  uneven likes/comments/shares/views so the popular order is visible (the dummy reels have no playable video, so the
+  player just spins; the title, author, counts and place are real). API reference: `docs/REELS_API.md` ("Area feed").
+  Re-seeded 2026-10-27 so the shared dev DB has these counters.
+
+- [ ] **Step G3d: Check the map stays on India.** Heatmap tab (either tab): it opens fitted to India and you can't pan
+  or zoom out past the India box (`indiaBounds` in `map_zoom_levels.dart`: 6.5–37.2 N, 68–97.5 E). Neighbouring
+  countries that fall inside that box (Pakistan, Nepal, Bangladesh, Sri Lanka, part of Tibet) are still drawn by the map
+  tiles; hiding them would need an India outline mask. App-only change, no backend change.
+
+- [ ] **Step G3e: Check the new truck details sheet.** Heatmap tab, Trucks, zoom in to pins and tap one (the Truck Map
+  screen uses the same sheet). Top row: poster photo/icon, name, and a close (X) button; no "Truck Details" title.
+  Grey card: truck type and capacity, masked number, then the route with full locations (name, city, state, pincode),
+  length/height and mutuals when present. Buttons: **Request 1:1** (shows "coming soon" until its form is built) and
+  **Call Driver to Book** (opens the dialer, same as the old call icon). App-only change.
+
+- [ ] **Step G3f: Check the Home / Profile / Search changes (app only).** Home no longer has "Manage Post & Searches".
+  Profile > Account has **Recent Post & Searches** between My Uploads and KYC Verification; it opens the full
+  Recent Posts / Recent Search screen (the old "View All" target). The Search tab shows your 5 most recent searches
+  under the form instead of the live truck map; tap one to repeat it, and the list refreshes when you come back.
+
+- [ ] **Step G4: REMOVE all the dummy data (one command).** It deletes only rows owned by the `hm-dummy-` users and
+  prints what it removed; real data is never matched.
+  ```bash
+  .venv/bin/python scripts/seed_heatmap_dummy.py --cleanup --allow-remote
+  ```
+
+- [ ] **Step G5: Try it in the app.** The app's `.env` already points at your local API (`API_BASE_URL`). Start the API
+  (`.venv/bin/uvicorn server:app --port 8000`, or use the port your `.env` expects), log in, open the **Heatmap** tab.
+
+- [ ] **Optional: use a scratch database instead of the shared one** (nothing visible to real users). Local Postgres 17
+  on port 5433 has PostGIS:
+  ```bash
+  psql -h 127.0.0.1 -p 5433 -U postgres -c "CREATE DATABASE convoy_heatmap_test;"
+  psql -h 127.0.0.1 -p 5433 -U postgres -d convoy_heatmap_test -c "CREATE EXTENSION IF NOT EXISTS postgis;"
+  export DATABASE_URL=postgresql://postgres@127.0.0.1:5433/convoy_heatmap_test
+  .venv/bin/python scripts/seed_heatmap_dummy.py --reset            # no --allow-remote needed for a local DB
+  DATABASE_URL=$DATABASE_URL VEUP_PROCESS_KEY= PORT=8010 .venv/bin/uvicorn server:app --port 8010   # empty key = dev OTP, no SMS
+  psql -h 127.0.0.1 -p 5433 -U postgres -c "DROP DATABASE convoy_heatmap_test;"                     # when done
+  ```
+
+- [ ] **In production:** deploy as usual (nothing else to run). The Trucks heatmap shows live (unexpired) truck posts;
+  the Reels heatmap shows ready reels from the last 30 days that were posted **with GPS** (change the window with the
+  `HEATMAP_REEL_WINDOW_DAYS` env var). It will look empty until there is such data. At zoom 12+ cells with fewer than 3
+  items are hidden on purpose, for privacy.
+
+---
+
 ## Housekeeping
 
 - [ ] Nothing from the last several sessions is committed. Review and commit when you're ready (Claude won't
