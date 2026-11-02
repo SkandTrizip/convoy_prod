@@ -27,6 +27,8 @@ async def upsert_device(
     fcm_token: str,
     app_version: Optional[str] = None,
     device_name: Optional[str] = None,
+    voip_token: Optional[str] = None,
+    voip_sandbox: Optional[bool] = None,
 ) -> UserDevice:
     """Idempotent device sync. Caller commits.
 
@@ -74,6 +76,21 @@ async def upsert_device(
     # app-seen event too — this matters for the legacy shim (routers/users.py),
     # which never gets the opportunistic middleware update since old app
     # versions don't send the X-Device-Id header.
+    # VoIP token: None = leave as is, "" = clear, anything else = store. A token
+    # is one app install's, so if another row held it that row is stale.
+    if voip_token is not None:
+        if voip_token == "":
+            device.voip_token = None
+        else:
+            await session.execute(
+                update(UserDevice)
+                .where(UserDevice.voip_token == voip_token, UserDevice.device_id != device_id)
+                .values(voip_token=None)
+            )
+            device.voip_token = voip_token
+    if voip_sandbox is not None:
+        device.voip_sandbox = voip_sandbox
+
     device.is_active = True
     device.last_token_sync = now
     device.last_app_seen = now
@@ -125,6 +142,37 @@ async def get_active_devices_for_user_ids(
     for user_id, device_id, fcm_token in result.all():
         devices.setdefault(str(user_id), []).append(DeviceToken(device_id, fcm_token))
     return devices
+
+
+@dataclass
+class CallDevice:
+    """What the incoming-call push needs to know about one of a user's devices."""
+
+    device_id: str
+    platform: str
+    fcm_token: str
+    voip_token: Optional[str]
+    voip_sandbox: bool
+
+
+async def get_active_call_devices(session: AsyncSession, user_id: uuid.UUID) -> List[CallDevice]:
+    result = await session.execute(
+        select(
+            UserDevice.device_id,
+            UserDevice.platform,
+            UserDevice.fcm_token,
+            UserDevice.voip_token,
+            UserDevice.voip_sandbox,
+        ).where(UserDevice.user_id == user_id, UserDevice.is_active.is_(True))
+    )
+    return [CallDevice(*row) for row in result.all()]
+
+
+async def clear_voip_token(session: AsyncSession, device_id: str) -> None:
+    """Apple said this token is dead (app removed, token rotated). Caller commits."""
+    await session.execute(
+        update(UserDevice).where(UserDevice.device_id == device_id).values(voip_token=None)
+    )
 
 
 async def deactivate_devices(session: AsyncSession, device_ids: List[str]) -> None:

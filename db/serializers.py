@@ -1,16 +1,18 @@
 import uuid
-from datetime import date
+from datetime import date, timedelta
 
 from decimal import Decimal
 
+from config import CALL_RING_SECONDS
+
 from db.base import (
     AdminUser,
+    CallRequest,
     Booking,
     CallLog,
     KYCRecord,
     Location,
     Notification,
-    OneToOneCall,
     ReelCategory,
     ScratchCard,
     SearchDemand,
@@ -318,15 +320,43 @@ def reel_comment_to_dict(comment: VideoComment, author: User | None, can_delete:
     }
 
 
-def one_to_one_call_to_dict(call: OneToOneCall) -> dict:
+
+def call_request_party_to_dict(user: User | None) -> dict:
     return {
-        "id": str(call.id),
-        "hostUserId": str(call.host_user_id),
-        "hostName": call.host_name,
-        "guestUserId": str(call.guest_user_id) if call.guest_user_id else None,
-        "channelName": call.channel_name,
-        "title": call.title,
-        "status": call.status,
-        "startedAt": call.started_at.isoformat(),
-        "endedAt": call.ended_at.isoformat() if call.ended_at else None,
+        "id": str(user.id) if user else None,
+        "name": user.name if user else None,
+        "photo": profile_photo_url(user) if user else None,
+    }
+
+
+def call_request_to_dict(
+    request: CallRequest, requester: User | None, provider: User | None, viewer_id: uuid.UUID
+) -> dict:
+    """`role` tells the app which side the caller is. `holdAmount` is the "call
+    amount" (frozen at request time, owed once the call connects); `amount` is
+    the full offer paid if the requester says they were satisfied."""
+    return {
+        "id": str(request.id),
+        "role": "requester" if viewer_id == request.requester_id else "provider",
+        "status": request.status,
+        "topic": request.topic,
+        "durationMinutes": request.duration_minutes,
+        "amount": str(request.amount),
+        "holdAmount": str(request.hold_amount),
+        "requester": call_request_party_to_dict(requester),
+        "provider": call_request_party_to_dict(provider),
+        "truckRouteId": str(request.truck_route_id) if request.truck_route_id else None,
+        "expiresAt": request.expires_at.isoformat(),
+        "createdAt": request.created_at.isoformat(),
+        "respondedAt": request.responded_at.isoformat() if request.responded_at else None,
+        "callStartedAt": request.call_started_at.isoformat() if request.call_started_at else None,
+        # While the phone is ringing: when the ring stops (the requester's ring screen counts down to it).
+        "ringEndsAt": (request.ring_started_at + timedelta(seconds=CALL_RING_SECONDS)).isoformat()
+        if request.status == "ringing" and request.ring_started_at
+        else None,
+        "callEndedAt": request.call_ended_at.isoformat() if request.call_ended_at else None,
+        "connectedSeconds": request.connected_seconds,
+        "feedbackDeadline": request.feedback_deadline.isoformat() if request.feedback_deadline else None,
+        "satisfied": request.satisfied,
+        "settledAmount": str(request.settled_amount) if request.settled_amount is not None else None,
     }

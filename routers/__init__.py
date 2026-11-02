@@ -7,7 +7,7 @@ from routers import (
     admin_auth,
     auth,
     bookings,
-    calls,
+    call_requests,
     campaigns,
     contacts,
     creator_reels,
@@ -69,5 +69,5 @@ protected_router.include_router(reels.router)
 protected_router.include_router(follows.router)
 protected_router.include_router(heatmap.router)
 protected_router.include_router(creator_reels.router)
-protected_router.include_router(calls.router)
+protected_router.include_router(call_requests.router)
 api_router.include_router(protected_router)

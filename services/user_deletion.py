@@ -13,7 +13,7 @@ from db.base import (
     User,
     UserActivity,
 )
-from services import reel_social
+from services import call_requests, reel_social
 
 
 async def delete_user_cascade(session: AsyncSession, user: User) -> dict[str, int]:
@@ -25,9 +25,12 @@ async def delete_user_cascade(session: AsyncSession, user: User) -> dict[str, in
     clean these up on its own. Caller commits.
     """
     user_id = user.id
+    # Before the rows go: hand back / pay out money held for their open 1:1 calls.
+    call_holds_settled = await call_requests.release_for_deleted_user(session, user_id)
     own_route_ids = select(TruckRoute.id).where(TruckRoute.user_id == user_id)
 
     deleted = {
+        "callHoldsSettled": call_holds_settled,
         "bookingsOnTheirPosts": (
             await session.execute(
                 delete(Booking).where(Booking.truck_route_id.in_(own_route_ids))

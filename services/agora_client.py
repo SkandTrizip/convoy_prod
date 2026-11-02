@@ -1,25 +1,34 @@
-"""Builds the tokens clients need to join an Agora RTC/RTM 1:1 call session.
+"""Builds the tokens clients need to join a paid 1:1 call (Agora RTC audio/video,
+Agora RTM chat).
 
-Agora's SDK never talks to this backend directly - the app id + certificate
-live here so raw credentials never ship inside the mobile app, and every join
-is scoped to a channel/uid/role (RTC) or account (RTM) with a
-server-controlled expiry.
+Agora's SDK never talks to this backend directly - the app id + certificate live
+here so raw credentials never ship inside the mobile app, and every join is scoped
+to a channel/uid (RTC) or user (RTM) with a server-controlled expiry.
+
+RTC tokens use the `agora_token_builder` package (legacy "006" format, which RTC
+accepts). RTM 2.x REJECTS that format ("Invalid token", verified on a device in the
+Stage 0 spike), so chat tokens need Agora's AccessToken2 ("007") builder, vendored
+at services/agora_token2/. Until that folder exists, `build_rtm_token` returns None
+and the call API reports `chatAvailable: false` instead of handing out a token that
+can never work.
 """
 
 import time
 import uuid
 
-from agora_token_builder import RtcTokenBuilder, RtmTokenBuilder
+from agora_token_builder import RtcTokenBuilder
 from fastapi import HTTPException
 
-from config import AGORA_APP_CERTIFICATE, AGORA_APP_ID, AGORA_MAX_CALL_SECONDS, AGORA_TOKEN_EXPIRATION_SECONDS
+from config import AGORA_APP_CERTIFICATE, AGORA_APP_ID, AGORA_TOKEN_EXPIRATION_SECONDS
+
+try:  # vendored copy of AgoraIO/Tools DynamicKey/AgoraDynamicKey/python3/src
+    from services.agora_token2.RtmTokenBuilder2 import RtmTokenBuilder as _RtmTokenBuilderV2
+except ImportError:
+    _RtmTokenBuilderV2 = None
 
 # Agora RTC role constants (agora_token_builder.RtcTokenBuilder.Role_*)
 RTC_ROLE_PUBLISHER = 1  # can send and receive audio/video
 RTC_ROLE_SUBSCRIBER = 2  # can only receive audio/video
-
-# Agora RTM role constant (agora_token_builder.RtmTokenBuilder.Role_Rtm_User)
-RTM_ROLE_USER = 1
 
 
 def require_configured() -> None:
@@ -27,42 +36,39 @@ def require_configured() -> None:
         raise HTTPException(status_code=503, detail="Video calls are not configured")
 
 
+def chat_available() -> bool:
+    return _RtmTokenBuilderV2 is not None
+
+
 def uid_for_user(user_id: uuid.UUID) -> int:
-    """Agora RTC uids are 32-bit unsigned ints; our user_id is a UUID, so
-    derive a stable numeric uid from it rather than requiring clients to
-    invent one."""
+    """Agora RTC uids are 32-bit unsigned ints; our user_id is a UUID, so derive a
+    stable numeric uid from it rather than requiring clients to invent one."""
     return user_id.int & 0x7FFFFFFF
 
 
-def max_call_seconds() -> int:
-    """Hard cap on call duration. Callers use this to compute a per-call
-    `not_after_ts` (`started_at + this`) so a token can never authenticate
-    past that point, however late a guest joins or however long
-    AGORA_TOKEN_EXPIRATION_SECONDS is."""
-    return AGORA_MAX_CALL_SECONDS
+def build_rtc_token(*, channel_name: str, uid: int, not_after_ts: int) -> tuple[str, int]:
+    """Returns (token, expires_at_unix_ts). The token can never outlive
+    `not_after_ts` (the call's hard end), however long the normal TTL is: Agora
+    disconnects a client when its token expires, which is what enforces the
+    chosen call duration even if the app misbehaves.
 
-
-def build_rtc_token(*, channel_name: str, uid: int, is_host: bool, not_after_ts: int | None = None) -> tuple[str, int]:
-    """Returns (token, expires_at_unix_ts).
-
-    `not_after_ts`, when given, caps the token's expiry at that absolute unix
-    timestamp even if the normal TTL would run longer - this is what enforces
-    a per-call max duration server-side.
-    """
+    Both sides get publisher rights: the legacy format can't say "audio only", so
+    the requester not sending video is enforced by their app for now (the 007
+    builder can enforce it here)."""
     require_configured()
-    expire_ts = int(time.time()) + AGORA_TOKEN_EXPIRATION_SECONDS
-    if not_after_ts is not None:
-        expire_ts = min(expire_ts, not_after_ts)
-    role = RTC_ROLE_PUBLISHER if is_host else RTC_ROLE_SUBSCRIBER
-    token = RtcTokenBuilder.buildTokenWithUid(AGORA_APP_ID, AGORA_APP_CERTIFICATE, channel_name, uid, role, expire_ts)
+    expire_ts = min(int(time.time()) + AGORA_TOKEN_EXPIRATION_SECONDS, not_after_ts)
+    token = RtcTokenBuilder.buildTokenWithUid(
+        AGORA_APP_ID, AGORA_APP_CERTIFICATE, channel_name, uid, RTC_ROLE_PUBLISHER, expire_ts
+    )
     return token, expire_ts
 
 
-def build_rtm_token(*, account: str, not_after_ts: int | None = None) -> tuple[str, int]:
-    """Returns (token, expires_at_unix_ts). `account` is the RTM user id (string)."""
+def build_rtm_token(*, account: str, not_after_ts: int) -> tuple[str, int] | None:
+    """Returns (token, expires_at_unix_ts), or None while the 007 builder isn't
+    vendored. `account` is the RTM user id (the app logs in with the same string)."""
+    if _RtmTokenBuilderV2 is None:
+        return None
     require_configured()
-    expire_ts = int(time.time()) + AGORA_TOKEN_EXPIRATION_SECONDS
-    if not_after_ts is not None:
-        expire_ts = min(expire_ts, not_after_ts)
-    token = RtmTokenBuilder.buildToken(AGORA_APP_ID, AGORA_APP_CERTIFICATE, account, RTM_ROLE_USER, expire_ts)
-    return token, expire_ts
+    expire_ts = min(int(time.time()) + AGORA_TOKEN_EXPIRATION_SECONDS, not_after_ts)
+    ttl = max(expire_ts - int(time.time()), 1)
+    return _RtmTokenBuilderV2.build_token(AGORA_APP_ID, AGORA_APP_CERTIFICATE, account, ttl), expire_ts

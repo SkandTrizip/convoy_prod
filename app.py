@@ -1,7 +1,8 @@
 import asyncio
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 from starlette.middleware.cors import CORSMiddleware
 
 from config import PORT, logger
@@ -10,6 +11,7 @@ from middleware import RequestLoggingMiddleware
 from notifications.scheduler import start_notification_scheduler, stop_notification_scheduler
 from openapi_config import API_METADATA, OPENAPI_TAGS, get_servers
 from routers import api_router
+from services.call_requests import CallRequestError, run_call_request_sweep_loop
 from services.device_cleanup import run_device_cleanup_loop
 from services.post_expiry import run_post_expiry_loop
 from services.scratch_service import run_scratch_card_expiry_loop
@@ -24,6 +26,7 @@ async def lifespan(app: FastAPI):
     device_cleanup_task: asyncio.Task | None = None
     scratch_card_expiry_task: asyncio.Task | None = None
     view_flush_task: asyncio.Task | None = None
+    call_sweep_task: asyncio.Task | None = None
     try:
         await init_db()
         logger.info("Database initialized (PostGIS + tables)")
@@ -31,13 +34,14 @@ async def lifespan(app: FastAPI):
         device_cleanup_task = asyncio.create_task(run_device_cleanup_loop())
         scratch_card_expiry_task = asyncio.create_task(run_scratch_card_expiry_loop())
         view_flush_task = asyncio.create_task(run_view_flush_loop())
+        call_sweep_task = asyncio.create_task(run_call_request_sweep_loop())
         start_notification_scheduler()
     except Exception as e:
         logger.error("Error during startup: %s", e, exc_info=True)
         raise
     yield
     stop_notification_scheduler()
-    for task in (expiry_task, device_cleanup_task, scratch_card_expiry_task, view_flush_task):
+    for task in (expiry_task, device_cleanup_task, scratch_card_expiry_task, view_flush_task, call_sweep_task):
         if task:
             task.cancel()
             try:
@@ -57,6 +61,12 @@ app = FastAPI(
     redoc_url="/redoc",
     openapi_url="/openapi.json",
 )
+
+
+@app.exception_handler(CallRequestError)
+async def call_request_error_handler(_: Request, exc: CallRequestError) -> JSONResponse:
+    # `detail` stays a plain string (the apps read it); `code` + numbers ride alongside.
+    return JSONResponse(status_code=exc.status_code, content=exc.body())
 
 
 app.include_router(api_router)

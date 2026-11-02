@@ -229,6 +229,8 @@ async def register_device(
             fcm_token=data.fcmToken,
             app_version=data.appVersion,
             device_name=data.deviceName,
+            voip_token=data.voipToken,
+            voip_sandbox=data.voipSandbox,
         )
         await session.commit()
 

@@ -71,6 +71,39 @@ PROFILE_PHOTO_MAX_SIZE_MB = int(os.environ.get("PROFILE_PHOTO_MAX_SIZE_MB", "5")
 # Wallet (reward/scratch-card payouts)
 MIN_REDEEM_AMOUNT_INR = Decimal(os.environ.get("MIN_REDEEM_AMOUNT_INR", "500"))
 
+# Paid 1:1 calls (request -> provider accepts -> wallet hold -> call -> settle).
+# See services/call_requests.py for how each of these is used.
+CALL_MIN_AMOUNT_INR = Decimal(os.environ.get("CALL_MIN_AMOUNT_INR", "50"))
+CALL_MAX_AMOUNT_INR = Decimal(os.environ.get("CALL_MAX_AMOUNT_INR", "10000"))
+# The "cost of connecting": max(25% of the offer, Rs25), never more than the offer
+# itself. Frozen at request time; owed to the provider if the call connects for
+# CALL_CONNECT_THRESHOLD_SECONDS even when the requester is unhappy.
+CALL_HOLD_FRACTION = Decimal("0.25")
+CALL_HOLD_MIN_INR = Decimal("25")
+CALL_CONNECT_THRESHOLD_SECONDS = int(os.environ.get("CALL_CONNECT_THRESHOLD_SECONDS", "30"))
+CALL_DURATION_OPTIONS_MINUTES = (10, 15, 30)
+# One window from creation covers pending + accepted + ringing; then the hold is released.
+CALL_REQUEST_TTL_MINUTES = int(os.environ.get("CALL_REQUEST_TTL_MINUTES", "30"))
+CALL_RING_SECONDS = int(os.environ.get("CALL_RING_SECONDS", "45"))
+# After a call that connected, the requester gets this long to answer "were you
+# satisfied?"; no answer means they pay only the call amount.
+CALL_FEEDBACK_TTL_HOURS = int(os.environ.get("CALL_FEEDBACK_TTL_HOURS", "24"))
+CALL_SWEEP_INTERVAL_SECONDS = int(os.environ.get("CALL_SWEEP_INTERVAL_SECONDS", "30"))
+# A live call: each app reports in every few seconds. A side counts as "in the call"
+# if the server heard from it within HEARTBEAT_GRACE; time counts toward the 30 s
+# threshold and the call amount only while BOTH sides are in. A drop gets
+# RECONNECT_WINDOW to come back before the call is ended. The call is force-ended
+# END_GRACE after the chosen duration (its tokens expire at about the same time).
+CALL_HEARTBEAT_GRACE_SECONDS = int(os.environ.get("CALL_HEARTBEAT_GRACE_SECONDS", "15"))
+CALL_RECONNECT_WINDOW_SECONDS = int(os.environ.get("CALL_RECONNECT_WINDOW_SECONDS", "60"))
+CALL_END_GRACE_SECONDS = int(os.environ.get("CALL_END_GRACE_SECONDS", "30"))
+
+# DEV ONLY: lets a user credit their OWN wallet with test money until the payment
+# gateway lands. Off unless explicitly "true". Local dev shares the production
+# database, so never switch this on while pointed at it (see my_task.md).
+DEV_WALLET_CREDIT_ENABLED = os.environ.get("DEV_WALLET_CREDIT_ENABLED", "false").lower() == "true"
+DEV_WALLET_CREDIT_MAX_INR = Decimal(os.environ.get("DEV_WALLET_CREDIT_MAX_INR", "10000"))
+
 # Scratch-card expiry sweep (unrevealed cards past expires_at -> "expired")
 SCRATCH_CARD_EXPIRY_CHECK_INTERVAL_SECONDS = int(
     os.environ.get("SCRATCH_CARD_EXPIRY_CHECK_INTERVAL_SECONDS", str(60 * 60))
@@ -93,10 +126,6 @@ MAX_VIDEO_DURATION_SECONDS = int(os.environ.get("MAX_VIDEO_DURATION_SECONDS", "3
 AGORA_APP_ID = os.environ.get("AGORA_APP_ID")
 AGORA_APP_CERTIFICATE = os.environ.get("AGORA_APP_CERTIFICATE")
 AGORA_TOKEN_EXPIRATION_SECONDS = int(os.environ.get("AGORA_TOKEN_EXPIRATION_SECONDS", "3600"))
-# Hard cap on a call's lifetime: no token minted for a call (host or guest, at
-# start or on join) outlives `started_at + this`, regardless of when it's
-# requested — see services/agora_client.py.
-AGORA_MAX_CALL_SECONDS = int(os.environ.get("AGORA_MAX_CALL_SECONDS", "3600"))
 
 # Video feed prefetch caching (Redis cache/locks + RabbitMQ job queue consumed by
 # worker.py). Best-effort only — a missing/unreachable Redis or RabbitMQ degrades
@@ -119,3 +148,28 @@ REEL_VIEW_DEDUPE_SECONDS = int(os.environ.get("REEL_VIEW_DEDUPE_SECONDS", "30"))
 # reel ever posted. The trucks heatmap needs no window — it only ever counts
 # live (unexpired) posts.
 HEATMAP_REEL_WINDOW_DAYS = int(os.environ.get("HEATMAP_REEL_WINDOW_DAYS", "30"))
+
+
+# --- Apple VoIP push (the iPhone's incoming-call screen) -----------------------------
+# Leave these unset and the iPhone simply gets the normal notification instead.
+# Create the key at developer.apple.com > Keys (Apple Push Notifications service), then either
+# put the .p8 file's path in APNS_KEY_PATH or its whole text in APNS_KEY_P8 (use \n for line breaks).
+APNS_KEY_ID = os.environ.get("APNS_KEY_ID", "")
+APNS_TEAM_ID = os.environ.get("APNS_TEAM_ID", "")
+APNS_KEY_PATH = os.environ.get("APNS_KEY_PATH", "")
+APNS_KEY_P8 = os.environ.get("APNS_KEY_P8", "")
+APNS_BUNDLE_ID = os.environ.get("APNS_BUNDLE_ID", "com.sharkship.bonut")
+
+# --- Wallet recharge through Razorpay ---------------------------------------------------
+# Leave RAZORPAY_KEY_ID / RAZORPAY_KEY_SECRET unset and recharging is simply off.
+# RAZORPAY_WEBHOOK_SECRET is the secret you type when you create the webhook in the Razorpay
+# dashboard (event "payment.captured", URL <api>/api/webhooks/razorpay).
+RAZORPAY_KEY_ID = os.environ.get("RAZORPAY_KEY_ID", "")
+RAZORPAY_KEY_SECRET = os.environ.get("RAZORPAY_KEY_SECRET", "")
+RAZORPAY_WEBHOOK_SECRET = os.environ.get("RAZORPAY_WEBHOOK_SECRET", "")
+RECHARGE_MIN_INR = Decimal(os.environ.get("RECHARGE_MIN_INR", "10"))
+RECHARGE_MAX_INR = Decimal(os.environ.get("RECHARGE_MAX_INR", "10000"))
+# The gateway's fee, which the person recharging pays ON TOP of what they want in the wallet. Razorpay's
+# standard 2% plus 18% GST on that 2% is 2.36%; set it to what your Razorpay contract says.
+RECHARGE_FEE_PERCENT = Decimal(os.environ.get("RECHARGE_FEE_PERCENT", "2.36"))
+RECHARGE_FEE_FIXED_INR = Decimal(os.environ.get("RECHARGE_FEE_FIXED_INR", "0"))

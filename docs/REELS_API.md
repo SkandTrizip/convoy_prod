@@ -226,6 +226,16 @@ For **another user's** profile the same shape is returned, but **`summary.totalV
 
 ---
 
+### `DELETE /api/reels/{reelId}` (new)
+Permanently deletes the caller's own reel, in any status (ready, processing, failed, rejected). It also removes the
+reel's likes, comments, shares and category tags, and the video on Bunny. No body. Response `200`:
+```json
+{ "success": true }
+```
+Errors: `400` invalid id, `403` `"Not authorized for this reel"` (not the owner), `404` `"Video not found"` (unknown
+or already deleted), `502` if Bunny is unreachable (nothing is deleted; safe to retry). After success, drop the reel
+from any local list and refresh the creator stats (`totalReels`, `totalLikes`, `totalViews` all change).
+
 ## 5. Likes
 
 ### `POST /api/reels/{reelId}/like` (new) / `DELETE /api/reels/{reelId}/like` (new)
@@ -327,7 +337,7 @@ Use `followedByMe` / `isMe` to draw the right button in each row.
 | **Changed** | `POST /videos` (new required `categoryIds`; optional hashtags and GPS; richer response) |
 | **Changed** | `GET /reels`, `GET /videos` (own reels hidden; `category`/`hashtag` filters; richer reel object) |
 | **Changed** | `GET /videos/{id}`, `POST /videos/{id}/sync-status`, `GET /users/{id}/videos` (now return the full reel object) |
-| **New** | `GET /reel-categories`, `GET /reels/{id}` |
+| **New** | `GET /reel-categories`, `GET /reels/{id}`, `DELETE /reels/{id}` (owner only) |
 | **New** | `POST/DELETE /reels/{id}/like`; `GET/POST /reels/{id}/comments`; `DELETE /reels/{id}/comments/{commentId}`; `POST /reels/{id}/share`; `POST /reels/{id}/view` |
 | **New** | `GET /users/{id}/reels` (creator stats) |
 | **New** | `POST/DELETE /users/{id}/follow`; `GET /users/{id}/follow-stats|followers|following` |

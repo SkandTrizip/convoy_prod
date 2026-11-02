@@ -18,6 +18,8 @@ h3>=4.0.0,<5.0.0
 # External services (Google Places, VAHAN, Veup SMS)
 requests>=2.31.0,<3.0.0
 PyJWT>=2.8.0,<3.0.0
+# ES256 signing of Apple's push provider token (services/apns_client.py)
+cryptography>=42.0.0
 
 # Azure Blob Storage (profile photos)
 azure-storage-blob>=12.19.0,<13.0.0
@@ -32,7 +34,7 @@ APScheduler>=3.10.0,<4.0.0
 bcrypt>=4.1.0,<5.0.0
 
 # Video reels (Bunny Stream) + 1:1 calls (Agora)
-httpx>=0.27.0,<1.0.0
+httpx[http2]>=0.27.0,<1.0.0
 agora-token-builder>=1.0.0,<2.0.0
 
 # Video feed prefetch caching (Redis cache/locks + RabbitMQ job queue/worker)

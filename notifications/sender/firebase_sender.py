@@ -1,6 +1,7 @@
 """Canonical FCM send path — single Firebase app instance shared by the one-off
 event-driven sends (services/notifications.py) and the campaign engine's batch sends."""
 from dataclasses import dataclass, field
+from datetime import timedelta
 from typing import Dict, List, Optional
 
 import firebase_admin
@@ -44,16 +45,42 @@ def get_firebase_app():
     return _firebase_app
 
 
-def _to_fcm_message(msg: PreparedMessage) -> messaging.Message:
+def _to_fcm_message(
+    msg: PreparedMessage, *, data_only: bool = False, high_priority: bool = False, ttl_seconds: Optional[int] = None
+) -> messaging.Message:
+    """data_only: no visible notification, the app decides what to show (an incoming-call screen).
+    high_priority + ttl: wake a sleeping phone now, and drop the message if it can't be delivered in time."""
+    kwargs = {}
+    if not data_only:
+        kwargs["notification"] = messaging.Notification(title=msg.title, body=msg.body)
+    if high_priority or ttl_seconds:
+        kwargs["android"] = messaging.AndroidConfig(
+            priority="high" if high_priority else "normal",
+            ttl=timedelta(seconds=ttl_seconds) if ttl_seconds else None,
+        )
+    if data_only:
+        # iPhone: a silent "background" push; best effort, the system may delay or skip it.
+        kwargs["apns"] = messaging.APNSConfig(
+            headers={"apns-push-type": "background", "apns-priority": "5"},
+            payload=messaging.APNSPayload(aps=messaging.Aps(content_available=True)),
+        )
     return messaging.Message(
-        notification=messaging.Notification(title=msg.title, body=msg.body),
         data={str(k): str(v) for k, v in msg.data.items()},
         token=msg.token,
+        **kwargs,
     )
 
 
 def send_single(
-    token: str, title: str, body: str, data: Dict = None, device_id: str = ""
+    token: str,
+    title: str,
+    body: str,
+    data: Dict = None,
+    device_id: str = "",
+    *,
+    data_only: bool = False,
+    high_priority: bool = False,
+    ttl_seconds: Optional[int] = None,
 ) -> SendResult:
     """Send one FCM message. Never raises — failures are reported in the
     returned SendResult, not exceptions."""
@@ -62,7 +89,10 @@ def send_single(
         message = _to_fcm_message(
             PreparedMessage(
                 user_id="", device_id=device_id, token=token, title=title, body=body, data=data or {}
-            )
+            ),
+            data_only=data_only,
+            high_priority=high_priority,
+            ttl_seconds=ttl_seconds,
         )
         response = messaging.send(message)
         logger.info(f"Push notification sent: {response}")

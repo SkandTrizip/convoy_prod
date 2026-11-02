@@ -107,6 +107,9 @@ class UserDevice(Base):
     device_id: Mapped[str] = mapped_column(String(255), nullable=False)
     platform: Mapped[str] = mapped_column(String(16), nullable=False)  # ios | android | web | unknown
     fcm_token: Mapped[str] = mapped_column(Text, nullable=False)
+    # iPhone only: the PushKit token used for the system incoming-call screen (see services/apns_client.py).
+    voip_token: Mapped[str | None] = mapped_column(Text, nullable=True)
+    voip_sandbox: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     device_name: Mapped[str | None] = mapped_column(String(255), nullable=True)
     app_version: Mapped[str | None] = mapped_column(String(32), nullable=True)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
@@ -339,6 +342,39 @@ class WalletTransaction(Base):
     note: Mapped[str | None] = mapped_column(Text, nullable=True)
     idempotency_key: Mapped[str] = mapped_column(String(128), unique=True, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.utcnow)
+
+
+class WalletRecharge(Base):
+    """One attempt to add money to a wallet through Razorpay. The amounts are fixed by the
+    server when the order is made (never taken from the app afterwards), and the row is what a
+    payment is checked against before any money is credited. `review` means the person paid but
+    the credit could not be applied (e.g. the wallet was frozen): a human must sort it out."""
+
+    __tablename__ = "wallet_recharges"
+    __table_args__ = (
+        UniqueConstraint("razorpay_order_id", name="uq_wallet_recharges_order"),
+        UniqueConstraint("razorpay_payment_id", name="uq_wallet_recharges_payment"),
+        CheckConstraint(
+            "credit_amount > 0 AND fee_amount >= 0 AND total_amount = credit_amount + fee_amount",
+            name="ck_wallet_recharges_amounts",
+        ),
+        Index("idx_wallet_recharges_user", "user_id", "created_at"),
+    )
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=new_uuid)
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+    )
+    razorpay_order_id: Mapped[str] = mapped_column(String(64), nullable=False)
+    razorpay_payment_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    credit_amount: Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False)
+    fee_amount: Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False)
+    total_amount: Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False)
+    status: Mapped[str] = mapped_column(String(16), default="created", nullable=False)
+    wallet_transaction_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), nullable=True)
+    note: Mapped[str | None] = mapped_column(Text, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.utcnow)
+    paid_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=False), nullable=True)
 
 
 class RedeemRequest(Base):
@@ -749,10 +785,9 @@ class VideoShare(Base):
 
 
 class OneToOneCall(Base):
-    """A 1:1 video call room: one host (camera+mic) and at most one guest
-    (mic-only audience-of-one). `guest_user_id` is set the moment the single
-    slot is claimed (see services/one_to_one_calls.py) — a second, different
-    user's join is rejected rather than ever overwriting it."""
+    """LEGACY open-room 1:1 calls (one host, one guest, anyone could join). The /calls
+    API that used this table was retired when paid call requests (CallRequest) replaced
+    it. The model and table are kept only so no existing rows are dropped."""
 
     __tablename__ = "one_to_one_calls"
     __table_args__ = (
@@ -777,3 +812,133 @@ class OneToOneCall(Base):
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=False), default=datetime.utcnow, onupdate=datetime.utcnow
     )
+
+
+# --- Paid 1:1 calls ---------------------------------------------------------
+# pending -> accepted -> ringing -> live -> awaiting_feedback -> completed
+#   side exits: rejected (provider), cancelled (requester), expired (30 min
+#   window), failed (call ended before connecting for the threshold). Every
+#   exit except `completed` releases the requester's hold in full.
+CALL_STATUSES = (
+    "pending",
+    "accepted",
+    "ringing",
+    "live",
+    "awaiting_feedback",
+    "completed",
+    "rejected",
+    "cancelled",
+    "expired",
+    "failed",
+)
+# At most one of these per requester/provider pair (partial unique index below).
+CALL_OPEN_STATUSES = ("pending", "accepted", "ringing", "live")
+# Statuses in which the requester's hold is still frozen and the rest of the
+# offer may still be charged — what the wallet counts as "committed".
+CALL_HOLDING_STATUSES = CALL_OPEN_STATUSES + ("awaiting_feedback",)
+
+
+def _sql_in(values: tuple[str, ...]) -> str:
+    return ", ".join(f"'{v}'" for v in values)
+
+
+class CallRequest(Base):
+    """One paid 1:1 call request, from the request through the Agora call to
+    settlement. The wallet side of it lives in WalletTransaction rows whose
+    reference_type is 'call_request' and reference_id is this row's id."""
+
+    __tablename__ = "call_requests"
+    __table_args__ = (
+        Index("idx_call_requests_provider_status", "provider_id", "status", "created_at"),
+        Index("idx_call_requests_requester_status", "requester_id", "status", "created_at"),
+        Index("idx_call_requests_status_expires", "status", "expires_at"),
+        Index(
+            "uq_call_requests_open_pair",
+            "requester_id",
+            "provider_id",
+            unique=True,
+            postgresql_where=text(f"status IN ({_sql_in(CALL_OPEN_STATUSES)})"),
+        ),
+        CheckConstraint(f"status IN ({_sql_in(CALL_STATUSES)})", name="ck_call_requests_status"),
+        CheckConstraint("amount > 0", name="ck_call_requests_amount_positive"),
+        CheckConstraint("hold_amount > 0 AND hold_amount <= amount", name="ck_call_requests_hold_range"),
+        CheckConstraint("duration_minutes IN (10, 15, 30)", name="ck_call_requests_duration"),
+        CheckConstraint("requester_id <> provider_id", name="ck_call_requests_not_self"),
+    )
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=new_uuid)
+    requester_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+    )
+    provider_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+    )
+    # The live truck post the request was made from (no FK: posts expire and get
+    # deleted, the request must outlive them).
+    truck_route_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), nullable=True)
+    topic: Mapped[str] = mapped_column(String(255), nullable=False)
+    duration_minutes: Mapped[int] = mapped_column(Integer, nullable=False)
+    # What the requester offered, and the part of it frozen up front (the "call
+    # amount": what the provider is owed once the call connects).
+    amount: Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False)
+    hold_amount: Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False)
+    status: Mapped[str] = mapped_column(String(24), default="pending", nullable=False)
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), nullable=False)
+    responded_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=False), nullable=True)
+
+    # Call fields — filled in by the call stage (services/call_requests.py).
+    channel_name: Mapped[str | None] = mapped_column(String(64), unique=True, nullable=True)
+    ring_started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=False), nullable=True)
+    ring_attempts: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    call_started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=False), nullable=True)
+    call_ended_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=False), nullable=True)
+    connected_seconds: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    end_reason: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    # Live-call presence (see CALL_HEARTBEAT_GRACE_SECONDS in config.py). Each app
+    # reports "I'm in the call" and "I can see the other person"; connected time only
+    # accumulates while both say yes, so neither side can run up the 30 s threshold alone.
+    requester_last_seen_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=False), nullable=True)
+    provider_last_seen_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=False), nullable=True)
+    requester_peer_present: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    provider_peer_present: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    last_tick_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=False), nullable=True)
+    connected_ms: Mapped[int] = mapped_column(BigInteger, default=0, nullable=False)
+
+    # Settlement.
+    feedback_deadline: Mapped[datetime | None] = mapped_column(DateTime(timezone=False), nullable=True)
+    satisfied: Mapped[bool | None] = mapped_column(Boolean, nullable=True)
+    settled_amount: Mapped[Decimal | None] = mapped_column(Numeric(12, 2), nullable=True)
+    settled_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=False), nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=False), default=datetime.utcnow, onupdate=datetime.utcnow
+    )
+
+
+class CallBehaviourEvent(Base):
+    """Append-only record of what each side did around a call request: server
+    lifecycle events (requested, accepted, rejected, ...) and client-reported
+    ones (mic_off, camera_off, chat_opened, ...). Raw material for the future
+    reputation system; chat text is never stored, only that chat was used."""
+
+    __tablename__ = "call_behaviour_events"
+    __table_args__ = (
+        Index("idx_call_behaviour_events_request", "call_request_id", "created_at"),
+        Index("idx_call_behaviour_events_user_type", "user_id", "event_type", "created_at"),
+    )
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=new_uuid)
+    call_request_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("call_requests.id", ondelete="CASCADE"), nullable=False
+    )
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+    )
+    role: Mapped[str] = mapped_column(String(16), nullable=False)  # requester | provider
+    event_type: Mapped[str] = mapped_column(String(48), nullable=False)
+    source: Mapped[str] = mapped_column(String(16), default="server", nullable=False)  # server | client
+    # When it happened on the device (client events) or on the server.
+    occurred_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.utcnow)
+    details: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.utcnow)

@@ -128,6 +128,19 @@ async def get_reel(
     return {"success": True, "reel": reel}
 
 
+@router.delete("/reels/{reel_id}")
+async def delete_reel(
+    reel_id: str,
+    session: AsyncSession = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+):
+    """Permanently deletes the caller's own reel (any status), including its
+    likes, comments, shares and the video on Bunny. 403 for someone else's reel."""
+    video = await videos.get_video(session, _reel_id(reel_id))
+    await videos.delete_own_video(session, video, current_user.id)
+    return {"success": True}
+
+
 @router.post("/reels/{reel_id}/view", status_code=202)
 async def record_reel_view(
     reel_id: str,

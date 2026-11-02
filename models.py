@@ -1,3 +1,5 @@
+from datetime import datetime
+from decimal import Decimal
 from typing import Any, Dict, List, Literal, Optional
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
@@ -80,6 +82,14 @@ class DeviceRegisterRequest(BaseModel):
     fcmToken: str = Field(..., description="Current FCM registration token")
     appVersion: Optional[str] = Field(None, description="App version string, e.g. '1.3.1'")
     deviceName: Optional[str] = Field(None, description="Optional human-readable device name")
+    voipToken: Optional[str] = Field(
+        None,
+        description="iPhone PushKit (VoIP) token for the incoming-call screen. Omit to leave what is stored "
+        "unchanged; send an empty string to clear it.",
+    )
+    voipSandbox: Optional[bool] = Field(
+        None, description="true when the app is a debug build (its VoIP token belongs to Apple's sandbox server)"
+    )
 
 
 class DeviceLogoutRequest(BaseModel):
@@ -421,6 +431,67 @@ class ReportWatchingRequest(BaseModel):
     feedPosition: int = Field(..., ge=0, description="Index of the video currently being watched in the feed")
 
 
-class StartOneToOneCallRequest(BaseModel):
-    title: str = Field(..., min_length=1, max_length=255)
-    hostName: str = Field(..., min_length=1, max_length=255)
+
+class CreateCallRequestRequest(BaseModel):
+    model_config = ConfigDict(
+        json_schema_extra={
+            "example": {
+                "providerId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                "truckRouteId": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+                "topic": "Route status, load negotiation",
+                "durationMinutes": 15,
+                "amount": "150.00",
+            }
+        }
+    )
+
+    providerId: str = Field(..., description="The driver to call: `userId` from the truck post")
+    truckRouteId: str = Field(..., description="The live truck post the request is made from: `truckRouteId`")
+    topic: str = Field(..., min_length=1, max_length=255, description="What the call is about")
+    durationMinutes: int = Field(..., description="10, 15 or 30")
+    amount: Decimal = Field(..., gt=0, max_digits=12, decimal_places=2, description="Offer in INR (50 to 10000)")
+
+
+class CallFeedbackRequest(BaseModel):
+    satisfied: bool = Field(
+        ..., description="True pays the full offer; false pays only the call amount (the part frozen up front)"
+    )
+
+
+class CallHeartbeatRequest(BaseModel):
+    peerPresent: bool = Field(
+        ...,
+        description="Can this app currently see the other person in the Agora channel "
+        "(e.g. from the SDK's user-joined / user-offline events)? Time only counts "
+        "while both sides say yes.",
+    )
+
+
+class CallBehaviourEventItem(BaseModel):
+    type: str = Field(..., description="e.g. mic_off, camera_off, chat_opened, call_cut")
+    occurredAt: Optional[datetime] = Field(None, description="Device time (UTC) the thing happened")
+    details: Optional[Dict[str, Any]] = Field(None, description="Small extra facts, e.g. {\"length\": 12}. Never chat text")
+
+
+class CallBehaviourEventsRequest(BaseModel):
+    events: List[CallBehaviourEventItem] = Field(..., min_length=1, max_length=50)
+
+
+class DevCreditRequest(BaseModel):
+    amount: Decimal = Field(..., gt=0, max_digits=12, decimal_places=2)
+    idempotencyKey: str = Field(..., min_length=1, max_length=64)
+
+
+class CreateRechargeRequest(BaseModel):
+    """Ask for an order to add money to the wallet. `amount` is what should land in the wallet; the
+    gateway fee is added on top by the server and shown in the response."""
+
+    amount: Decimal = Field(..., gt=0, description="Rupees to add to the wallet (the fee is extra)")
+
+
+class ConfirmRechargeRequest(BaseModel):
+    """What Razorpay's checkout hands back after a successful payment."""
+
+    orderId: str = Field(..., min_length=1, max_length=64)
+    paymentId: str = Field(..., min_length=1, max_length=64)
+    signature: str = Field(..., min_length=1, max_length=256)

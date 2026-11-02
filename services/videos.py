@@ -228,6 +228,19 @@ async def list_for_user(
     return list(result.scalars().all()), total or 0
 
 
+async def delete_own_video(session: AsyncSession, video: Video, user_id: uuid.UUID) -> None:
+    """Hard-delete a reel the caller owns, in any status. Bunny goes first so a
+    Bunny outage leaves the row (and the user's retry) intact instead of orphaning
+    a stream; Bunny's 404 is ignored, so a retry after a half-finished delete
+    works. Likes, comments, shares and category tags go with the row (ON DELETE
+    CASCADE)."""
+    if video.user_id != user_id:
+        raise HTTPException(status_code=403, detail="Not authorized for this reel")
+    await bunny_stream.delete_video(video.bunny_video_id)
+    await session.delete(video)
+    await session.commit()
+
+
 async def sync_status(session: AsyncSession, video: Video) -> Video:
     info = await bunny_stream.get_video(video.bunny_video_id)
 
