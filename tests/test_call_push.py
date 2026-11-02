@@ -347,6 +347,20 @@ async def test_cancelling_sends_a_silent_data_push_to_every_device(sessions, sen
     assert sent["voip"] == []  # a VoIP push must always show a call, so never used to cancel
 
 
+@needs_db
+@pytest.mark.anyio
+async def test_stopping_the_ring_skips_the_phone_that_just_answered(sessions, sent):
+    requester, req = await ringing_request(sessions)
+    await add_device(sessions, requester, "android")
+    await add_device(sessions, requester, "android")
+    async with sessions() as s:
+        devices = await device_repository.get_active_call_devices(s, requester.id)
+        count = await call_push.notify_ring_stopped(s, req.id, requester.id, except_device_id=devices[0].device_id)
+    assert count == 1
+    assert [m["device_id"] for m in sent["fcm"]] == [devices[1].device_id]
+    assert sent["fcm"][0]["data"] == {"type": "call_cancelled", "requestId": str(req.id)}
+
+
 # --- device registration -----------------------------------------------------------------------
 
 

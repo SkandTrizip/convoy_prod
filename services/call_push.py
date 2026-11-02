@@ -12,6 +12,7 @@ Best effort throughout: a push problem must never undo or block a call.
 import asyncio
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
+from uuid import UUID
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -114,12 +115,17 @@ async def notify_incoming_call(
     return summary
 
 
-async def notify_call_cancelled(session: AsyncSession, request: CallRequest) -> int:
-    """The driver hung up while it was still ringing: tell the requester's phones to drop the call
-    screen. A silent data push, best effort (the screen also dismisses itself when the ring ends)."""
+async def notify_ring_stopped(
+    session: AsyncSession, request_id: UUID, user_id: UUID, *, except_device_id: str | None = None
+) -> int:
+    """Tell the person's phones (all but [except_device_id], the one that just acted) to drop the call
+    screen: the ring was answered or declined elsewhere, or the driver hung up. A silent data push,
+    best effort (the screen also dismisses itself when the ring ends)."""
     sent_count = 0
-    data = {"type": "call_cancelled", "requestId": str(request.id)}
-    for device in await device_repository.get_active_call_devices(session, request.requester_id):
+    data = {"type": "call_cancelled", "requestId": str(request_id)}
+    for device in await device_repository.get_active_call_devices(session, user_id):
+        if device.device_id == except_device_id:
+            continue
         try:
             sent = await _fcm(
                 device.fcm_token, "", "", data, device.device_id,
@@ -129,3 +135,8 @@ async def notify_call_cancelled(session: AsyncSession, request: CallRequest) -> 
         except Exception as e:  # noqa: BLE001
             logger.error("Call-cancelled push to device %s failed: %s", device.device_id, e)
     return sent_count
+
+
+async def notify_call_cancelled(session: AsyncSession, request: CallRequest) -> int:
+    """The driver hung up while it was still ringing: take the call screen off all the requester's phones."""
+    return await notify_ring_stopped(session, request.id, request.requester_id)

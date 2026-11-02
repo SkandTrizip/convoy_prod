@@ -8,7 +8,7 @@ app.py. See docs/ONE_TO_ONE_CALL_API.md for the flow and the codes.
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Header, Query
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -27,6 +27,10 @@ from services.call_requests import CallRequestError
 
 router = APIRouter(prefix="/call-requests", tags=["call-requests"])
 
+# The phone making the call (the app sends it on every request). Lets a person signed in on several
+# phones hold a call on one of them: see services.call_requests.device_conflict.
+DeviceId = Annotated[str | None, Header(alias="X-Device-Id")]
+
 
 def _uuid(value: str, what: str) -> UUID:
     try:
@@ -35,16 +39,27 @@ def _uuid(value: str, what: str) -> UUID:
         raise CallRequestError(400, "INVALID_ID", f"Invalid {what}")
 
 
-async def _respond(session: AsyncSession, requests: list[CallRequest], viewer: User) -> list[dict]:
+async def _respond(
+    session: AsyncSession, requests: list[CallRequest], viewer: User, device_id: str | None = None
+) -> list[dict]:
     ids = {r.requester_id for r in requests} | {r.provider_id for r in requests}
     users = {}
     if ids:
         users = {u.id: u for u in (await session.execute(select(User).where(User.id.in_(ids)))).scalars()}
-    return [call_request_to_dict(r, users.get(r.requester_id), users.get(r.provider_id), viewer.id) for r in requests]
+    return [
+        call_request_to_dict(
+            r,
+            users.get(r.requester_id),
+            users.get(r.provider_id),
+            viewer.id,
+            on_another_device=svc.on_another_device(r, viewer.id, device_id),
+        )
+        for r in requests
+    ]
 
 
-async def _one(session: AsyncSession, request: CallRequest, viewer: User) -> dict:
-    return {"success": True, "request": (await _respond(session, [request], viewer))[0]}
+async def _one(session: AsyncSession, request: CallRequest, viewer: User, device_id: str | None = None) -> dict:
+    return {"success": True, "request": (await _respond(session, [request], viewer, device_id))[0]}
 
 
 @router.post("", status_code=201)
@@ -72,12 +87,13 @@ async def create_call_request(
 async def incoming_requests(
     session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user),
+    device_id: DeviceId = None,
 ):
     """The driver's queue, oldest first: requests to review plus accepted ones
     still waiting for the driver to start the call. Poll this (and on a push) to
     drive the Home banner; `count` is the queue length."""
     requests = await svc.list_incoming(session, current_user.id)
-    return {"success": True, "count": len(requests), "requests": await _respond(session, requests, current_user)}
+    return {"success": True, "count": len(requests), "requests": await _respond(session, requests, current_user, device_id)}
 
 
 @router.get("/outgoing")
@@ -85,11 +101,12 @@ async def outgoing_requests(
     active_only: Annotated[bool, Query(alias="activeOnly")] = False,
     session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user),
+    device_id: DeviceId = None,
 ):
     """The caller's own requests, newest first. `activeOnly=true` keeps only the
     ones still going (open, or waiting for their "were you satisfied?" answer)."""
     requests = await svc.list_outgoing(session, current_user.id, active_only=active_only)
-    return {"success": True, "requests": await _respond(session, requests, current_user)}
+    return {"success": True, "requests": await _respond(session, requests, current_user, device_id)}
 
 
 @router.get("/{request_id}")
@@ -97,9 +114,10 @@ async def get_call_request(
     request_id: str,
     session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user),
+    device_id: DeviceId = None,
 ):
     request = await svc.get_request(session, _uuid(request_id, "request id"), current_user.id)
-    return await _one(session, request, current_user)
+    return await _one(session, request, current_user, device_id)
 
 
 @router.post("/{request_id}/accept")
@@ -140,14 +158,17 @@ async def start_call(
     request_id: str,
     session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user),
+    device_id: DeviceId = None,
 ):
     """Driver starts the call after accepting: the requester's phone rings for 45 s
     (push `call_incoming`). Returns the driver's Agora credentials (`call`); join the
     channel and start the camera. A missed ring can be started again until the
     request's 30-minute window ends; calling this while it is still ringing returns
     the same credentials."""
-    request, call = await svc.start_call(session, _uuid(request_id, "request id"), current_user.id)
-    return {**await _one(session, request, current_user), "call": call}
+    request, call = await svc.start_call(
+        session, _uuid(request_id, "request id"), current_user.id, device_id
+    )
+    return {**await _one(session, request, current_user, device_id), "call": call}
 
 
 @router.post("/{request_id}/join")
@@ -155,12 +176,15 @@ async def join_call(
     request_id: str,
     session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user),
+    device_id: DeviceId = None,
 ):
     """Requester answers the ring: the call goes `live` and the response carries their
     Agora credentials (`call`, with `audioOnly: true`). Either side also uses this to
     rejoin a live call after a drop. `409 RING_OVER` if the ring ran out."""
-    request, call = await svc.join_call(session, _uuid(request_id, "request id"), current_user.id)
-    return {**await _one(session, request, current_user), "call": call}
+    request, call = await svc.join_call(
+        session, _uuid(request_id, "request id"), current_user.id, device_id
+    )
+    return {**await _one(session, request, current_user, device_id), "call": call}
 
 
 @router.post("/{request_id}/heartbeat")
@@ -169,12 +193,15 @@ async def call_heartbeat(
     body: CallHeartbeatRequest,
     session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user),
+    device_id: DeviceId = None,
 ):
     """Both apps call this every ~5 s on the call screen. Returns the live state:
     `status`, `connectedSeconds`, `remainingSeconds`, `peerOnline`. When `status` is no
     longer `live` the call is over: leave the channel and, for the requester,
     show the satisfaction prompt if it is `awaiting_feedback`."""
-    state = await svc.heartbeat(session, _uuid(request_id, "request id"), current_user.id, body.peerPresent)
+    state = await svc.heartbeat(
+        session, _uuid(request_id, "request id"), current_user.id, body.peerPresent, device_id
+    )
     return {"success": True, **state}
 
 
@@ -183,13 +210,14 @@ async def end_call(
     request_id: str,
     session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user),
+    device_id: DeviceId = None,
 ):
     """Hang up. Ringing: the driver cancels the ring (can start again), the requester
     declines it (request cancelled, money released). Live: the call ends and is settled
     from the connected time (under 30 s costs nothing, otherwise the requester is
     asked if they were satisfied). Already over: returned unchanged."""
-    request = await svc.end_call(session, _uuid(request_id, "request id"), current_user.id)
-    return await _one(session, request, current_user)
+    request = await svc.end_call(session, _uuid(request_id, "request id"), current_user.id, device_id)
+    return await _one(session, request, current_user, device_id)
 
 
 @router.post("/{request_id}/feedback")

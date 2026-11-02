@@ -11190,3 +11190,1383 @@ sqlalchemy.exc.DBAPIError: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class
 2026-11-02 14:24:50 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 8.2ms | client=192.168.1.102
 2026-11-02 14:24:57 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 4.2ms | client=192.168.1.158
 2026-11-02 14:25:00 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 4.3ms | client=192.168.1.131
+2026-11-02 14:25:13 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 9.0ms | client=192.168.1.102
+2026-11-02 14:25:17 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 9.1ms | client=192.168.1.158
+2026-11-02 14:25:21 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 13.6ms | client=192.168.1.131
+2026-11-02 14:25:34 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 10.9ms | client=192.168.1.102
+2026-11-02 14:25:37 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 7.6ms | client=192.168.1.158
+2026-11-02 14:25:41 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 5.7ms | client=192.168.1.131
+2026-11-02 14:25:54 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 4.9ms | client=192.168.1.102
+2026-11-02 14:25:58 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 4.7ms | client=192.168.1.158
+2026-11-02 14:26:01 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 4.4ms | client=192.168.1.131
+2026-11-02 14:26:14 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 8.3ms | client=192.168.1.102
+2026-11-02 14:26:16 | INFO     | convoy.access | GET /api/call-requests/outgoing?activeOnly=true | status=200 | 9.1ms | client=192.168.1.102
+2026-11-02 14:26:16 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 6.3ms | client=192.168.1.102
+2026-11-02 14:26:18 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 7.3ms | client=192.168.1.158
+2026-11-02 14:26:22 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 7.7ms | client=192.168.1.131
+2026-11-02 14:26:35 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 5.7ms | client=192.168.1.102
+2026-11-02 14:26:38 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 6.8ms | client=192.168.1.158
+2026-11-02 14:26:42 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 5.5ms | client=192.168.1.131
+2026-11-02 14:26:55 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 9.3ms | client=192.168.1.102
+2026-11-02 14:26:58 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 8.7ms | client=192.168.1.158
+2026-11-02 14:27:02 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 5.3ms | client=192.168.1.131
+2026-11-02 14:27:15 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 7.5ms | client=192.168.1.102
+2026-11-02 14:27:18 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 6.1ms | client=192.168.1.158
+2026-11-02 14:27:22 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 7.9ms | client=192.168.1.131
+2026-11-02 14:27:39 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 7.6ms | client=192.168.1.158
+2026-11-02 14:27:42 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 7.4ms | client=192.168.1.131
+2026-11-02 14:27:59 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 8.1ms | client=192.168.1.158
+2026-11-02 14:28:02 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 4.3ms | client=192.168.1.131
+2026-11-02 14:28:21 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 6.9ms | client=192.168.1.158
+2026-11-02 14:28:23 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 4.9ms | client=192.168.1.131
+2026-11-02 14:28:41 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 4.6ms | client=192.168.1.158
+2026-11-02 14:28:43 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 7.6ms | client=192.168.1.131
+2026-11-02 14:29:03 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 4.5ms | client=192.168.1.131
+2026-11-02 14:29:24 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 8.2ms | client=192.168.1.131
+2026-11-02 14:29:44 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 16.4ms | client=192.168.1.131
+2026-11-02 14:30:04 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 9.8ms | client=192.168.1.131
+2026-11-02 14:30:24 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 10.6ms | client=192.168.1.131
+2026-11-02 14:30:45 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 4.8ms | client=192.168.1.131
+2026-11-02 14:31:05 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 15.4ms | client=192.168.1.131
+2026-11-02 14:31:25 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 13.6ms | client=192.168.1.131
+2026-11-02 14:31:45 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 8.2ms | client=192.168.1.131
+2026-11-02 14:32:05 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 6.7ms | client=192.168.1.131
+2026-11-02 14:32:25 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 7.3ms | client=192.168.1.131
+2026-11-02 14:32:45 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 8.3ms | client=192.168.1.131
+2026-11-02 14:32:58 | INFO     | convoy.access | GET /api/call-requests/outgoing?activeOnly=true | status=200 | 13.8ms | client=192.168.1.131
+2026-11-02 14:32:58 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 6.8ms | client=192.168.1.131
+2026-11-02 14:33:06 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 8.5ms | client=192.168.1.131
+2026-11-02 14:33:26 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 6.4ms | client=192.168.1.131
+2026-11-02 14:33:46 | ERROR    | convoy.access | GET /api/call-requests/incoming | status=500 | 16.6ms | client=192.168.1.131
+Traceback (most recent call last):
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 526, in _prepare_and_execute
+    prepared_stmt, attributes = await adapt_connection._prepare(
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        operation, self._invalidate_schema_cache_asof
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 773, in _prepare
+    prepared_stmt = await self._connection.prepare(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        operation, name=self._prepared_statement_name_func()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/asyncpg/connection.py", line 638, in prepare
+    return await self._prepare(
+           ^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/asyncpg/connection.py", line 657, in _prepare
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/asyncpg/connection.py", line 443, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "asyncpg/protocol/protocol.pyx", line 165, in prepare
+asyncpg.exceptions.UndefinedColumnError: column call_requests.requester_device_id does not exist
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1969, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 585, in execute
+    self._adapt_connection.await_(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._prepare_and_execute(operation, parameters)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 563, in _prepare_and_execute
+    self._handle_exception(error)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 513, in _handle_exception
+    self._adapt_connection._handle_exception(error)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 797, in _handle_exception
+    raise translated_error from error
+sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.ProgrammingError: <class 'asyncpg.exceptions.UndefinedColumnError'>: column call_requests.requester_device_id does not exist
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/middleware/logging.py", line 21, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2683, in app
+    await route.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1753, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2738, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1764, in _handle_selected
+    await route.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1753, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2738, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1764, in _handle_selected
+    await route.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1753, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2738, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1773, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1264, in handle
+    await app(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 150, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 136, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 690, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 344, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/routers/call_requests.py", line 79, in incoming_requests
+    requests = await svc.list_incoming(session, current_user.id)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/services/call_requests.py", line 376, in list_incoming
+    result = await session.execute(
+             ^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/ext/asyncio/session.py", line 448, in execute
+    result = await greenlet_spawn(
+             ^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 201, in greenlet_spawn
+    result = context.throw(*sys.exc_info())
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/orm/session.py", line 2373, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/orm/session.py", line 2271, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<4 lines>...
+        conn,
+        ^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/orm/context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+        statement, params or {}, execution_options=execution_options
+    )
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1421, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/sql/elements.py", line 526, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1643, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1848, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1988, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 2365, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1969, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 585, in execute
+    self._adapt_connection.await_(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._prepare_and_execute(operation, parameters)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 563, in _prepare_and_execute
+    self._handle_exception(error)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 513, in _handle_exception
+    self._adapt_connection._handle_exception(error)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 797, in _handle_exception
+    raise translated_error from error
+sqlalchemy.exc.ProgrammingError: (sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.UndefinedColumnError'>: column call_requests.requester_device_id does not exist
+[SQL: SELECT call_requests.id, call_requests.requester_id, call_requests.provider_id, call_requests.truck_route_id, call_requests.topic, call_requests.duration_minutes, call_requests.amount, call_requests.hold_amount, call_requests.status, call_requests.expires_at, call_requests.responded_at, call_requests.channel_name, call_requests.ring_started_at, call_requests.ring_attempts, call_requests.call_started_at, call_requests.call_ended_at, call_requests.connected_seconds, call_requests.end_reason, call_requests.requester_last_seen_at, call_requests.provider_last_seen_at, call_requests.requester_peer_present, call_requests.provider_peer_present, call_requests.last_tick_at, call_requests.connected_ms, call_requests.requester_device_id, call_requests.provider_device_id, call_requests.feedback_deadline, call_requests.satisfied, call_requests.settled_amount, call_requests.settled_at, call_requests.created_at, call_requests.updated_at 
+FROM call_requests 
+WHERE call_requests.provider_id = $1::UUID AND call_requests.status IN ($3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR) AND call_requests.expires_at > $2::TIMESTAMP WITHOUT TIME ZONE ORDER BY call_requests.created_at ASC]
+[parameters: (UUID('cb332d54-92a9-4c31-aa14-34d01c4719ef'), datetime.datetime(2026, 11, 2, 9, 3, 46, 523351), 'pending', 'accepted', 'ringing', 'live')]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-11-02 14:34:06 | ERROR    | convoy.access | GET /api/call-requests/incoming | status=500 | 17.1ms | client=192.168.1.131
+Traceback (most recent call last):
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 526, in _prepare_and_execute
+    prepared_stmt, attributes = await adapt_connection._prepare(
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        operation, self._invalidate_schema_cache_asof
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 773, in _prepare
+    prepared_stmt = await self._connection.prepare(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        operation, name=self._prepared_statement_name_func()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/asyncpg/connection.py", line 638, in prepare
+    return await self._prepare(
+           ^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/asyncpg/connection.py", line 657, in _prepare
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/asyncpg/connection.py", line 443, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "asyncpg/protocol/protocol.pyx", line 165, in prepare
+asyncpg.exceptions.UndefinedColumnError: column call_requests.requester_device_id does not exist
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1969, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 585, in execute
+    self._adapt_connection.await_(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._prepare_and_execute(operation, parameters)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 563, in _prepare_and_execute
+    self._handle_exception(error)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 513, in _handle_exception
+    self._adapt_connection._handle_exception(error)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 797, in _handle_exception
+    raise translated_error from error
+sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.ProgrammingError: <class 'asyncpg.exceptions.UndefinedColumnError'>: column call_requests.requester_device_id does not exist
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/middleware/logging.py", line 21, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2683, in app
+    await route.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1753, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2738, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1764, in _handle_selected
+    await route.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1753, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2738, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1764, in _handle_selected
+    await route.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1753, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2738, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1773, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1264, in handle
+    await app(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 150, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 136, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 690, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 344, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/routers/call_requests.py", line 79, in incoming_requests
+    requests = await svc.list_incoming(session, current_user.id)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/services/call_requests.py", line 376, in list_incoming
+    result = await session.execute(
+             ^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/ext/asyncio/session.py", line 448, in execute
+    result = await greenlet_spawn(
+             ^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 201, in greenlet_spawn
+    result = context.throw(*sys.exc_info())
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/orm/session.py", line 2373, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/orm/session.py", line 2271, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<4 lines>...
+        conn,
+        ^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/orm/context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+        statement, params or {}, execution_options=execution_options
+    )
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1421, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/sql/elements.py", line 526, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1643, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1848, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1988, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 2365, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1969, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 585, in execute
+    self._adapt_connection.await_(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._prepare_and_execute(operation, parameters)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 563, in _prepare_and_execute
+    self._handle_exception(error)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 513, in _handle_exception
+    self._adapt_connection._handle_exception(error)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 797, in _handle_exception
+    raise translated_error from error
+sqlalchemy.exc.ProgrammingError: (sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.UndefinedColumnError'>: column call_requests.requester_device_id does not exist
+[SQL: SELECT call_requests.id, call_requests.requester_id, call_requests.provider_id, call_requests.truck_route_id, call_requests.topic, call_requests.duration_minutes, call_requests.amount, call_requests.hold_amount, call_requests.status, call_requests.expires_at, call_requests.responded_at, call_requests.channel_name, call_requests.ring_started_at, call_requests.ring_attempts, call_requests.call_started_at, call_requests.call_ended_at, call_requests.connected_seconds, call_requests.end_reason, call_requests.requester_last_seen_at, call_requests.provider_last_seen_at, call_requests.requester_peer_present, call_requests.provider_peer_present, call_requests.last_tick_at, call_requests.connected_ms, call_requests.requester_device_id, call_requests.provider_device_id, call_requests.feedback_deadline, call_requests.satisfied, call_requests.settled_amount, call_requests.settled_at, call_requests.created_at, call_requests.updated_at 
+FROM call_requests 
+WHERE call_requests.provider_id = $1::UUID AND call_requests.status IN ($3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR) AND call_requests.expires_at > $2::TIMESTAMP WITHOUT TIME ZONE ORDER BY call_requests.created_at ASC]
+[parameters: (UUID('cb332d54-92a9-4c31-aa14-34d01c4719ef'), datetime.datetime(2026, 11, 2, 9, 4, 6, 837962), 'pending', 'accepted', 'ringing', 'live')]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-11-02 14:34:27 | ERROR    | convoy.access | GET /api/call-requests/incoming | status=500 | 11.2ms | client=192.168.1.131
+Traceback (most recent call last):
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 526, in _prepare_and_execute
+    prepared_stmt, attributes = await adapt_connection._prepare(
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        operation, self._invalidate_schema_cache_asof
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 773, in _prepare
+    prepared_stmt = await self._connection.prepare(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        operation, name=self._prepared_statement_name_func()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/asyncpg/connection.py", line 638, in prepare
+    return await self._prepare(
+           ^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/asyncpg/connection.py", line 657, in _prepare
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/asyncpg/connection.py", line 443, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "asyncpg/protocol/protocol.pyx", line 165, in prepare
+asyncpg.exceptions.UndefinedColumnError: column call_requests.requester_device_id does not exist
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1969, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 585, in execute
+    self._adapt_connection.await_(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._prepare_and_execute(operation, parameters)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 563, in _prepare_and_execute
+    self._handle_exception(error)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 513, in _handle_exception
+    self._adapt_connection._handle_exception(error)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 797, in _handle_exception
+    raise translated_error from error
+sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.ProgrammingError: <class 'asyncpg.exceptions.UndefinedColumnError'>: column call_requests.requester_device_id does not exist
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/middleware/logging.py", line 21, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2683, in app
+    await route.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1753, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2738, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1764, in _handle_selected
+    await route.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1753, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2738, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1764, in _handle_selected
+    await route.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1753, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2738, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1773, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1264, in handle
+    await app(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 150, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 136, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 690, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 344, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/routers/call_requests.py", line 79, in incoming_requests
+    requests = await svc.list_incoming(session, current_user.id)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/services/call_requests.py", line 376, in list_incoming
+    result = await session.execute(
+             ^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/ext/asyncio/session.py", line 448, in execute
+    result = await greenlet_spawn(
+             ^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 201, in greenlet_spawn
+    result = context.throw(*sys.exc_info())
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/orm/session.py", line 2373, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/orm/session.py", line 2271, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<4 lines>...
+        conn,
+        ^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/orm/context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+        statement, params or {}, execution_options=execution_options
+    )
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1421, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/sql/elements.py", line 526, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1643, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1848, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1988, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 2365, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1969, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 585, in execute
+    self._adapt_connection.await_(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._prepare_and_execute(operation, parameters)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 563, in _prepare_and_execute
+    self._handle_exception(error)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 513, in _handle_exception
+    self._adapt_connection._handle_exception(error)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 797, in _handle_exception
+    raise translated_error from error
+sqlalchemy.exc.ProgrammingError: (sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.UndefinedColumnError'>: column call_requests.requester_device_id does not exist
+[SQL: SELECT call_requests.id, call_requests.requester_id, call_requests.provider_id, call_requests.truck_route_id, call_requests.topic, call_requests.duration_minutes, call_requests.amount, call_requests.hold_amount, call_requests.status, call_requests.expires_at, call_requests.responded_at, call_requests.channel_name, call_requests.ring_started_at, call_requests.ring_attempts, call_requests.call_started_at, call_requests.call_ended_at, call_requests.connected_seconds, call_requests.end_reason, call_requests.requester_last_seen_at, call_requests.provider_last_seen_at, call_requests.requester_peer_present, call_requests.provider_peer_present, call_requests.last_tick_at, call_requests.connected_ms, call_requests.requester_device_id, call_requests.provider_device_id, call_requests.feedback_deadline, call_requests.satisfied, call_requests.settled_amount, call_requests.settled_at, call_requests.created_at, call_requests.updated_at 
+FROM call_requests 
+WHERE call_requests.provider_id = $1::UUID AND call_requests.status IN ($3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR) AND call_requests.expires_at > $2::TIMESTAMP WITHOUT TIME ZONE ORDER BY call_requests.created_at ASC]
+[parameters: (UUID('cb332d54-92a9-4c31-aa14-34d01c4719ef'), datetime.datetime(2026, 11, 2, 9, 4, 26, 998877), 'pending', 'accepted', 'ringing', 'live')]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-11-02 14:34:47 | ERROR    | convoy.access | GET /api/call-requests/incoming | status=500 | 11.2ms | client=192.168.1.131
+Traceback (most recent call last):
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 526, in _prepare_and_execute
+    prepared_stmt, attributes = await adapt_connection._prepare(
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        operation, self._invalidate_schema_cache_asof
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 773, in _prepare
+    prepared_stmt = await self._connection.prepare(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        operation, name=self._prepared_statement_name_func()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/asyncpg/connection.py", line 638, in prepare
+    return await self._prepare(
+           ^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/asyncpg/connection.py", line 657, in _prepare
+    stmt = await self._get_statement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/asyncpg/connection.py", line 443, in _get_statement
+    statement = await self._protocol.prepare(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "asyncpg/protocol/protocol.pyx", line 165, in prepare
+asyncpg.exceptions.UndefinedColumnError: column call_requests.requester_device_id does not exist
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1969, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 585, in execute
+    self._adapt_connection.await_(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._prepare_and_execute(operation, parameters)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 563, in _prepare_and_execute
+    self._handle_exception(error)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 513, in _handle_exception
+    self._adapt_connection._handle_exception(error)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 797, in _handle_exception
+    raise translated_error from error
+sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.ProgrammingError: <class 'asyncpg.exceptions.UndefinedColumnError'>: column call_requests.requester_device_id does not exist
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/middleware/logging.py", line 21, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2683, in app
+    await route.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1753, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2738, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1764, in _handle_selected
+    await route.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1753, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2738, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1764, in _handle_selected
+    await route.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1753, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2738, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1773, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1264, in handle
+    await app(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 150, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 136, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 690, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 344, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/routers/call_requests.py", line 94, in incoming_requests
+    requests = await svc.list_incoming(session, current_user.id)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/services/call_requests.py", line 428, in list_incoming
+    result = await session.execute(
+             ^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/ext/asyncio/session.py", line 448, in execute
+    result = await greenlet_spawn(
+             ^^^^^^^^^^^^^^^^^^^^^
+    ...<6 lines>...
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 201, in greenlet_spawn
+    result = context.throw(*sys.exc_info())
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/orm/session.py", line 2373, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/orm/session.py", line 2271, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<4 lines>...
+        conn,
+        ^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/orm/context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+        statement, params or {}, execution_options=execution_options
+    )
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1421, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/sql/elements.py", line 526, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1643, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1848, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1988, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 2365, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1969, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 585, in execute
+    self._adapt_connection.await_(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._prepare_and_execute(operation, parameters)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 563, in _prepare_and_execute
+    self._handle_exception(error)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 513, in _handle_exception
+    self._adapt_connection._handle_exception(error)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 797, in _handle_exception
+    raise translated_error from error
+sqlalchemy.exc.ProgrammingError: (sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.UndefinedColumnError'>: column call_requests.requester_device_id does not exist
+[SQL: SELECT call_requests.id, call_requests.requester_id, call_requests.provider_id, call_requests.truck_route_id, call_requests.topic, call_requests.duration_minutes, call_requests.amount, call_requests.hold_amount, call_requests.status, call_requests.expires_at, call_requests.responded_at, call_requests.channel_name, call_requests.ring_started_at, call_requests.ring_attempts, call_requests.call_started_at, call_requests.call_ended_at, call_requests.connected_seconds, call_requests.end_reason, call_requests.requester_last_seen_at, call_requests.provider_last_seen_at, call_requests.requester_peer_present, call_requests.provider_peer_present, call_requests.last_tick_at, call_requests.connected_ms, call_requests.requester_device_id, call_requests.provider_device_id, call_requests.feedback_deadline, call_requests.satisfied, call_requests.settled_amount, call_requests.settled_at, call_requests.created_at, call_requests.updated_at 
+FROM call_requests 
+WHERE call_requests.provider_id = $1::UUID AND call_requests.status IN ($3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR) AND call_requests.expires_at > $2::TIMESTAMP WITHOUT TIME ZONE ORDER BY call_requests.created_at ASC]
+[parameters: (UUID('cb332d54-92a9-4c31-aa14-34d01c4719ef'), datetime.datetime(2026, 11, 2, 9, 4, 47, 185752), 'pending', 'accepted', 'ringing', 'live')]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2026-11-02 14:35:07 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 16.8ms | client=192.168.1.131
+2026-11-02 14:35:27 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 13.9ms | client=192.168.1.131
+2026-11-02 14:35:42 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 12.1ms | client=192.168.1.158
+2026-11-02 14:35:47 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 11.9ms | client=192.168.1.131
+2026-11-02 14:36:03 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 13.3ms | client=192.168.1.158
+2026-11-02 14:36:07 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 17.3ms | client=192.168.1.131
+2026-11-02 14:36:17 | INFO     | convoy.access | GET /api/call-requests/incoming | status=401 | 3.1ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests | status=402 | 13.5ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/wallet/e896ab7b-a926-4c5a-9607-3abed6d5a9de/dev-credit | status=200 | 10.2ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests | status=201 | 14.0ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | GET /api/wallet/e896ab7b-a926-4c5a-9607-3abed6d5a9de | status=200 | 5.1ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 5.1ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 3.1ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | GET /api/call-requests/ab9132c5-a9e4-4be7-a6ea-398569c8af2a | status=404 | 4.3ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests/ab9132c5-a9e4-4be7-a6ea-398569c8af2a/accept | status=403 | 4.0ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests/ab9132c5-a9e4-4be7-a6ea-398569c8af2a/accept | status=200 | 6.8ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests/ab9132c5-a9e4-4be7-a6ea-398569c8af2a/events | status=200 | 6.3ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests/ab9132c5-a9e4-4be7-a6ea-398569c8af2a/events | status=400 | 3.7ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | GET /api/call-requests/ab9132c5-a9e4-4be7-a6ea-398569c8af2a | status=200 | 3.5ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | GET /api/call-requests/outgoing?activeOnly=true | status=200 | 4.8ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests/ab9132c5-a9e4-4be7-a6ea-398569c8af2a/feedback | status=200 | 9.4ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | GET /api/wallet/e896ab7b-a926-4c5a-9607-3abed6d5a9de | status=200 | 4.1ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | GET /api/wallet/0f0546da-5c5a-48a8-9346-d93a8522cd59 | status=200 | 3.8ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | GET /api/wallet/0f0546da-5c5a-48a8-9346-d93a8522cd59/transactions | status=200 | 4.2ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests | status=201 | 8.8ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | GET /api/call-requests/not-a-uuid | status=400 | 4.6ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests | status=400 | 3.2ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests | status=422 | 3.3ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/wallet/6dce1cc3-206c-4e1a-87cd-a66dda7113e5/dev-credit | status=403 | 4.8ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/wallet/aede52bd-bbb3-417d-8b95-163698b82f9d/dev-credit | status=400 | 3.8ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/wallet/aede52bd-bbb3-417d-8b95-163698b82f9d/dev-credit | status=200 | 11.6ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/wallet/aede52bd-bbb3-417d-8b95-163698b82f9d/dev-credit | status=200 | 4.2ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | GET /api/wallet/aede52bd-bbb3-417d-8b95-163698b82f9d | status=200 | 6.6ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/wallet/e3659daa-2162-4c20-9121-7d31bea66764/dev-credit | status=404 | 4.8ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests | status=201 | 17.3ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests/92c682e3-2945-4234-b812-ec5e82c8591a/start | status=409 | 4.8ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests/92c682e3-2945-4234-b812-ec5e82c8591a/accept | status=200 | 6.6ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests/92c682e3-2945-4234-b812-ec5e82c8591a/start | status=403 | 3.1ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests/92c682e3-2945-4234-b812-ec5e82c8591a/start | status=200 | 6.1ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | GET /api/call-requests/92c682e3-2945-4234-b812-ec5e82c8591a | status=200 | 4.4ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests/92c682e3-2945-4234-b812-ec5e82c8591a/join | status=200 | 6.2ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests/92c682e3-2945-4234-b812-ec5e82c8591a/heartbeat | status=200 | 4.6ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests/92c682e3-2945-4234-b812-ec5e82c8591a/heartbeat | status=200 | 4.3ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests/92c682e3-2945-4234-b812-ec5e82c8591a/heartbeat | status=200 | 4.1ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests/92c682e3-2945-4234-b812-ec5e82c8591a/heartbeat | status=200 | 4.1ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests/92c682e3-2945-4234-b812-ec5e82c8591a/heartbeat | status=200 | 3.7ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests/92c682e3-2945-4234-b812-ec5e82c8591a/heartbeat | status=200 | 3.6ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests/92c682e3-2945-4234-b812-ec5e82c8591a/heartbeat | status=200 | 3.7ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests/92c682e3-2945-4234-b812-ec5e82c8591a/heartbeat | status=200 | 3.7ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests/92c682e3-2945-4234-b812-ec5e82c8591a/heartbeat | status=200 | 3.8ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests/92c682e3-2945-4234-b812-ec5e82c8591a/heartbeat | status=200 | 3.6ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests/92c682e3-2945-4234-b812-ec5e82c8591a/heartbeat | status=200 | 3.6ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests/92c682e3-2945-4234-b812-ec5e82c8591a/heartbeat | status=200 | 3.7ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests/92c682e3-2945-4234-b812-ec5e82c8591a/heartbeat | status=200 | 3.7ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests/92c682e3-2945-4234-b812-ec5e82c8591a/heartbeat | status=200 | 3.7ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests/92c682e3-2945-4234-b812-ec5e82c8591a/heartbeat | status=200 | 3.5ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests/92c682e3-2945-4234-b812-ec5e82c8591a/heartbeat | status=200 | 4.1ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests/92c682e3-2945-4234-b812-ec5e82c8591a/heartbeat | status=422 | 3.1ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests/92c682e3-2945-4234-b812-ec5e82c8591a/end | status=200 | 6.6ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests/92c682e3-2945-4234-b812-ec5e82c8591a/end | status=200 | 3.2ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests/92c682e3-2945-4234-b812-ec5e82c8591a/feedback | status=200 | 8.5ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | GET /api/wallet/e24b0217-bc80-442c-a695-3cbf12482a18 | status=200 | 4.6ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests | status=201 | 18.4ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests/3088ac42-fe24-4aff-8888-bc8cab87c4a1/accept | status=200 | 7.8ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests/3088ac42-fe24-4aff-8888-bc8cab87c4a1/start | status=200 | 6.4ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests/3088ac42-fe24-4aff-8888-bc8cab87c4a1/join | status=409 | 3.2ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests | status=201 | 18.3ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests/281f9f1e-5e44-4168-93e4-e869c29a295f/events | status=200 | 7.1ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests/281f9f1e-5e44-4168-93e4-e869c29a295f/events | status=200 | 4.8ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests/281f9f1e-5e44-4168-93e4-e869c29a295f/events | status=200 | 4.6ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests/281f9f1e-5e44-4168-93e4-e869c29a295f/events | status=200 | 4.3ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests/281f9f1e-5e44-4168-93e4-e869c29a295f/events | status=200 | 4.3ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests | status=201 | 17.1ms | client=127.0.0.1
+2026-11-02 14:36:18 | INFO     | convoy.access | POST /api/call-requests/49fa62f8-0ab1-4e17-9083-8d730df96b0b/events | status=200 | 7.1ms | client=127.0.0.1
+2026-11-02 14:36:19 | INFO     | convoy.access | GET /api/wallet/recharge/config | status=200 | 3.9ms | client=127.0.0.1
+2026-11-02 14:36:19 | INFO     | convoy.access | GET /api/wallet/recharge/config | status=200 | 3.6ms | client=127.0.0.1
+2026-11-02 14:36:19 | INFO     | convoy.access | GET /api/wallet/recharge/config | status=401 | 1.5ms | client=127.0.0.1
+2026-11-02 14:36:19 | INFO     | convoy.access | POST /api/wallet/2d9b79fd-2bd3-450f-b03b-3e587ce3c96b/recharges | status=201 | 17.4ms | client=127.0.0.1
+2026-11-02 14:36:19 | INFO     | convoy.access | POST /api/wallet/fe86704c-a41d-484a-af7b-42c6043f06b2/recharges | status=400 | 5.7ms | client=127.0.0.1
+2026-11-02 14:36:19 | INFO     | convoy.access | POST /api/wallet/fe86704c-a41d-484a-af7b-42c6043f06b2/recharges | status=422 | 3.7ms | client=127.0.0.1
+2026-11-02 14:36:19 | INFO     | convoy.access | POST /api/wallet/fe86704c-a41d-484a-af7b-42c6043f06b2/recharges | status=422 | 3.4ms | client=127.0.0.1
+2026-11-02 14:36:19 | INFO     | convoy.access | POST /api/wallet/fe86704c-a41d-484a-af7b-42c6043f06b2/recharges | status=422 | 3.5ms | client=127.0.0.1
+2026-11-02 14:36:19 | INFO     | convoy.access | POST /api/wallet/fe86704c-a41d-484a-af7b-42c6043f06b2/recharges | status=422 | 4.0ms | client=127.0.0.1
+2026-11-02 14:36:19 | INFO     | convoy.access | POST /api/wallet/a6545e3a-0ac4-4c82-93bc-e260ebed7e6d/recharges | status=403 | 5.2ms | client=127.0.0.1
+2026-11-02 14:36:19 | INFO     | convoy.access | POST /api/wallet/a6545e3a-0ac4-4c82-93bc-e260ebed7e6d/recharges | status=201 | 11.8ms | client=127.0.0.1
+2026-11-02 14:36:19 | INFO     | convoy.access | POST /api/wallet/a6545e3a-0ac4-4c82-93bc-e260ebed7e6d/recharges/confirm | status=403 | 4.0ms | client=127.0.0.1
+2026-11-02 14:36:19 | INFO     | convoy.access | POST /api/wallet/578b4927-b542-4191-92e4-6e6f09aca827/recharges/confirm | status=404 | 4.4ms | client=127.0.0.1
+2026-11-02 14:36:19 | INFO     | convoy.access | POST /api/wallet/72ed1901-d666-4231-8960-6082ab61bc5f/recharges | status=201 | 12.7ms | client=127.0.0.1
+2026-11-02 14:36:19 | INFO     | convoy.access | POST /api/wallet/72ed1901-d666-4231-8960-6082ab61bc5f/recharges/confirm | status=200 | 12.6ms | client=127.0.0.1
+2026-11-02 14:36:19 | INFO     | convoy.access | GET /api/wallet/72ed1901-d666-4231-8960-6082ab61bc5f | status=200 | 6.3ms | client=127.0.0.1
+2026-11-02 14:36:19 | INFO     | convoy.access | GET /api/wallet/72ed1901-d666-4231-8960-6082ab61bc5f/transactions | status=200 | 4.7ms | client=127.0.0.1
+2026-11-02 14:36:19 | INFO     | convoy.access | POST /api/wallet/eaf7642d-1620-45fa-bd4a-76d3edf90cf1/recharges | status=201 | 12.6ms | client=127.0.0.1
+2026-11-02 14:36:19 | INFO     | convoy.access | POST /api/wallet/eaf7642d-1620-45fa-bd4a-76d3edf90cf1/recharges/confirm | status=400 | 3.8ms | client=127.0.0.1
+2026-11-02 14:36:19 | INFO     | convoy.access | GET /api/wallet/eaf7642d-1620-45fa-bd4a-76d3edf90cf1 | status=200 | 4.9ms | client=127.0.0.1
+2026-11-02 14:36:19 | INFO     | convoy.access | POST /api/wallet/fa02845e-6d01-45d6-8f9c-9c2ee2cf5f3e/recharges | status=201 | 12.7ms | client=127.0.0.1
+2026-11-02 14:36:19 | INFO     | convoy.access | GET /api/wallet/fa02845e-6d01-45d6-8f9c-9c2ee2cf5f3e/recharges/order_2adde5788672 | status=200 | 4.1ms | client=127.0.0.1
+2026-11-02 14:36:19 | INFO     | convoy.access | POST /api/wallet/fa02845e-6d01-45d6-8f9c-9c2ee2cf5f3e/recharges/confirm | status=200 | 12.0ms | client=127.0.0.1
+2026-11-02 14:36:19 | INFO     | convoy.access | GET /api/wallet/fa02845e-6d01-45d6-8f9c-9c2ee2cf5f3e/recharges/order_2adde5788672 | status=200 | 3.6ms | client=127.0.0.1
+2026-11-02 14:36:19 | INFO     | convoy.access | GET /api/wallet/fa02845e-6d01-45d6-8f9c-9c2ee2cf5f3e/recharges/order_nope | status=404 | 3.3ms | client=127.0.0.1
+2026-11-02 14:36:19 | INFO     | convoy.access | POST /api/wallet/e473ae96-6f6d-44b0-82a5-b46d30efe83a/recharges | status=201 | 13.0ms | client=127.0.0.1
+2026-11-02 14:36:19 | INFO     | convoy.access | POST /api/webhooks/razorpay | status=400 | 1.9ms | client=127.0.0.1
+2026-11-02 14:36:19 | INFO     | convoy.access | POST /api/webhooks/razorpay | status=400 | 0.7ms | client=127.0.0.1
+2026-11-02 14:36:19 | INFO     | convoy.access | POST /api/webhooks/razorpay | status=200 | 9.9ms | client=127.0.0.1
+2026-11-02 14:36:19 | INFO     | convoy.access | POST /api/webhooks/razorpay | status=200 | 1.6ms | client=127.0.0.1
+2026-11-02 14:36:19 | INFO     | convoy.access | GET /api/wallet/e473ae96-6f6d-44b0-82a5-b46d30efe83a | status=200 | 5.3ms | client=127.0.0.1
+2026-11-02 14:36:19 | INFO     | convoy.access | POST /api/wallet/2ae85874-2beb-49cb-81ce-7e129871b0cc/recharges | status=201 | 15.0ms | client=127.0.0.1
+2026-11-02 14:36:19 | INFO     | convoy.access | POST /api/wallet/2ae85874-2beb-49cb-81ce-7e129871b0cc/recharges/confirm | status=200 | 14.6ms | client=127.0.0.1
+2026-11-02 14:36:19 | INFO     | convoy.access | POST /api/call-requests | status=201 | 18.0ms | client=127.0.0.1
+2026-11-02 14:36:23 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 13.4ms | client=192.168.1.158
+2026-11-02 14:36:28 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 10.2ms | client=192.168.1.131
+2026-11-02 14:36:33 | INFO     | convoy.access | GET /api/call-requests/incoming | status=401 | 3.0ms | client=127.0.0.1
+2026-11-02 14:36:33 | INFO     | convoy.access | POST /api/call-requests | status=402 | 13.7ms | client=127.0.0.1
+2026-11-02 14:36:33 | INFO     | convoy.access | POST /api/wallet/baf90d1e-5c3b-48ea-a814-858b3c77574a/dev-credit | status=200 | 9.8ms | client=127.0.0.1
+2026-11-02 14:36:33 | INFO     | convoy.access | POST /api/call-requests | status=201 | 13.0ms | client=127.0.0.1
+2026-11-02 14:36:33 | INFO     | convoy.access | GET /api/wallet/baf90d1e-5c3b-48ea-a814-858b3c77574a | status=200 | 5.0ms | client=127.0.0.1
+2026-11-02 14:36:33 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 5.1ms | client=127.0.0.1
+2026-11-02 14:36:33 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 3.1ms | client=127.0.0.1
+2026-11-02 14:36:33 | INFO     | convoy.access | GET /api/call-requests/d8b85df8-6958-4af2-9999-8e9c9bab512e | status=404 | 4.4ms | client=127.0.0.1
+2026-11-02 14:36:33 | INFO     | convoy.access | POST /api/call-requests/d8b85df8-6958-4af2-9999-8e9c9bab512e/accept | status=403 | 4.3ms | client=127.0.0.1
+2026-11-02 14:36:33 | INFO     | convoy.access | POST /api/call-requests/d8b85df8-6958-4af2-9999-8e9c9bab512e/accept | status=200 | 7.2ms | client=127.0.0.1
+2026-11-02 14:36:33 | INFO     | convoy.access | POST /api/call-requests/d8b85df8-6958-4af2-9999-8e9c9bab512e/events | status=200 | 6.8ms | client=127.0.0.1
+2026-11-02 14:36:33 | INFO     | convoy.access | POST /api/call-requests/d8b85df8-6958-4af2-9999-8e9c9bab512e/events | status=400 | 3.8ms | client=127.0.0.1
+2026-11-02 14:36:33 | INFO     | convoy.access | GET /api/call-requests/d8b85df8-6958-4af2-9999-8e9c9bab512e | status=200 | 3.6ms | client=127.0.0.1
+2026-11-02 14:36:33 | INFO     | convoy.access | GET /api/call-requests/outgoing?activeOnly=true | status=200 | 4.8ms | client=127.0.0.1
+2026-11-02 14:36:33 | INFO     | convoy.access | POST /api/call-requests/d8b85df8-6958-4af2-9999-8e9c9bab512e/feedback | status=200 | 9.9ms | client=127.0.0.1
+2026-11-02 14:36:33 | INFO     | convoy.access | GET /api/wallet/baf90d1e-5c3b-48ea-a814-858b3c77574a | status=200 | 4.1ms | client=127.0.0.1
+2026-11-02 14:36:33 | INFO     | convoy.access | GET /api/wallet/4749c59a-6896-4ac7-8419-1e29c5b2179a | status=200 | 3.8ms | client=127.0.0.1
+2026-11-02 14:36:33 | INFO     | convoy.access | GET /api/wallet/4749c59a-6896-4ac7-8419-1e29c5b2179a/transactions | status=200 | 4.4ms | client=127.0.0.1
+2026-11-02 14:36:33 | INFO     | convoy.access | POST /api/call-requests | status=201 | 8.9ms | client=127.0.0.1
+2026-11-02 14:36:33 | INFO     | convoy.access | GET /api/call-requests/not-a-uuid | status=400 | 4.7ms | client=127.0.0.1
+2026-11-02 14:36:33 | INFO     | convoy.access | POST /api/call-requests | status=400 | 3.3ms | client=127.0.0.1
+2026-11-02 14:36:33 | INFO     | convoy.access | POST /api/call-requests | status=422 | 3.2ms | client=127.0.0.1
+2026-11-02 14:36:33 | INFO     | convoy.access | POST /api/wallet/7172fbc2-06b7-47bf-ab3e-ec6fe09c45d3/dev-credit | status=403 | 5.1ms | client=127.0.0.1
+2026-11-02 14:36:33 | INFO     | convoy.access | POST /api/wallet/e07c6986-bfa9-410d-9f14-1d8cd79b3f9c/dev-credit | status=400 | 3.5ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | POST /api/wallet/e07c6986-bfa9-410d-9f14-1d8cd79b3f9c/dev-credit | status=200 | 10.6ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | POST /api/wallet/e07c6986-bfa9-410d-9f14-1d8cd79b3f9c/dev-credit | status=200 | 4.0ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | GET /api/wallet/e07c6986-bfa9-410d-9f14-1d8cd79b3f9c | status=200 | 5.9ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | POST /api/wallet/c4e582d5-8493-4a3a-b904-941184180466/dev-credit | status=404 | 5.7ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | POST /api/call-requests | status=201 | 17.7ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | POST /api/call-requests/6ae02039-fe08-40bf-aed2-61316805faa8/start | status=409 | 4.8ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | POST /api/call-requests/6ae02039-fe08-40bf-aed2-61316805faa8/accept | status=200 | 6.7ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | POST /api/call-requests/6ae02039-fe08-40bf-aed2-61316805faa8/start | status=403 | 3.2ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | POST /api/call-requests/6ae02039-fe08-40bf-aed2-61316805faa8/start | status=200 | 6.3ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | GET /api/call-requests/6ae02039-fe08-40bf-aed2-61316805faa8 | status=200 | 4.5ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | POST /api/call-requests/6ae02039-fe08-40bf-aed2-61316805faa8/join | status=200 | 6.2ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | POST /api/call-requests/6ae02039-fe08-40bf-aed2-61316805faa8/heartbeat | status=200 | 4.5ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | POST /api/call-requests/6ae02039-fe08-40bf-aed2-61316805faa8/heartbeat | status=200 | 4.2ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | POST /api/call-requests/6ae02039-fe08-40bf-aed2-61316805faa8/heartbeat | status=200 | 4.0ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | POST /api/call-requests/6ae02039-fe08-40bf-aed2-61316805faa8/heartbeat | status=200 | 4.0ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | POST /api/call-requests/6ae02039-fe08-40bf-aed2-61316805faa8/heartbeat | status=200 | 4.1ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | POST /api/call-requests/6ae02039-fe08-40bf-aed2-61316805faa8/heartbeat | status=200 | 3.8ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | POST /api/call-requests/6ae02039-fe08-40bf-aed2-61316805faa8/heartbeat | status=200 | 3.9ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | POST /api/call-requests/6ae02039-fe08-40bf-aed2-61316805faa8/heartbeat | status=200 | 3.8ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | POST /api/call-requests/6ae02039-fe08-40bf-aed2-61316805faa8/heartbeat | status=200 | 3.7ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | POST /api/call-requests/6ae02039-fe08-40bf-aed2-61316805faa8/heartbeat | status=200 | 3.6ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | POST /api/call-requests/6ae02039-fe08-40bf-aed2-61316805faa8/heartbeat | status=200 | 4.0ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | POST /api/call-requests/6ae02039-fe08-40bf-aed2-61316805faa8/heartbeat | status=200 | 4.2ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | POST /api/call-requests/6ae02039-fe08-40bf-aed2-61316805faa8/heartbeat | status=200 | 4.3ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | POST /api/call-requests/6ae02039-fe08-40bf-aed2-61316805faa8/heartbeat | status=200 | 4.0ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | POST /api/call-requests/6ae02039-fe08-40bf-aed2-61316805faa8/heartbeat | status=200 | 3.8ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | POST /api/call-requests/6ae02039-fe08-40bf-aed2-61316805faa8/heartbeat | status=200 | 4.0ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | POST /api/call-requests/6ae02039-fe08-40bf-aed2-61316805faa8/heartbeat | status=422 | 3.5ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | POST /api/call-requests/6ae02039-fe08-40bf-aed2-61316805faa8/end | status=200 | 7.8ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | POST /api/call-requests/6ae02039-fe08-40bf-aed2-61316805faa8/end | status=200 | 3.6ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | POST /api/call-requests/6ae02039-fe08-40bf-aed2-61316805faa8/feedback | status=200 | 9.6ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | GET /api/wallet/e4b01d2c-74d2-457f-836e-f3e60d941c70 | status=200 | 4.6ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | POST /api/call-requests | status=201 | 17.7ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | POST /api/call-requests/35c4a9a5-75a2-4a97-872f-bd27cf271d84/accept | status=200 | 8.2ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | POST /api/call-requests/35c4a9a5-75a2-4a97-872f-bd27cf271d84/start | status=200 | 6.0ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | POST /api/call-requests/35c4a9a5-75a2-4a97-872f-bd27cf271d84/join | status=409 | 3.2ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | POST /api/call-requests | status=201 | 17.7ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | POST /api/call-requests/9cc297c1-3f1e-4b1a-b098-58f75b5b7f5e/events | status=200 | 6.8ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | POST /api/call-requests/9cc297c1-3f1e-4b1a-b098-58f75b5b7f5e/events | status=200 | 4.8ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | POST /api/call-requests/9cc297c1-3f1e-4b1a-b098-58f75b5b7f5e/events | status=200 | 4.7ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | POST /api/call-requests/9cc297c1-3f1e-4b1a-b098-58f75b5b7f5e/events | status=200 | 4.5ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | POST /api/call-requests/9cc297c1-3f1e-4b1a-b098-58f75b5b7f5e/events | status=200 | 4.5ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | POST /api/call-requests | status=201 | 18.5ms | client=127.0.0.1
+2026-11-02 14:36:34 | INFO     | convoy.access | POST /api/call-requests/50aed858-903b-420c-9611-5ca6c088afcf/events | status=200 | 7.0ms | client=127.0.0.1
+2026-11-02 14:36:35 | INFO     | convoy.access | GET /api/wallet/recharge/config | status=200 | 5.4ms | client=127.0.0.1
+2026-11-02 14:36:35 | INFO     | convoy.access | GET /api/wallet/recharge/config | status=200 | 3.5ms | client=127.0.0.1
+2026-11-02 14:36:35 | INFO     | convoy.access | GET /api/wallet/recharge/config | status=401 | 1.4ms | client=127.0.0.1
+2026-11-02 14:36:35 | INFO     | convoy.access | POST /api/wallet/0209c00a-5cdf-4d5b-a1b2-0f01af7fc668/recharges | status=201 | 14.1ms | client=127.0.0.1
+2026-11-02 14:36:35 | INFO     | convoy.access | POST /api/wallet/7a9edc4a-a091-4634-9f64-9877e2df0c9a/recharges | status=400 | 5.4ms | client=127.0.0.1
+2026-11-02 14:36:35 | INFO     | convoy.access | POST /api/wallet/7a9edc4a-a091-4634-9f64-9877e2df0c9a/recharges | status=422 | 3.8ms | client=127.0.0.1
+2026-11-02 14:36:35 | INFO     | convoy.access | POST /api/wallet/7a9edc4a-a091-4634-9f64-9877e2df0c9a/recharges | status=422 | 8.7ms | client=127.0.0.1
+2026-11-02 14:36:35 | INFO     | convoy.access | POST /api/wallet/7a9edc4a-a091-4634-9f64-9877e2df0c9a/recharges | status=422 | 3.6ms | client=127.0.0.1
+2026-11-02 14:36:35 | INFO     | convoy.access | POST /api/wallet/7a9edc4a-a091-4634-9f64-9877e2df0c9a/recharges | status=422 | 3.7ms | client=127.0.0.1
+2026-11-02 14:36:35 | INFO     | convoy.access | POST /api/wallet/c15873c8-3824-4330-a96c-cd6944f986af/recharges | status=403 | 4.8ms | client=127.0.0.1
+2026-11-02 14:36:35 | INFO     | convoy.access | POST /api/wallet/c15873c8-3824-4330-a96c-cd6944f986af/recharges | status=201 | 12.3ms | client=127.0.0.1
+2026-11-02 14:36:35 | INFO     | convoy.access | POST /api/wallet/c15873c8-3824-4330-a96c-cd6944f986af/recharges/confirm | status=403 | 3.6ms | client=127.0.0.1
+2026-11-02 14:36:35 | INFO     | convoy.access | POST /api/wallet/3778d857-37ff-4899-89e0-8c547236d1b5/recharges/confirm | status=404 | 4.3ms | client=127.0.0.1
+2026-11-02 14:36:35 | INFO     | convoy.access | POST /api/wallet/06bb5d44-93fc-4ca4-b2ac-12f7d3f2d875/recharges | status=201 | 70.1ms | client=127.0.0.1
+2026-11-02 14:36:35 | INFO     | convoy.access | POST /api/wallet/06bb5d44-93fc-4ca4-b2ac-12f7d3f2d875/recharges/confirm | status=200 | 13.9ms | client=127.0.0.1
+2026-11-02 14:36:35 | INFO     | convoy.access | GET /api/wallet/06bb5d44-93fc-4ca4-b2ac-12f7d3f2d875 | status=200 | 5.6ms | client=127.0.0.1
+2026-11-02 14:36:35 | INFO     | convoy.access | GET /api/wallet/06bb5d44-93fc-4ca4-b2ac-12f7d3f2d875/transactions | status=200 | 4.2ms | client=127.0.0.1
+2026-11-02 14:36:35 | INFO     | convoy.access | POST /api/wallet/ff7d3a35-8ee4-4fb6-8271-6ced0f299428/recharges | status=201 | 12.6ms | client=127.0.0.1
+2026-11-02 14:36:35 | INFO     | convoy.access | POST /api/wallet/ff7d3a35-8ee4-4fb6-8271-6ced0f299428/recharges/confirm | status=400 | 3.8ms | client=127.0.0.1
+2026-11-02 14:36:35 | INFO     | convoy.access | GET /api/wallet/ff7d3a35-8ee4-4fb6-8271-6ced0f299428 | status=200 | 5.2ms | client=127.0.0.1
+2026-11-02 14:36:35 | INFO     | convoy.access | POST /api/wallet/955beaec-63e6-4a42-821d-13140f368241/recharges | status=201 | 11.9ms | client=127.0.0.1
+2026-11-02 14:36:35 | INFO     | convoy.access | GET /api/wallet/955beaec-63e6-4a42-821d-13140f368241/recharges/order_b8eddcf532ff | status=200 | 4.3ms | client=127.0.0.1
+2026-11-02 14:36:35 | INFO     | convoy.access | POST /api/wallet/955beaec-63e6-4a42-821d-13140f368241/recharges/confirm | status=200 | 12.9ms | client=127.0.0.1
+2026-11-02 14:36:35 | INFO     | convoy.access | GET /api/wallet/955beaec-63e6-4a42-821d-13140f368241/recharges/order_b8eddcf532ff | status=200 | 3.4ms | client=127.0.0.1
+2026-11-02 14:36:35 | INFO     | convoy.access | GET /api/wallet/955beaec-63e6-4a42-821d-13140f368241/recharges/order_nope | status=404 | 3.4ms | client=127.0.0.1
+2026-11-02 14:36:35 | INFO     | convoy.access | POST /api/wallet/3415e9eb-40af-4859-a40e-b59ab135df5b/recharges | status=201 | 13.6ms | client=127.0.0.1
+2026-11-02 14:36:35 | INFO     | convoy.access | POST /api/webhooks/razorpay | status=400 | 1.4ms | client=127.0.0.1
+2026-11-02 14:36:35 | INFO     | convoy.access | POST /api/webhooks/razorpay | status=400 | 0.7ms | client=127.0.0.1
+2026-11-02 14:36:35 | INFO     | convoy.access | POST /api/webhooks/razorpay | status=200 | 10.3ms | client=127.0.0.1
+2026-11-02 14:36:35 | INFO     | convoy.access | POST /api/webhooks/razorpay | status=200 | 1.7ms | client=127.0.0.1
+2026-11-02 14:36:35 | INFO     | convoy.access | GET /api/wallet/3415e9eb-40af-4859-a40e-b59ab135df5b | status=200 | 5.9ms | client=127.0.0.1
+2026-11-02 14:36:35 | INFO     | convoy.access | POST /api/wallet/418f49db-48be-42da-8d7c-f911866cdd64/recharges | status=201 | 14.2ms | client=127.0.0.1
+2026-11-02 14:36:35 | INFO     | convoy.access | POST /api/wallet/418f49db-48be-42da-8d7c-f911866cdd64/recharges/confirm | status=200 | 13.4ms | client=127.0.0.1
+2026-11-02 14:36:35 | INFO     | convoy.access | POST /api/call-requests | status=201 | 16.5ms | client=127.0.0.1
+2026-11-02 14:36:43 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 8.4ms | client=192.168.1.158
+2026-11-02 14:36:48 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 8.8ms | client=192.168.1.131
+2026-11-02 14:37:02 | INFO     | convoy.access | GET /api/call-requests/incoming | status=401 | 3.2ms | client=127.0.0.1
+2026-11-02 14:37:02 | INFO     | convoy.access | POST /api/call-requests | status=402 | 14.0ms | client=127.0.0.1
+2026-11-02 14:37:02 | INFO     | convoy.access | POST /api/wallet/22364643-c1e4-4a41-8493-76961003783b/dev-credit | status=200 | 9.9ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests | status=201 | 13.7ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | GET /api/wallet/22364643-c1e4-4a41-8493-76961003783b | status=200 | 5.3ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 4.7ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 3.1ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | GET /api/call-requests/e2873527-c191-4bed-bb7c-7b92337a2037 | status=404 | 4.3ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/e2873527-c191-4bed-bb7c-7b92337a2037/accept | status=403 | 3.9ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/e2873527-c191-4bed-bb7c-7b92337a2037/accept | status=200 | 6.3ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/e2873527-c191-4bed-bb7c-7b92337a2037/events | status=200 | 6.5ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/e2873527-c191-4bed-bb7c-7b92337a2037/events | status=400 | 3.7ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | GET /api/call-requests/e2873527-c191-4bed-bb7c-7b92337a2037 | status=200 | 3.8ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | GET /api/call-requests/outgoing?activeOnly=true | status=200 | 4.9ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/e2873527-c191-4bed-bb7c-7b92337a2037/feedback | status=200 | 10.0ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | GET /api/wallet/22364643-c1e4-4a41-8493-76961003783b | status=200 | 4.0ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | GET /api/wallet/36c17bc1-c8ea-40e9-90f9-7f504eedc840 | status=200 | 3.8ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | GET /api/wallet/36c17bc1-c8ea-40e9-90f9-7f504eedc840/transactions | status=200 | 4.2ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests | status=201 | 8.6ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | GET /api/call-requests/not-a-uuid | status=400 | 4.8ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests | status=400 | 3.3ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests | status=422 | 3.2ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/wallet/15c358c6-85d7-41c8-adc8-867f816d3b9c/dev-credit | status=403 | 5.0ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/wallet/8b62c42a-9072-4f37-96b9-aefdd3b9c797/dev-credit | status=400 | 3.6ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/wallet/8b62c42a-9072-4f37-96b9-aefdd3b9c797/dev-credit | status=200 | 10.6ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/wallet/8b62c42a-9072-4f37-96b9-aefdd3b9c797/dev-credit | status=200 | 3.9ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | GET /api/wallet/8b62c42a-9072-4f37-96b9-aefdd3b9c797 | status=200 | 6.2ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/wallet/4f86cc4f-75f9-4061-9d21-ab698aab5f5a/dev-credit | status=404 | 5.6ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests | status=201 | 18.2ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/494907fb-eac0-4321-9bd0-71b7d834cede/start | status=409 | 5.1ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/494907fb-eac0-4321-9bd0-71b7d834cede/accept | status=200 | 6.4ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/494907fb-eac0-4321-9bd0-71b7d834cede/start | status=403 | 3.3ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/494907fb-eac0-4321-9bd0-71b7d834cede/start | status=200 | 6.7ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | GET /api/call-requests/494907fb-eac0-4321-9bd0-71b7d834cede | status=200 | 4.5ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/494907fb-eac0-4321-9bd0-71b7d834cede/join | status=200 | 6.4ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/494907fb-eac0-4321-9bd0-71b7d834cede/heartbeat | status=200 | 4.5ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/494907fb-eac0-4321-9bd0-71b7d834cede/heartbeat | status=200 | 4.1ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/494907fb-eac0-4321-9bd0-71b7d834cede/heartbeat | status=200 | 4.2ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/494907fb-eac0-4321-9bd0-71b7d834cede/heartbeat | status=200 | 4.1ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/494907fb-eac0-4321-9bd0-71b7d834cede/heartbeat | status=200 | 3.6ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/494907fb-eac0-4321-9bd0-71b7d834cede/heartbeat | status=200 | 3.7ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/494907fb-eac0-4321-9bd0-71b7d834cede/heartbeat | status=200 | 3.8ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/494907fb-eac0-4321-9bd0-71b7d834cede/heartbeat | status=200 | 3.8ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/494907fb-eac0-4321-9bd0-71b7d834cede/heartbeat | status=200 | 3.6ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/494907fb-eac0-4321-9bd0-71b7d834cede/heartbeat | status=200 | 3.7ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/494907fb-eac0-4321-9bd0-71b7d834cede/heartbeat | status=200 | 3.9ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/494907fb-eac0-4321-9bd0-71b7d834cede/heartbeat | status=200 | 4.0ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/494907fb-eac0-4321-9bd0-71b7d834cede/heartbeat | status=200 | 3.8ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/494907fb-eac0-4321-9bd0-71b7d834cede/heartbeat | status=200 | 3.8ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/494907fb-eac0-4321-9bd0-71b7d834cede/heartbeat | status=200 | 3.7ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/494907fb-eac0-4321-9bd0-71b7d834cede/heartbeat | status=200 | 3.6ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/494907fb-eac0-4321-9bd0-71b7d834cede/heartbeat | status=422 | 3.0ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/494907fb-eac0-4321-9bd0-71b7d834cede/end | status=200 | 6.9ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/494907fb-eac0-4321-9bd0-71b7d834cede/end | status=200 | 3.5ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/494907fb-eac0-4321-9bd0-71b7d834cede/feedback | status=200 | 9.1ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | GET /api/wallet/74f5e878-b961-44ea-9b09-1d07d3f38af6 | status=200 | 4.5ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests | status=201 | 16.9ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 16.1ms | client=192.168.1.158
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/1a93d673-4175-47de-bdee-53e51cf6a38a/accept | status=200 | 8.1ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/1a93d673-4175-47de-bdee-53e51cf6a38a/start | status=200 | 6.5ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/1a93d673-4175-47de-bdee-53e51cf6a38a/join | status=409 | 3.4ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests | status=201 | 17.6ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/5abddc96-4c6e-4b08-b324-5feb72928370/events | status=200 | 6.8ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/5abddc96-4c6e-4b08-b324-5feb72928370/events | status=200 | 4.7ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/5abddc96-4c6e-4b08-b324-5feb72928370/events | status=200 | 4.6ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/5abddc96-4c6e-4b08-b324-5feb72928370/events | status=200 | 4.4ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/5abddc96-4c6e-4b08-b324-5feb72928370/events | status=200 | 4.3ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests | status=201 | 24.2ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/3a4fced2-83cf-4edb-91ae-fe5bea34d395/events | status=200 | 7.5ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/a3c09c54-4f24-4864-bf64-26364a9b7bd2/accept | status=200 | 8.8ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/a3c09c54-4f24-4864-bf64-26364a9b7bd2/start | status=200 | 8.7ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/a3c09c54-4f24-4864-bf64-26364a9b7bd2/join | status=200 | 6.5ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | GET /api/call-requests/a3c09c54-4f24-4864-bf64-26364a9b7bd2 | status=200 | 5.2ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | GET /api/call-requests/a3c09c54-4f24-4864-bf64-26364a9b7bd2 | status=200 | 3.9ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/a3c09c54-4f24-4864-bf64-26364a9b7bd2/join | status=409 | 3.8ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/a3c09c54-4f24-4864-bf64-26364a9b7bd2/end | status=409 | 3.6ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/a3c09c54-4f24-4864-bf64-26364a9b7bd2/heartbeat | status=409 | 4.1ms | client=127.0.0.1
+2026-11-02 14:37:03 | INFO     | convoy.access | POST /api/call-requests/a3c09c54-4f24-4864-bf64-26364a9b7bd2/heartbeat | status=200 | 4.9ms | client=127.0.0.1
+2026-11-02 14:37:04 | INFO     | convoy.access | GET /api/wallet/recharge/config | status=200 | 4.4ms | client=127.0.0.1
+2026-11-02 14:37:04 | INFO     | convoy.access | GET /api/wallet/recharge/config | status=200 | 4.0ms | client=127.0.0.1
+2026-11-02 14:37:04 | INFO     | convoy.access | GET /api/wallet/recharge/config | status=401 | 1.4ms | client=127.0.0.1
+2026-11-02 14:37:04 | INFO     | convoy.access | POST /api/wallet/59935e79-2a67-49c7-9355-7270f285a250/recharges | status=201 | 14.4ms | client=127.0.0.1
+2026-11-02 14:37:04 | INFO     | convoy.access | POST /api/wallet/c229c7ea-5bd1-4576-8989-5c3c05dcf327/recharges | status=400 | 5.4ms | client=127.0.0.1
+2026-11-02 14:37:04 | INFO     | convoy.access | POST /api/wallet/c229c7ea-5bd1-4576-8989-5c3c05dcf327/recharges | status=422 | 3.6ms | client=127.0.0.1
+2026-11-02 14:37:04 | INFO     | convoy.access | POST /api/wallet/c229c7ea-5bd1-4576-8989-5c3c05dcf327/recharges | status=422 | 3.8ms | client=127.0.0.1
+2026-11-02 14:37:04 | INFO     | convoy.access | POST /api/wallet/c229c7ea-5bd1-4576-8989-5c3c05dcf327/recharges | status=422 | 3.5ms | client=127.0.0.1
+2026-11-02 14:37:04 | INFO     | convoy.access | POST /api/wallet/c229c7ea-5bd1-4576-8989-5c3c05dcf327/recharges | status=422 | 3.4ms | client=127.0.0.1
+2026-11-02 14:37:04 | INFO     | convoy.access | POST /api/wallet/46df96bf-0bb2-48a2-98ab-4320b9a8aa5e/recharges | status=403 | 5.2ms | client=127.0.0.1
+2026-11-02 14:37:04 | INFO     | convoy.access | POST /api/wallet/46df96bf-0bb2-48a2-98ab-4320b9a8aa5e/recharges | status=201 | 11.2ms | client=127.0.0.1
+2026-11-02 14:37:04 | INFO     | convoy.access | POST /api/wallet/46df96bf-0bb2-48a2-98ab-4320b9a8aa5e/recharges/confirm | status=403 | 4.0ms | client=127.0.0.1
+2026-11-02 14:37:04 | INFO     | convoy.access | POST /api/wallet/24cc42c1-1d7b-41c6-a24d-e5a6cec628fd/recharges/confirm | status=404 | 4.5ms | client=127.0.0.1
+2026-11-02 14:37:04 | INFO     | convoy.access | POST /api/wallet/ac726236-d574-4c6d-92b9-5b7e5a862035/recharges | status=201 | 12.9ms | client=127.0.0.1
+2026-11-02 14:37:04 | INFO     | convoy.access | POST /api/wallet/ac726236-d574-4c6d-92b9-5b7e5a862035/recharges/confirm | status=200 | 12.8ms | client=127.0.0.1
+2026-11-02 14:37:04 | INFO     | convoy.access | GET /api/wallet/ac726236-d574-4c6d-92b9-5b7e5a862035 | status=200 | 5.7ms | client=127.0.0.1
+2026-11-02 14:37:04 | INFO     | convoy.access | GET /api/wallet/ac726236-d574-4c6d-92b9-5b7e5a862035/transactions | status=200 | 4.3ms | client=127.0.0.1
+2026-11-02 14:37:04 | INFO     | convoy.access | POST /api/wallet/f2802fc9-6cb3-4234-b0b3-ea6d271597f7/recharges | status=201 | 13.1ms | client=127.0.0.1
+2026-11-02 14:37:04 | INFO     | convoy.access | POST /api/wallet/f2802fc9-6cb3-4234-b0b3-ea6d271597f7/recharges/confirm | status=400 | 3.8ms | client=127.0.0.1
+2026-11-02 14:37:04 | INFO     | convoy.access | GET /api/wallet/f2802fc9-6cb3-4234-b0b3-ea6d271597f7 | status=200 | 5.1ms | client=127.0.0.1
+2026-11-02 14:37:04 | INFO     | convoy.access | POST /api/wallet/dbd403be-eb66-479f-bc54-71a40c5c796c/recharges | status=201 | 13.1ms | client=127.0.0.1
+2026-11-02 14:37:04 | INFO     | convoy.access | GET /api/wallet/dbd403be-eb66-479f-bc54-71a40c5c796c/recharges/order_41c2a5bd6668 | status=200 | 4.1ms | client=127.0.0.1
+2026-11-02 14:37:04 | INFO     | convoy.access | POST /api/wallet/dbd403be-eb66-479f-bc54-71a40c5c796c/recharges/confirm | status=200 | 12.5ms | client=127.0.0.1
+2026-11-02 14:37:04 | INFO     | convoy.access | GET /api/wallet/dbd403be-eb66-479f-bc54-71a40c5c796c/recharges/order_41c2a5bd6668 | status=200 | 3.5ms | client=127.0.0.1
+2026-11-02 14:37:04 | INFO     | convoy.access | GET /api/wallet/dbd403be-eb66-479f-bc54-71a40c5c796c/recharges/order_nope | status=404 | 3.4ms | client=127.0.0.1
+2026-11-02 14:37:05 | INFO     | convoy.access | POST /api/wallet/54d38caa-b079-4bb2-bf4e-bf26c6de3d18/recharges | status=201 | 13.2ms | client=127.0.0.1
+2026-11-02 14:37:05 | INFO     | convoy.access | POST /api/webhooks/razorpay | status=400 | 1.3ms | client=127.0.0.1
+2026-11-02 14:37:05 | INFO     | convoy.access | POST /api/webhooks/razorpay | status=400 | 0.7ms | client=127.0.0.1
+2026-11-02 14:37:05 | INFO     | convoy.access | POST /api/webhooks/razorpay | status=200 | 10.2ms | client=127.0.0.1
+2026-11-02 14:37:05 | INFO     | convoy.access | POST /api/webhooks/razorpay | status=200 | 1.7ms | client=127.0.0.1
+2026-11-02 14:37:05 | INFO     | convoy.access | GET /api/wallet/54d38caa-b079-4bb2-bf4e-bf26c6de3d18 | status=200 | 5.7ms | client=127.0.0.1
+2026-11-02 14:37:05 | INFO     | convoy.access | POST /api/wallet/ca5b4e97-10fd-4596-a28f-7a8fd014ab62/recharges | status=201 | 13.7ms | client=127.0.0.1
+2026-11-02 14:37:05 | INFO     | convoy.access | POST /api/wallet/ca5b4e97-10fd-4596-a28f-7a8fd014ab62/recharges/confirm | status=200 | 13.1ms | client=127.0.0.1
+2026-11-02 14:37:05 | INFO     | convoy.access | POST /api/call-requests | status=201 | 16.0ms | client=127.0.0.1
+2026-11-02 14:37:08 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 13.8ms | client=192.168.1.131
+2026-11-02 14:37:28 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 13.6ms | client=192.168.1.131
+2026-11-02 14:37:49 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 7.9ms | client=192.168.1.131
+2026-11-02 14:38:09 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 16.9ms | client=192.168.1.131
+2026-11-02 14:38:29 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 7.0ms | client=192.168.1.131
+2026-11-02 14:38:49 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 27.9ms | client=192.168.1.131
+2026-11-02 14:39:09 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 20.3ms | client=192.168.1.131
+2026-11-02 14:39:29 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 6.7ms | client=192.168.1.131
+2026-11-02 14:39:50 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 4.2ms | client=192.168.1.131
+2026-11-02 14:40:06 | INFO     | convoy.access | GET /api/call-requests/outgoing | status=401 | 4.5ms | client=127.0.0.1
+2026-11-02 14:40:10 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 9.2ms | client=192.168.1.131
+2026-11-02 14:40:30 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 8.9ms | client=192.168.1.131
+2026-11-02 14:40:50 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 7.8ms | client=192.168.1.131
+2026-11-02 14:41:11 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 4.9ms | client=192.168.1.131
+2026-11-02 14:41:31 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 8.3ms | client=192.168.1.131
+2026-11-02 14:41:51 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 8.2ms | client=192.168.1.131
+2026-11-02 14:42:11 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 11.9ms | client=192.168.1.131
+2026-11-02 14:42:32 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 9.1ms | client=192.168.1.131
+2026-11-02 14:42:52 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 7.9ms | client=192.168.1.131
+2026-11-02 14:43:12 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 7.3ms | client=192.168.1.131
+2026-11-02 14:43:32 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 13.0ms | client=192.168.1.131
+2026-11-02 14:43:52 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 4.5ms | client=192.168.1.131
+2026-11-02 14:44:12 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 8.4ms | client=192.168.1.131

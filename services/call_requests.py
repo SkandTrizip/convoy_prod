@@ -33,6 +33,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from config import (
     CALL_CONNECT_THRESHOLD_SECONDS,
     CALL_DURATION_OPTIONS_MINUTES,
+    CALL_DEVICE_TAKEOVER_SECONDS,
     CALL_END_GRACE_SECONDS,
     CALL_FEEDBACK_TTL_HOURS,
     CALL_HEARTBEAT_GRACE_SECONDS,
@@ -202,6 +203,58 @@ async def _push_call_cancelled(session: AsyncSession, request: CallRequest) -> N
         await asyncio.wait_for(call_push.notify_call_cancelled(session, request), _PUSH_BUDGET_SECONDS)
     except Exception as e:  # noqa: BLE001
         logger.error("Call-cancelled push for request %s failed or timed out: %s", request.id, e)
+
+
+_background_tasks: set[asyncio.Task] = set()
+
+
+def _after_response(session: AsyncSession, label: str, work) -> None:
+    """Run best-effort `work(own_session)` without holding up the answer to the app (a person who just
+    tapped Answer must not wait on a push service). It gets its own session: the request's is closed
+    by then. Tests await `drain_background()`."""
+    bind = session.bind
+
+    async def run() -> None:
+        try:
+            async with AsyncSession(bind=bind, expire_on_commit=False) as own:
+                await asyncio.wait_for(work(own), _PUSH_BUDGET_SECONDS)
+        except Exception as e:  # noqa: BLE001 - includes the timeout
+            logger.error("%s failed or timed out: %s", label, e)
+
+    task = asyncio.create_task(run())
+    _background_tasks.add(task)
+    task.add_done_callback(_background_tasks.discard)
+
+
+async def drain_background() -> None:
+    if _background_tasks:
+        await asyncio.gather(*list(_background_tasks), return_exceptions=True)
+
+
+def _stop_other_phones_ringing(session: AsyncSession, request: CallRequest, except_device_id: str | None) -> None:
+    """The ring was answered or declined on one phone of the requester: the others must stop ringing.
+    (If we don't know which phone acted, a push to all would also silence the one that answered, so none.)"""
+    if except_device_id is None:
+        return
+    request_id, user_id = request.id, request.requester_id
+    _after_response(
+        session,
+        f"Stopping other phones ringing for request {request_id}",
+        lambda own: call_push.notify_ring_stopped(own, request_id, user_id, except_device_id=except_device_id),
+    )
+
+
+async def _push_missed_call(session: AsyncSession, request: CallRequest) -> None:
+    """Tell the requester they were called and didn't pick up. The ring push is silent when the phone
+    never got it (battery saver, force-stopped app), so this visible note is how they find out."""
+    name = await session.scalar(select(User.name).where(User.id == request.provider_id))
+    await _notify(
+        session,
+        request.requester_id,
+        "Missed 1:1 call",
+        f"{name or 'The driver'} called you. They can try again, or message them from your request",
+        {"type": "call_missed", "requestId": request.id, "missedBy": "requester"},
+    )
 
 
 async def _lock_request(session: AsyncSession, request_id: UUID) -> CallRequest:
@@ -535,6 +588,38 @@ def ring_deadline(request: CallRequest) -> datetime | None:
     return request.ring_started_at + timedelta(seconds=CALL_RING_SECONDS)
 
 
+def device_conflict(request: CallRequest, role: str, device_id: str | None, now: datetime) -> bool:
+    """True when ANOTHER phone of this person holds the call right now.
+
+    The phone that answered the ring (requester) or started it (provider) is remembered. Another phone
+    of the same account must stay out of a call in progress: it would join the Agora channel with the
+    same uid and knock the first phone off, or hang up a call it is not part of. It may only step in
+    once the holder has gone quiet (a dead battery). No device id (an older app) = nothing to compare."""
+    holder = request.requester_device_id if role == "requester" else request.provider_device_id
+    if device_id is None or holder is None or holder == device_id:
+        return False
+    if request.status == "ringing":
+        deadline = ring_deadline(request)
+        return deadline is not None and now < deadline
+    if request.status == "live":
+        last_seen = request.requester_last_seen_at if role == "requester" else request.provider_last_seen_at
+        last_seen = last_seen or request.call_started_at or request.updated_at
+        return now - last_seen <= timedelta(seconds=CALL_DEVICE_TAKEOVER_SECONDS)
+    return False
+
+
+def on_another_device(request: CallRequest, viewer_id: UUID, device_id: str | None) -> bool:
+    """For the app: "this call is on your other phone" (so don't offer to rejoin it or ring for it)."""
+    role = role_of(request, viewer_id)
+    return role is not None and request.status in ("ringing", "live") and device_conflict(
+        request, role, device_id, _now()
+    )
+
+
+def _other_device_error() -> CallRequestError:
+    return CallRequestError(409, "CALL_ON_ANOTHER_DEVICE", "This call is on another one of your devices")
+
+
 def _utc_ts(moment: datetime) -> int:
     return int(moment.replace(tzinfo=timezone.utc).timestamp())
 
@@ -579,7 +664,9 @@ def call_credentials(request: CallRequest, user_id: UUID) -> dict:
     }
 
 
-async def start_call(session: AsyncSession, request_id: UUID, provider_id: UUID) -> tuple[CallRequest, dict]:
+async def start_call(
+    session: AsyncSession, request_id: UUID, provider_id: UUID, device_id: str | None = None
+) -> tuple[CallRequest, dict]:
     """Driver starts the call: the requester's phone rings for CALL_RING_SECONDS.
     A missed ring can be retried until the request's 30-minute window ends. Asking
     again while it is still ringing just returns the same credentials."""
@@ -590,6 +677,8 @@ async def start_call(session: AsyncSession, request_id: UUID, provider_id: UUID)
     now = _now()
 
     if request.status == "ringing" and now < ring_deadline(request):
+        if device_conflict(request, "provider", device_id, now):
+            raise _other_device_error()
         return request, call_credentials(request, provider_id)  # same ring, e.g. the app restarted
     if request.status not in ("accepted", "ringing"):  # ringing past its deadline = a missed ring: retry
         raise _wrong_state(request, "started")
@@ -602,6 +691,7 @@ async def start_call(session: AsyncSession, request_id: UUID, provider_id: UUID)
     request.ring_started_at = now
     request.ring_attempts += 1
     request.updated_at = now
+    request.provider_device_id = device_id
     add_event(session, request, provider_id, "call_started_by_provider", details={"attempt": request.ring_attempts})
     await session.commit()
     await session.refresh(request)
@@ -611,7 +701,9 @@ async def start_call(session: AsyncSession, request_id: UUID, provider_id: UUID)
     return request, call_credentials(request, provider_id)
 
 
-async def join_call(session: AsyncSession, request_id: UUID, user_id: UUID) -> tuple[CallRequest, dict]:
+async def join_call(
+    session: AsyncSession, request_id: UUID, user_id: UUID, device_id: str | None = None
+) -> tuple[CallRequest, dict]:
     """Requester answers the ring (the call goes live), or either side rejoins a live
     call after a drop. The driver can also fetch credentials while it rings, to start
     their camera before the requester picks up."""
@@ -619,7 +711,10 @@ async def join_call(session: AsyncSession, request_id: UUID, user_id: UUID) -> t
     request = await _lock_request(session, request_id)
     role = _require_party(request, user_id)
     now = _now()
+    if request.status in ("ringing", "live") and device_conflict(request, role, device_id, now):
+        raise _other_device_error()
 
+    answered = False
     if role == "requester":
         if request.status == "ringing":
             if now >= ring_deadline(request):
@@ -631,21 +726,47 @@ async def join_call(session: AsyncSession, request_id: UUID, user_id: UUID) -> t
             request.requester_peer_present = False
             request.provider_peer_present = False
             request.connected_ms = 0
+            request.requester_device_id = device_id
             request.updated_at = now
             add_event(session, request, user_id, "call_answered")
             await session.commit()
             await session.refresh(request)
+            answered = True
         elif request.status == "live":
-            add_event(session, request, user_id, "call_rejoined")
+            _rejoin(session, request, role, user_id, device_id, now)
             await session.commit()
         else:
             raise _wrong_state(request, "joined")
     elif request.status not in ("ringing", "live"):
         raise _wrong_state(request, "joined")
     elif request.status == "live":
-        add_event(session, request, user_id, "call_rejoined")
+        _rejoin(session, request, role, user_id, device_id, now)
         await session.commit()
+    if answered:
+        _stop_other_phones_ringing(session, request, device_id)
     return request, call_credentials(request, user_id)
+
+
+def _rejoin(
+    session: AsyncSession, request: CallRequest, role: str, user_id: UUID, device_id: str | None, now: datetime
+) -> None:
+    """Back into a live call. If it comes from another phone of the same person (the first having gone
+    quiet, or the same phone after a reinstall) that phone now holds the call."""
+    details = None
+    # Coming back proves this phone is alive: from here on it is the one that must be heard from.
+    if role == "requester":
+        request.requester_last_seen_at = now
+    else:
+        request.provider_last_seen_at = now
+    holder = request.requester_device_id if role == "requester" else request.provider_device_id
+    if device_id is not None:
+        if holder is not None and holder != device_id:
+            details = {"takeover": True}
+        if role == "requester":
+            request.requester_device_id = device_id
+        else:
+            request.provider_device_id = device_id
+    add_event(session, request, user_id, "call_rejoined", details=details)
 
 
 def _call_state(request: CallRequest, now: datetime) -> dict:
@@ -660,7 +781,9 @@ def _call_state(request: CallRequest, now: datetime) -> dict:
     }
 
 
-async def heartbeat(session: AsyncSession, request_id: UUID, user_id: UUID, peer_present: bool) -> dict:
+async def heartbeat(
+    session: AsyncSession, request_id: UUID, user_id: UUID, peer_present: bool, device_id: str | None = None
+) -> dict:
     """Each app calls this every ~5 s while on the call screen, saying whether it can
     currently see the other person in the Agora channel. Time counts toward the call
     only while both sides are fresh AND both say they can see each other, so
@@ -677,6 +800,10 @@ async def heartbeat(session: AsyncSession, request_id: UUID, user_id: UUID, peer
         await session.refresh(request)
         await _after_finalize(session, request)
         return _call_state(request, now)
+
+    if device_conflict(request, role, device_id, now):
+        # Another of this person's phones is on the call: this one's beats must not count for it.
+        raise _other_device_error()
 
     if role == "requester":
         request.requester_last_seen_at, request.requester_peer_present = now, peer_present
@@ -699,13 +826,18 @@ async def heartbeat(session: AsyncSession, request_id: UUID, user_id: UUID, peer
     return state
 
 
-async def end_call(session: AsyncSession, request_id: UUID, user_id: UUID) -> CallRequest:
+async def end_call(
+    session: AsyncSession, request_id: UUID, user_id: UUID, device_id: str | None = None
+) -> CallRequest:
     """Hang up. While ringing: the driver cancels the ring (they can start again), the
     requester declines it (the request is cancelled, money released). While live: the
     call ends and is settled from the connected time. Anything already over is
     returned unchanged, so a double tap is harmless."""
     request = await _lock_request(session, request_id)
     role = _require_party(request, user_id)
+    if request.status in ("ringing", "live") and device_conflict(request, role, device_id, _now()):
+        # e.g. "Decline" on a phone whose ring screen is still up after the other phone answered.
+        raise _other_device_error()
 
     if request.status == "ringing":
         if role == "provider":
@@ -718,6 +850,13 @@ async def end_call(session: AsyncSession, request_id: UUID, user_id: UUID) -> Ca
         await session.refresh(request)
         if role == "provider":
             await _push_call_cancelled(session, request)  # take the call screen off the requester's phone
+            _after_response(
+                session,
+                f"Missed-call note for request {request.id}",
+                lambda own, r=request: _push_missed_call(own, r),
+            )
+        else:
+            _stop_other_phones_ringing(session, request, device_id)
         return request
 
     if request.status == "live":
@@ -926,6 +1065,7 @@ async def sweep(session: AsyncSession) -> dict[str, int]:
             "They didn't pick up. You can try again",
             {"type": "call_missed", "requestId": request.id},
         )
+        await _push_missed_call(session, request)
 
     ids = (await session.execute(select(CallRequest.id).where(CallRequest.status == "live"))).scalars().all()
     for request_id in ids:

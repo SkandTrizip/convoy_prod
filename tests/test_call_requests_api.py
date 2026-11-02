@@ -56,6 +56,7 @@ async def api(schema, monkeypatch):  # noqa: F811
     monkeypatch.setattr(svc, "_notify", quiet_notify)
     monkeypatch.setattr(svc, "_push_incoming_call", quiet_notify)
     monkeypatch.setattr(svc, "_push_call_cancelled", quiet_notify)
+    monkeypatch.setattr(svc, "_stop_other_phones_ringing", lambda *a, **k: None)
     monkeypatch.setattr(wallet_service, "DEV_WALLET_CREDIT_ENABLED", True)
     app_module.app.dependency_overrides[get_session] = override
     transport = httpx.ASGITransport(app=app_module.app)
@@ -336,3 +337,31 @@ async def test_a_wildly_wrong_phone_clock_cannot_put_events_in_the_future(api, c
         row = (await s.execute(select(CallBehaviourEvent).where(CallBehaviourEvent.call_request_id == uuid.UUID(rid), CallBehaviourEvent.source == "client"))).scalar_one()
     assert row.occurred_at <= datetime.utcnow() + timedelta(minutes=1)
 
+
+
+async def test_the_device_header_keeps_a_live_call_on_one_phone(api):
+    requester = await make_user(api.factory, "Asha")
+    provider = await make_user(api.factory, "Vikram")
+    post = await make_post(api.factory, provider)
+    from tests.test_call_requests import request_call
+
+    await fund(api.factory, requester, "500")
+    req = await request_call(api.factory, requester, provider, post)
+    phone = lambda user, device: {**auth(user), "X-Device-Id": device}  # noqa: E731
+    assert (await api.post(f"/api/call-requests/{req.id}/accept", headers=auth(provider))).status_code == 200
+    r = await api.post(f"/api/call-requests/{req.id}/start", headers=phone(provider, "driver-phone"))
+    assert r.status_code == 200 and r.json()["request"]["onAnotherDevice"] is False
+    assert (await api.post(f"/api/call-requests/{req.id}/join", headers=phone(requester, "phone-a"))).status_code == 200
+
+    # the requester's second phone is told the call is elsewhere, and cannot join, hang up or beat for it
+    seen = await api.get(f"/api/call-requests/{req.id}", headers=phone(requester, "phone-b"))
+    assert seen.json()["request"]["onAnotherDevice"] is True
+    assert (await api.get(f"/api/call-requests/{req.id}", headers=phone(requester, "phone-a"))).json()["request"][
+        "onAnotherDevice"
+    ] is False
+    for path, body in (("join", None), ("end", None), ("heartbeat", {"peerPresent": True})):
+        r = await api.post(f"/api/call-requests/{req.id}/{path}", json=body, headers=phone(requester, "phone-b"))
+        assert r.status_code == 409 and r.json()["code"] == "CALL_ON_ANOTHER_DEVICE", path
+    # while the phone that holds it carries on
+    r = await api.post(f"/api/call-requests/{req.id}/heartbeat", json={"peerPresent": True}, headers=phone(requester, "phone-a"))
+    assert r.status_code == 200 and r.json()["status"] == "live"

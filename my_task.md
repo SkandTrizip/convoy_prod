@@ -589,7 +589,36 @@ silently. Both are Android phones, same channel name, same app id, so it is not 
   So the flow bugs are fixed, but this is a device-specific hang inside Agora's engine start-up. Cause not yet known: it needs that phone's `adb logcat` (plug the A566E in, I capture while a call is made).
 - [ ] **Step I32: Capture the A566E's log.** Plug in the **SM-A566E (Skand's phone)** and tell me; I will start `adb -s RZGL5278P7J logcat` capture, you make one call, I read where Agora's start-up stops.
 
-- Note: push notifications cannot be sent from this Mac (the Firebase key path in `.env` is the server's `/home/azureuser/...`), so on local testing the requester's ring appears through the app's polling (a few seconds), not a push.
+- Note (corrected below): push notifications cannot be sent from this Mac **as started before**, because the Firebase key path in `.env` is the server's `/home/azureuser/...`. Step I33 fixes that for local testing.
+
+### Ringing a closed app, and one account on several phones (2 Nov)
+
+**Why the ring only appeared with the app open:** the local backend had no working Firebase key (path `/home/azureuser/credentials/...` doesn't exist on this Mac), so **no push was ever sent** from it
+(the log has errors, not one success). What you saw was the app polling. The repo's `credentials/firebase-admin.json` is the same Firebase project as the app (`convoy-app-4aa95`) and a dry-run send with it succeeded.
+
+**What was built (backend + app):**
+- **Missed-call note for the requester.** When a ring runs out, or the driver hangs up while it rings, the requester now gets a normal notification "Missed 1:1 call" (before, only the driver was told). It works even if the ring push never arrived.
+- **A phone holds its call.** The server remembers which phone answered the ring (requester) or started it (driver) (migration 027, from the app's `X-Device-Id`). While the call is on, another phone of the same account:
+  cannot answer/join it (it used to be treated as a rejoin, same Agora uid, so the two phones knocked each other off), cannot hang it up (declining on a stale ring screen used to end the *live* call), and its heartbeats are refused (`409 CALL_ON_ANOTHER_DEVICE`).
+  If the holding phone has been silent for 20 s (dead battery) the other phone may take the call over, and the first phone then leaves quietly without ending it.
+- **The other phones stop ringing** when one answers or declines (a silent `call_cancelled` push to every phone except the one that acted).
+- **App:** a call on your other phone is never offered as "Rejoin"; the ring screen says "You answered this call on your other device"; a refused join/heartbeat shows "This call is on another of your devices" (hi/kn/mr texts are mine: please have a native speaker check them, like the others).
+- Older apps (no device id) behave exactly as before. Backend: 244 tests pass (15 new in `tests/test_call_devices.py`, 1 push, 1 HTTP); app: 306 call tests pass.
+
+- [ ] **Step I33: Restart the local backend with the Firebase key** (also has the dev wallet switch). From `convoy_prod/`; migration 027 is already applied to your local `convoy_dev` and the scratch test DB:
+  ```bash
+  FIREBASE_CREDENTIALS_PATH=credentials/firebase-admin.json DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:5433/convoy_dev DEV_WALLET_CREDIT_ENABLED=true .venv/bin/uvicorn server:app --host 0.0.0.0 --port 8000 --reload
+  ```
+  Then test on the phones: (a) close the requester's app (swipe it away), driver taps Start: the full-screen ring should appear; (b) let a ring run out: the requester gets "Missed 1:1 call".
+  If (a) doesn't ring on Samsung: Settings > Apps > Bonut > Battery > "Unrestricted", allow notifications and "Full-screen notifications", and never use Force stop (Android blocks all pushes to a force-stopped app).
+- [ ] **Step I34: Test one account on two phones.** Sign the same user in on two phones. Driver starts a call: both ring. Answer on one: the other should stop ringing within a few seconds; if its screen is still up, Answer must show
+  "This call is on another of your devices" and Decline must **not** end the call.
+- [ ] **Step I35 (before deploying): apply migration 027 to production.** Back up first, then:
+  ```bash
+  pg_dump "$DATABASE_URL" -Fc -f ~/convoy_backup_$(date +%Y%m%d_%H%M).dump
+  psql "$DATABASE_URL" -v ON_ERROR_STOP=1 --single-transaction -f migrations/027_call_request_devices.sql   # adds 2 empty columns, safe to run twice
+  ```
+  Deploy the backend only after this (the new code reads those columns). Not needed for the iPhone: a call screen already shown by a VoIP push cannot be dismissed by a silent push (iOS limit), so on iPhone the other phone keeps ringing until the ring ends; answering there gets the "on another device" message.
 
 ### Stage 6 (the phone rings like a phone call: CallKit on iPhone, full-screen call on Android)
 

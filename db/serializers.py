@@ -330,11 +330,17 @@ def call_request_party_to_dict(user: User | None) -> dict:
 
 
 def call_request_to_dict(
-    request: CallRequest, requester: User | None, provider: User | None, viewer_id: uuid.UUID
+    request: CallRequest,
+    requester: User | None,
+    provider: User | None,
+    viewer_id: uuid.UUID,
+    on_another_device: bool = False,
 ) -> dict:
     """`role` tells the app which side the caller is. `holdAmount` is the "call
     amount" (frozen at request time, owed once the call connects); `amount` is
-    the full offer paid if the requester says they were satisfied."""
+    the full offer paid if the requester says they were satisfied. `onAnotherDevice`: the
+    call is on the viewer's OTHER phone (they are signed in on several), so this phone must
+    not offer to join, rejoin or decline it."""
     return {
         "id": str(request.id),
         "role": "requester" if viewer_id == request.requester_id else "provider",
@@ -359,4 +365,5 @@ def call_request_to_dict(
         "feedbackDeadline": request.feedback_deadline.isoformat() if request.feedback_deadline else None,
         "satisfied": request.satisfied,
         "settledAmount": str(request.settled_amount) if request.settled_amount is not None else None,
+        "onAnotherDevice": on_another_device,
     }

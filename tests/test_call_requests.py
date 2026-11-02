@@ -89,8 +89,13 @@ async def sessions(schema, monkeypatch):
     async def fake_cancelled(session, request):
         pushes.append((request.requester_id, "call_cancelled"))
 
+    def fake_stop_others(session, request, except_device_id):
+        if except_device_id is not None:
+            pushes.append((request.requester_id, f"ring_stopped_except:{except_device_id}"))
+
     monkeypatch.setattr(svc, "_push_incoming_call", fake_incoming)
     monkeypatch.setattr(svc, "_push_call_cancelled", fake_cancelled)
+    monkeypatch.setattr(svc, "_stop_other_phones_ringing", fake_stop_others)
     engine = create_async_engine(_asyncpg_url(TEST_URL))
     factory = async_sessionmaker(engine, expire_on_commit=False)
     factory.pushes = pushes

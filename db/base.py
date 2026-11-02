@@ -903,6 +903,10 @@ class CallRequest(Base):
     provider_peer_present: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     last_tick_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=False), nullable=True)
     connected_ms: Mapped[int] = mapped_column(BigInteger, default=0, nullable=False)
+    # Which phone holds the call when a person is signed in on several (the app's X-Device-Id):
+    # the one that answered the ring (requester) / started it (provider). Null = not known yet.
+    requester_device_id: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    provider_device_id: Mapped[str | None] = mapped_column(String(255), nullable=True)
 
     # Settlement.
     feedback_deadline: Mapped[datetime | None] = mapped_column(DateTime(timezone=False), nullable=True)

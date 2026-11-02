@@ -96,6 +96,15 @@ Requester, while `ringing`: the call goes `live` and they get credentials with `
 `409 RING_OVER` if the 45 s ran out. Either side while `live`: fresh credentials to rejoin after a
 drop (also fine for the driver while it rings).
 
+#### One account on several phones
+The app sends its device id on every request (`X-Device-Id`). The phone that answers the ring (requester) or starts it
+(driver) is remembered, and while the call is `ringing`/`live` another phone of the same account gets
+`409 CALL_ON_ANOTHER_DEVICE` from `start`, `join`, `end` and `heartbeat` (it must not join with the same Agora uid, hang up, or
+count presence). It may take the call over with `join` only once the holder has been silent for `CALL_DEVICE_TAKEOVER_SECONDS`
+(20 s); the first phone's next heartbeat then gets the 409 and should leave **without** calling `end`. The request object
+carries `onAnotherDevice: true` for the phone that is not the holder, so the app does not offer "Rejoin" there.
+No `X-Device-Id` = no check (older apps). Answering or declining a ring also sends `call_cancelled` to the account's other phones.
+
 #### The `call` object
 ```json
 {
@@ -205,6 +214,7 @@ Every error has a plain-string `detail` (show it) plus a stable `code` (switch o
 | 409 | `ALREADY_OPEN` | `requestId` of the existing open request |
 | 409 | `INVALID_STATE` | `status` it is in now |
 | 409 | `RING_OVER` | the requester answered after the 45 s ring |
+| 409 | `CALL_ON_ANOTHER_DEVICE` | another phone of this account holds the call (see above) |
 | 503 | (plain `detail`) | Agora isn't configured on the server |
 | 409 | `ALREADY_SETTLED` | |
 | 410 | `REQUEST_EXPIRED` | |
@@ -242,12 +252,15 @@ When the driver starts a call, every active device of the requester is rung. Wha
 
 If Apple refuses a VoIP push, that iPhone gets the normal notification instead.
 
+When a ring ends unanswered, or the driver hangs up while it rings, the requester also gets a normal visible notification,
+`{ "type": "call_missed", "missedBy": "requester", "requestId": "..." }` ("Missed 1:1 call"), so they find out even if the ring push never reached the phone.
+
 Push data for `call_incoming` (all values are strings; **no money details**):
 `{ "type": "call_incoming", "requestId": "<uuid>", "callerName": "Vikram", "topic": "...", "ringEndsAt": "2026-10-30T10:30:45+00:00" }`.
 The request id is a UUID so the app can use it directly as the CallKit call id.
 
-`call_cancelled` (`{ "type": "call_cancelled", "requestId": "..." }`): a silent data push sent when the **driver** hangs up while it rings, so
-the phone drops its call screen. Best effort (the screen also ends by itself when the ring does). It is never a VoIP push: iOS requires every
+`call_cancelled` (`{ "type": "call_cancelled", "requestId": "..." }`): a silent data push sent when the **driver** hangs up while it rings, or when the
+requester answers/declines on one phone (then to their other phones only), so the phone drops its call screen. Best effort (the screen also ends by itself when the ring does). It is never a VoIP push: iOS requires every
 VoIP push to show a call.
 
 **Device registration** (`POST /api/user/devices/register/{userId}`) takes two more optional fields:

@@ -97,6 +97,9 @@ CALL_SWEEP_INTERVAL_SECONDS = int(os.environ.get("CALL_SWEEP_INTERVAL_SECONDS", 
 CALL_HEARTBEAT_GRACE_SECONDS = int(os.environ.get("CALL_HEARTBEAT_GRACE_SECONDS", "15"))
 CALL_RECONNECT_WINDOW_SECONDS = int(os.environ.get("CALL_RECONNECT_WINDOW_SECONDS", "60"))
 CALL_END_GRACE_SECONDS = int(os.environ.get("CALL_END_GRACE_SECONDS", "30"))
+# A person signed in on two phones: the phone on a live call keeps it. Another of their phones
+# may take it over (or hang it up) only after the first has been silent this long (a dead battery).
+CALL_DEVICE_TAKEOVER_SECONDS = int(os.environ.get("CALL_DEVICE_TAKEOVER_SECONDS", "20"))
 
 # DEV ONLY: lets a user credit their OWN wallet with test money until the payment
 # gateway lands. Off unless explicitly "true". Local dev shares the production
