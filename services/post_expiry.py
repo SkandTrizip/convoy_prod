@@ -77,6 +77,10 @@ async def run_post_expiry_loop() -> None:
                 count = await expire_overdue_posts(session)
                 if count:
                     logger.info("Auto-expired %s truck post(s)", count)
+                from services import location_tracking  # here: it imports this module
+
+                if await location_tracking.finish_expired(session):
+                    logger.info("Location sharing windows ended")
         except asyncio.CancelledError:
             raise
         except Exception as e:

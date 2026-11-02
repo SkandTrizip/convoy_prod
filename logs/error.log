@@ -16030,3 +16030,53 @@ sqlalchemy.exc.DBAPIError: (sqlalchemy.dialects.postgresql.asyncpg.Error) <class
 2026-11-02 14:37:04 | ERROR    | convoy | Razorpay GET /payments/pay_319b4866118c unreachable: no route
 2026-11-02 14:37:04 | ERROR    | convoy | Recharge for order order_f46c4082b51c needs review: credit refused: Wallet is frozen, contact support
 2026-11-02 14:37:04 | ERROR    | convoy | Recharge for order order_6756d4e2975c needs review: webhook payment pay_dd32839b223f does not match the order
+2026-11-02 14:59:14 | ERROR    | convoy | APNs refused a VoIP push: 403 InvalidProviderToken
+2026-11-02 14:59:14 | ERROR    | convoy | APNs refused a VoIP push: 429 TooManyRequests
+2026-11-02 14:59:14 | ERROR    | convoy | APNs refused a VoIP push: 500 InternalServerError
+2026-11-02 14:59:14 | ERROR    | convoy | APNs refused a VoIP push: 503 
+2026-11-02 14:59:14 | ERROR    | convoy | APNs VoIP push failed: no route
+2026-11-02 14:59:15 | ERROR    | convoy | Incoming-call push to device dev-79bd7024-cd19-4e87-b317-3274ded3c963 failed: boom
+2026-11-02 14:59:18 | ERROR    | convoy | Razorpay POST /orders unreachable: no route
+2026-11-02 14:59:18 | ERROR    | convoy | Creating a Razorpay order failed for user 585789fa-db86-445c-8e37-790a8b5d26cd: Razorpay could not be reached
+2026-11-02 14:59:18 | ERROR    | convoy | Razorpay POST /orders -> 400 bad
+2026-11-02 14:59:18 | ERROR    | convoy | Creating a Razorpay order failed for user 7cfb065f-a2c6-4b4a-9a0c-289f033195c2: bad
+2026-11-02 14:59:19 | ERROR    | convoy | Recharge for order order_614a3a5f3e2d needs review: payment pay_a8815dbb0e1d does not match the order
+2026-11-02 14:59:19 | ERROR    | convoy | Recharge for order order_9218e9fd46a1 needs review: payment pay_9f8de3a5a46b does not match the order
+2026-11-02 14:59:19 | ERROR    | convoy | Razorpay GET /payments/pay_64bd163782e3 unreachable: no route
+2026-11-02 14:59:19 | ERROR    | convoy | Recharge for order order_2a42c63f7ef3 needs review: credit refused: Wallet is frozen, contact support
+2026-11-02 14:59:19 | ERROR    | convoy | Recharge for order order_773673cd35f3 needs review: webhook payment pay_49748f534192 does not match the order
+2026-11-02 14:59:57 | ERROR    | convoy | APNs refused a VoIP push: 403 InvalidProviderToken
+2026-11-02 14:59:57 | ERROR    | convoy | APNs refused a VoIP push: 429 TooManyRequests
+2026-11-02 14:59:57 | ERROR    | convoy | APNs refused a VoIP push: 500 InternalServerError
+2026-11-02 14:59:57 | ERROR    | convoy | APNs refused a VoIP push: 503 
+2026-11-02 14:59:57 | ERROR    | convoy | APNs VoIP push failed: no route
+2026-11-02 15:00:09 | ERROR    | convoy | APNs refused a VoIP push: 403 InvalidProviderToken
+2026-11-02 15:00:09 | ERROR    | convoy | APNs refused a VoIP push: 429 TooManyRequests
+2026-11-02 15:00:09 | ERROR    | convoy | APNs refused a VoIP push: 500 InternalServerError
+2026-11-02 15:00:09 | ERROR    | convoy | APNs refused a VoIP push: 503 
+2026-11-02 15:00:09 | ERROR    | convoy | APNs VoIP push failed: no route
+2026-11-02 15:00:10 | ERROR    | convoy | Incoming-call push to device dev-50d2424d-b5f2-4675-8562-c262453bfb5b failed: boom
+2026-11-02 15:00:14 | ERROR    | convoy | Razorpay POST /orders unreachable: no route
+2026-11-02 15:00:14 | ERROR    | convoy | Creating a Razorpay order failed for user 62958052-c85b-4563-935c-5774cbbade4a: Razorpay could not be reached
+2026-11-02 15:00:14 | ERROR    | convoy | Razorpay POST /orders -> 400 bad
+2026-11-02 15:00:14 | ERROR    | convoy | Creating a Razorpay order failed for user 688e8209-f4d1-4b85-b1d9-a41cbfa52440: bad
+2026-11-02 15:00:14 | ERROR    | convoy | Recharge for order order_5bca1feb15c9 needs review: payment pay_a9c56d078a14 does not match the order
+2026-11-02 15:00:14 | ERROR    | convoy | Recharge for order order_563a228fab5a needs review: payment pay_9c669466b26d does not match the order
+2026-11-02 15:00:14 | ERROR    | convoy | Razorpay GET /payments/pay_60750979f4f6 unreachable: no route
+2026-11-02 15:00:14 | ERROR    | convoy | Recharge for order order_b00026936fb5 needs review: credit refused: Wallet is frozen, contact support
+2026-11-02 15:00:14 | ERROR    | convoy | Recharge for order order_51093122274a needs review: webhook payment pay_0ded288f8f30 does not match the order
+2026-11-02 15:06:49 | ERROR    | convoy | APNs refused a VoIP push: 403 InvalidProviderToken
+2026-11-02 15:06:49 | ERROR    | convoy | APNs refused a VoIP push: 429 TooManyRequests
+2026-11-02 15:06:49 | ERROR    | convoy | APNs refused a VoIP push: 500 InternalServerError
+2026-11-02 15:06:49 | ERROR    | convoy | APNs refused a VoIP push: 503 
+2026-11-02 15:06:49 | ERROR    | convoy | APNs VoIP push failed: no route
+2026-11-02 15:06:49 | ERROR    | convoy | Incoming-call push to device dev-444e6673-e4dc-4a57-a612-7220f2f8420c failed: boom
+2026-11-02 15:06:54 | ERROR    | convoy | Razorpay POST /orders unreachable: no route
+2026-11-02 15:06:54 | ERROR    | convoy | Creating a Razorpay order failed for user ab4ad5a2-b11e-4731-bee9-a4d15bbadf83: Razorpay could not be reached
+2026-11-02 15:06:54 | ERROR    | convoy | Razorpay POST /orders -> 400 bad
+2026-11-02 15:06:54 | ERROR    | convoy | Creating a Razorpay order failed for user d321f08a-1ed6-4906-b5b4-08aaed630d0b: bad
+2026-11-02 15:06:54 | ERROR    | convoy | Recharge for order order_22b9925f18d3 needs review: payment pay_c02caa056ce6 does not match the order
+2026-11-02 15:06:54 | ERROR    | convoy | Recharge for order order_264027d7c29a needs review: payment pay_de1dce928e88 does not match the order
+2026-11-02 15:06:54 | ERROR    | convoy | Razorpay GET /payments/pay_f6d5e72738da unreachable: no route
+2026-11-02 15:06:54 | ERROR    | convoy | Recharge for order order_fb4614230d5e needs review: credit refused: Wallet is frozen, contact support
+2026-11-02 15:06:54 | ERROR    | convoy | Recharge for order order_64d0ed98dc85 needs review: webhook payment pay_e43a4dfae98e does not match the order

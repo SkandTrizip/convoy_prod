@@ -12570,3 +12570,699 @@ WHERE call_requests.provider_id = $1::UUID AND call_requests.status IN ($3::VARC
 2026-11-02 14:43:32 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 13.0ms | client=192.168.1.131
 2026-11-02 14:43:52 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 4.5ms | client=192.168.1.131
 2026-11-02 14:44:12 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 8.4ms | client=192.168.1.131
+2026-11-02 14:44:33 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 6.0ms | client=192.168.1.131
+2026-11-02 14:44:53 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 11.1ms | client=192.168.1.131
+2026-11-02 14:45:13 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 13.8ms | client=192.168.1.131
+2026-11-02 14:45:33 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 4.9ms | client=192.168.1.131
+2026-11-02 14:45:53 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 7.9ms | client=192.168.1.131
+2026-11-02 14:46:13 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 8.1ms | client=192.168.1.131
+2026-11-02 14:46:34 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 6.4ms | client=192.168.1.131
+2026-11-02 14:46:54 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 9.1ms | client=192.168.1.131
+2026-11-02 14:47:14 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 9.7ms | client=192.168.1.131
+2026-11-02 14:47:35 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 7.8ms | client=192.168.1.131
+2026-11-02 14:47:56 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 10.6ms | client=192.168.1.131
+2026-11-02 14:48:18 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 7.9ms | client=192.168.1.131
+2026-11-02 14:48:29 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 8.2ms | client=192.168.1.158
+2026-11-02 14:48:38 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 8.0ms | client=192.168.1.131
+2026-11-02 14:48:50 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 8.2ms | client=192.168.1.158
+2026-11-02 14:48:58 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 6.4ms | client=192.168.1.131
+2026-11-02 14:49:19 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 7.3ms | client=192.168.1.131
+2026-11-02 14:49:39 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 8.6ms | client=192.168.1.131
+2026-11-02 14:49:59 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 10.2ms | client=192.168.1.131
+2026-11-02 14:50:20 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 8.3ms | client=192.168.1.131
+2026-11-02 14:50:40 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 7.5ms | client=192.168.1.131
+2026-11-02 14:51:00 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 8.4ms | client=192.168.1.131
+2026-11-02 14:51:20 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 4.5ms | client=192.168.1.131
+2026-11-02 14:51:40 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 7.8ms | client=192.168.1.131
+2026-11-02 14:52:00 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 12.0ms | client=192.168.1.131
+2026-11-02 14:52:21 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 8.4ms | client=192.168.1.131
+2026-11-02 14:52:41 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 8.3ms | client=192.168.1.131
+2026-11-02 14:53:01 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 7.6ms | client=192.168.1.131
+2026-11-02 14:53:21 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 7.7ms | client=192.168.1.131
+2026-11-02 14:53:42 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 8.2ms | client=192.168.1.131
+2026-11-02 14:54:02 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 8.6ms | client=192.168.1.131
+2026-11-02 14:54:22 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 7.9ms | client=192.168.1.131
+2026-11-02 14:54:42 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 7.4ms | client=192.168.1.131
+2026-11-02 14:55:02 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 9.5ms | client=192.168.1.131
+2026-11-02 14:55:23 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 19.5ms | client=192.168.1.131
+2026-11-02 14:55:44 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 8.7ms | client=192.168.1.131
+2026-11-02 14:56:04 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 8.7ms | client=192.168.1.131
+2026-11-02 14:56:24 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 7.6ms | client=192.168.1.131
+2026-11-02 14:56:44 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 23.9ms | client=192.168.1.131
+2026-11-02 14:57:04 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 8.7ms | client=192.168.1.131
+2026-11-02 14:57:25 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 8.2ms | client=192.168.1.131
+2026-11-02 14:57:45 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 13.0ms | client=192.168.1.131
+2026-11-02 14:58:06 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 22.3ms | client=192.168.1.131
+2026-11-02 14:58:26 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 9.9ms | client=192.168.1.131
+2026-11-02 14:58:42 | INFO     | convoy.access | GET /api/location-tracking/status | status=401 | 2.9ms | client=127.0.0.1
+2026-11-02 14:58:42 | INFO     | convoy.access | POST /api/location-tracking/stop | status=401 | 1.9ms | client=127.0.0.1
+2026-11-02 14:58:42 | INFO     | convoy.access | POST /api/location-tracking/location | status=401 | 2.1ms | client=127.0.0.1
+2026-11-02 14:58:42 | INFO     | convoy.access | POST /api/location-tracking/location | status=422 | 5.5ms | client=127.0.0.1
+2026-11-02 14:58:42 | INFO     | convoy.access | POST /api/location-tracking/location | status=422 | 3.3ms | client=127.0.0.1
+2026-11-02 14:58:42 | INFO     | convoy.access | POST /api/location-tracking/location | status=422 | 3.1ms | client=127.0.0.1
+2026-11-02 14:58:42 | INFO     | convoy.access | POST /api/location-tracking/location | status=422 | 3.1ms | client=127.0.0.1
+2026-11-02 14:58:42 | INFO     | convoy.access | GET /api/location-tracking/status | status=200 | 5.5ms | client=127.0.0.1
+2026-11-02 14:58:42 | INFO     | convoy.access | POST /api/location-tracking/location | status=200 | 4.8ms | client=127.0.0.1
+2026-11-02 14:58:42 | INFO     | convoy.access | GET /api/location-tracking/status | status=200 | 3.2ms | client=127.0.0.1
+2026-11-02 14:58:42 | INFO     | convoy.access | POST /api/location-tracking/location | status=200 | 20.3ms | client=127.0.0.1
+2026-11-02 14:58:42 | INFO     | convoy.access | POST /api/location-tracking/stop | status=200 | 5.3ms | client=127.0.0.1
+2026-11-02 14:58:42 | ERROR    | convoy.access | POST /api/location-tracking/location | status=500 | 4.6ms | client=127.0.0.1
+Traceback (most recent call last):
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/middleware/logging.py", line 21, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2683, in app
+    await route.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1753, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2738, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1764, in _handle_selected
+    await route.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1753, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2738, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1764, in _handle_selected
+    await route.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1753, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 2738, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1773, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 1264, in handle
+    await app(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 150, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 136, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 690, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/fastapi/routing.py", line 344, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/routers/location_tracking.py", line 37, in report_location
+    state = await svc.record_location(session, current_user.id, body.lat, body.lng, body.accuracy, place)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/services/location_tracking.py", line 137, in record_location
+    return {**_status(row, now), "recorded": False}
+              ~~~~~~~^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/services/location_tracking.py", line 41, in _status
+    on = _is_on(row, now)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/services/location_tracking.py", line 37, in _is_on
+    return row is not None and row.stopped_at is None and now < row.ends_at
+                               ^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/orm/attributes.py", line 569, in __get__
+    return self.impl.get(state, dict_)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/orm/attributes.py", line 1096, in get
+    value = self._fire_loader_callables(state, key, passive)
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/orm/attributes.py", line 1126, in _fire_loader_callables
+    return state._load_expired(state, passive)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/orm/state.py", line 828, in _load_expired
+    self.manager.expired_attribute_loader(self, toload, passive)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/orm/loading.py", line 1674, in load_scalar_attributes
+    result = load_on_ident(
+        session,
+    ...<4 lines>...
+        no_autoflush=no_autoflush,
+    )
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/orm/loading.py", line 510, in load_on_ident
+    return load_on_pk_identity(
+        session,
+    ...<11 lines>...
+        is_user_refresh=is_user_refresh,
+    )
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/orm/loading.py", line 695, in load_on_pk_identity
+    session.execute(
+    ~~~~~~~~~~~~~~~^
+        q,
+        ^^
+    ...<2 lines>...
+        bind_arguments=bind_arguments,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/orm/session.py", line 2373, in execute
+    return self._execute_internal(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        statement,
+        ^^^^^^^^^^
+    ...<4 lines>...
+        _add_event=_add_event,
+        ^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/orm/session.py", line 2271, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<4 lines>...
+        conn,
+        ^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/orm/context.py", line 306, in orm_execute_statement
+    result = conn.execute(
+        statement, params or {}, execution_options=execution_options
+    )
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1421, in execute
+    return meth(
+        self,
+        distilled_parameters,
+        execution_options or NO_OPTIONS,
+    )
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/sql/elements.py", line 526, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self, distilled_params, execution_options
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1643, in _execute_clauseelement
+    ret = self._execute_context(
+        dialect,
+    ...<8 lines>...
+        cache_hit=cache_hit,
+    )
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1848, in _execute_context
+    return self._exec_single_context(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dialect, context, statement, parameters
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1988, in _exec_single_context
+    self._handle_dbapi_exception(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        e, str_statement, effective_parameters, cursor, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 2368, in _handle_dbapi_exception
+    raise exc_info[1].with_traceback(exc_info[2])
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/base.py", line 1969, in _exec_single_context
+    self.dialect.do_execute(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor, str_statement, effective_parameters, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/engine/default.py", line 952, in do_execute
+    cursor.execute(statement, parameters)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 585, in execute
+    self._adapt_connection.await_(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self._prepare_and_execute(operation, parameters)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/ankit/Documents/sharkship-others/convoy_prod/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 123, in await_only
+    raise exc.MissingGreenlet(
+    ...<2 lines>...
+    )
+sqlalchemy.exc.MissingGreenlet: greenlet_spawn has not been called; can't call await_only() here. Was IO attempted in an unexpected place? (Background on this error at: https://sqlalche.me/e/20/xd2s)
+2026-11-02 14:58:43 | INFO     | convoy.access | DELETE /api/posts/delete/0da7492a-2421-4bf6-9f07-5bb2d974daa3 | status=200 | 12.7ms | client=127.0.0.1
+2026-11-02 14:58:43 | INFO     | convoy.access | GET /api/location-tracking/status | status=200 | 3.2ms | client=127.0.0.1
+2026-11-02 14:58:47 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 23.9ms | client=192.168.1.131
+2026-11-02 14:59:07 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 14.5ms | client=192.168.1.131
+2026-11-02 14:59:17 | INFO     | convoy.access | GET /api/call-requests/incoming | status=401 | 2.9ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/call-requests | status=402 | 12.6ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/wallet/f732c10c-577d-440f-a692-904f4ed5aa2b/dev-credit | status=200 | 15.2ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/call-requests | status=201 | 12.8ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | GET /api/wallet/f732c10c-577d-440f-a692-904f4ed5aa2b | status=200 | 4.8ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 4.7ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 3.1ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | GET /api/call-requests/00489ec3-c715-45a7-8faf-4f73407886fa | status=404 | 4.3ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/call-requests/00489ec3-c715-45a7-8faf-4f73407886fa/accept | status=403 | 4.0ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/call-requests/00489ec3-c715-45a7-8faf-4f73407886fa/accept | status=200 | 6.7ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/call-requests/00489ec3-c715-45a7-8faf-4f73407886fa/events | status=200 | 5.9ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/call-requests/00489ec3-c715-45a7-8faf-4f73407886fa/events | status=400 | 3.4ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | GET /api/call-requests/00489ec3-c715-45a7-8faf-4f73407886fa | status=200 | 3.3ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | GET /api/call-requests/outgoing?activeOnly=true | status=200 | 4.5ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/call-requests/00489ec3-c715-45a7-8faf-4f73407886fa/feedback | status=200 | 10.6ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | GET /api/wallet/f732c10c-577d-440f-a692-904f4ed5aa2b | status=200 | 3.9ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | GET /api/wallet/5be65d1a-9f38-4e4a-8689-cfcd49955db2 | status=200 | 3.7ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | GET /api/wallet/5be65d1a-9f38-4e4a-8689-cfcd49955db2/transactions | status=200 | 4.0ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/call-requests | status=201 | 8.3ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | GET /api/call-requests/not-a-uuid | status=400 | 4.0ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/call-requests | status=400 | 3.0ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/call-requests | status=422 | 3.0ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/wallet/88c6d2bc-2178-40d2-b37c-98fca4f4f120/dev-credit | status=403 | 5.5ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/wallet/eb69da42-b35d-4c03-9eb1-40a8f33ffe7a/dev-credit | status=400 | 3.5ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/wallet/eb69da42-b35d-4c03-9eb1-40a8f33ffe7a/dev-credit | status=200 | 10.1ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/wallet/eb69da42-b35d-4c03-9eb1-40a8f33ffe7a/dev-credit | status=200 | 3.6ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | GET /api/wallet/eb69da42-b35d-4c03-9eb1-40a8f33ffe7a | status=200 | 6.5ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/wallet/5f7d64bd-9931-447a-ab2e-6cd3fb22d384/dev-credit | status=404 | 5.0ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/call-requests | status=201 | 19.3ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/start | status=409 | 4.9ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/accept | status=200 | 8.6ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/start | status=403 | 3.4ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/start | status=200 | 6.8ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | GET /api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6 | status=200 | 5.2ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/join | status=200 | 7.0ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/heartbeat | status=200 | 4.5ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/heartbeat | status=200 | 4.1ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/heartbeat | status=200 | 4.1ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/heartbeat | status=200 | 5.1ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/heartbeat | status=200 | 3.7ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/heartbeat | status=200 | 3.6ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/heartbeat | status=200 | 3.6ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/heartbeat | status=200 | 3.6ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/heartbeat | status=200 | 3.6ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/heartbeat | status=200 | 3.6ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/heartbeat | status=200 | 3.6ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/heartbeat | status=200 | 3.6ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/heartbeat | status=200 | 3.6ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/heartbeat | status=200 | 3.5ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/heartbeat | status=200 | 3.5ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/heartbeat | status=200 | 3.6ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/heartbeat | status=422 | 4.0ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/end | status=200 | 6.5ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/end | status=200 | 3.3ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/feedback | status=200 | 8.4ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | GET /api/wallet/2ee8fc22-5862-4c18-9e2d-7d1855ca7ef7 | status=200 | 4.4ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/call-requests | status=201 | 21.1ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/call-requests/aa750b7c-b2ae-4caa-a59e-ca4c3443295a/accept | status=200 | 7.4ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/call-requests/aa750b7c-b2ae-4caa-a59e-ca4c3443295a/start | status=200 | 6.0ms | client=127.0.0.1
+2026-11-02 14:59:17 | INFO     | convoy.access | POST /api/call-requests/aa750b7c-b2ae-4caa-a59e-ca4c3443295a/join | status=409 | 3.5ms | client=127.0.0.1
+2026-11-02 14:59:18 | INFO     | convoy.access | POST /api/call-requests | status=201 | 72.4ms | client=127.0.0.1
+2026-11-02 14:59:18 | INFO     | convoy.access | POST /api/call-requests/d99b8270-2d5c-41c0-98fe-a95477f4b4cd/events | status=200 | 7.2ms | client=127.0.0.1
+2026-11-02 14:59:18 | INFO     | convoy.access | POST /api/call-requests/d99b8270-2d5c-41c0-98fe-a95477f4b4cd/events | status=200 | 4.6ms | client=127.0.0.1
+2026-11-02 14:59:18 | INFO     | convoy.access | POST /api/call-requests/d99b8270-2d5c-41c0-98fe-a95477f4b4cd/events | status=200 | 4.6ms | client=127.0.0.1
+2026-11-02 14:59:18 | INFO     | convoy.access | POST /api/call-requests/d99b8270-2d5c-41c0-98fe-a95477f4b4cd/events | status=200 | 4.2ms | client=127.0.0.1
+2026-11-02 14:59:18 | INFO     | convoy.access | POST /api/call-requests/d99b8270-2d5c-41c0-98fe-a95477f4b4cd/events | status=200 | 4.3ms | client=127.0.0.1
+2026-11-02 14:59:18 | INFO     | convoy.access | POST /api/call-requests | status=201 | 16.8ms | client=127.0.0.1
+2026-11-02 14:59:18 | INFO     | convoy.access | POST /api/call-requests/07d33661-02f9-4a14-8efc-b65ae87d19b0/events | status=200 | 6.3ms | client=127.0.0.1
+2026-11-02 14:59:18 | INFO     | convoy.access | POST /api/call-requests/b90843d2-ca35-4620-bbab-9a2a655fad64/accept | status=200 | 9.5ms | client=127.0.0.1
+2026-11-02 14:59:18 | INFO     | convoy.access | POST /api/call-requests/b90843d2-ca35-4620-bbab-9a2a655fad64/start | status=200 | 8.9ms | client=127.0.0.1
+2026-11-02 14:59:18 | INFO     | convoy.access | POST /api/call-requests/b90843d2-ca35-4620-bbab-9a2a655fad64/join | status=200 | 6.2ms | client=127.0.0.1
+2026-11-02 14:59:18 | INFO     | convoy.access | GET /api/call-requests/b90843d2-ca35-4620-bbab-9a2a655fad64 | status=200 | 4.9ms | client=127.0.0.1
+2026-11-02 14:59:18 | INFO     | convoy.access | GET /api/call-requests/b90843d2-ca35-4620-bbab-9a2a655fad64 | status=200 | 3.8ms | client=127.0.0.1
+2026-11-02 14:59:18 | INFO     | convoy.access | POST /api/call-requests/b90843d2-ca35-4620-bbab-9a2a655fad64/join | status=409 | 3.6ms | client=127.0.0.1
+2026-11-02 14:59:18 | INFO     | convoy.access | POST /api/call-requests/b90843d2-ca35-4620-bbab-9a2a655fad64/end | status=409 | 3.6ms | client=127.0.0.1
+2026-11-02 14:59:18 | INFO     | convoy.access | POST /api/call-requests/b90843d2-ca35-4620-bbab-9a2a655fad64/heartbeat | status=409 | 3.9ms | client=127.0.0.1
+2026-11-02 14:59:18 | INFO     | convoy.access | POST /api/call-requests/b90843d2-ca35-4620-bbab-9a2a655fad64/heartbeat | status=200 | 4.8ms | client=127.0.0.1
+2026-11-02 14:59:18 | INFO     | convoy.access | GET /api/location-tracking/status | status=401 | 2.6ms | client=127.0.0.1
+2026-11-02 14:59:18 | INFO     | convoy.access | POST /api/location-tracking/stop | status=401 | 1.7ms | client=127.0.0.1
+2026-11-02 14:59:18 | INFO     | convoy.access | POST /api/location-tracking/location | status=401 | 2.0ms | client=127.0.0.1
+2026-11-02 14:59:18 | INFO     | convoy.access | POST /api/location-tracking/location | status=422 | 4.7ms | client=127.0.0.1
+2026-11-02 14:59:18 | INFO     | convoy.access | POST /api/location-tracking/location | status=422 | 3.1ms | client=127.0.0.1
+2026-11-02 14:59:18 | INFO     | convoy.access | POST /api/location-tracking/location | status=422 | 2.9ms | client=127.0.0.1
+2026-11-02 14:59:18 | INFO     | convoy.access | POST /api/location-tracking/location | status=422 | 2.9ms | client=127.0.0.1
+2026-11-02 14:59:18 | INFO     | convoy.access | GET /api/location-tracking/status | status=200 | 5.1ms | client=127.0.0.1
+2026-11-02 14:59:18 | INFO     | convoy.access | POST /api/location-tracking/location | status=200 | 4.0ms | client=127.0.0.1
+2026-11-02 14:59:18 | INFO     | convoy.access | GET /api/location-tracking/status | status=200 | 2.9ms | client=127.0.0.1
+2026-11-02 14:59:18 | INFO     | convoy.access | POST /api/location-tracking/location | status=200 | 18.9ms | client=127.0.0.1
+2026-11-02 14:59:18 | INFO     | convoy.access | POST /api/location-tracking/stop | status=200 | 4.9ms | client=127.0.0.1
+2026-11-02 14:59:18 | INFO     | convoy.access | POST /api/location-tracking/location | status=200 | 3.6ms | client=127.0.0.1
+2026-11-02 14:59:18 | INFO     | convoy.access | DELETE /api/posts/delete/6a622e69-bc0b-43a2-b3bc-551c90f5d477 | status=200 | 11.4ms | client=127.0.0.1
+2026-11-02 14:59:18 | INFO     | convoy.access | GET /api/location-tracking/status | status=200 | 3.1ms | client=127.0.0.1
+2026-11-02 14:59:19 | INFO     | convoy.access | GET /api/wallet/recharge/config | status=200 | 3.8ms | client=127.0.0.1
+2026-11-02 14:59:19 | INFO     | convoy.access | GET /api/wallet/recharge/config | status=200 | 4.1ms | client=127.0.0.1
+2026-11-02 14:59:19 | INFO     | convoy.access | GET /api/wallet/recharge/config | status=401 | 1.5ms | client=127.0.0.1
+2026-11-02 14:59:19 | INFO     | convoy.access | POST /api/wallet/ba3b89a2-5e1b-45c9-af48-898616b6818f/recharges | status=201 | 22.7ms | client=127.0.0.1
+2026-11-02 14:59:19 | INFO     | convoy.access | POST /api/wallet/ab0420d6-2f68-4064-8e7c-694ae1ec57c3/recharges | status=400 | 7.1ms | client=127.0.0.1
+2026-11-02 14:59:19 | INFO     | convoy.access | POST /api/wallet/ab0420d6-2f68-4064-8e7c-694ae1ec57c3/recharges | status=422 | 4.0ms | client=127.0.0.1
+2026-11-02 14:59:19 | INFO     | convoy.access | POST /api/wallet/ab0420d6-2f68-4064-8e7c-694ae1ec57c3/recharges | status=422 | 4.2ms | client=127.0.0.1
+2026-11-02 14:59:19 | INFO     | convoy.access | POST /api/wallet/ab0420d6-2f68-4064-8e7c-694ae1ec57c3/recharges | status=422 | 4.5ms | client=127.0.0.1
+2026-11-02 14:59:19 | INFO     | convoy.access | POST /api/wallet/ab0420d6-2f68-4064-8e7c-694ae1ec57c3/recharges | status=422 | 3.9ms | client=127.0.0.1
+2026-11-02 14:59:19 | INFO     | convoy.access | POST /api/wallet/e60d8a65-0dca-42ba-9648-eb2c7d2f8944/recharges | status=403 | 4.9ms | client=127.0.0.1
+2026-11-02 14:59:19 | INFO     | convoy.access | POST /api/wallet/e60d8a65-0dca-42ba-9648-eb2c7d2f8944/recharges | status=201 | 11.3ms | client=127.0.0.1
+2026-11-02 14:59:19 | INFO     | convoy.access | POST /api/wallet/e60d8a65-0dca-42ba-9648-eb2c7d2f8944/recharges/confirm | status=403 | 4.4ms | client=127.0.0.1
+2026-11-02 14:59:19 | INFO     | convoy.access | POST /api/wallet/da38f2c9-9a46-4d7a-a312-fec612446443/recharges/confirm | status=404 | 4.9ms | client=127.0.0.1
+2026-11-02 14:59:19 | INFO     | convoy.access | POST /api/wallet/7ce8a801-deed-4e86-8cb4-a8c8abbd6703/recharges | status=201 | 12.5ms | client=127.0.0.1
+2026-11-02 14:59:19 | INFO     | convoy.access | POST /api/wallet/7ce8a801-deed-4e86-8cb4-a8c8abbd6703/recharges/confirm | status=200 | 13.4ms | client=127.0.0.1
+2026-11-02 14:59:19 | INFO     | convoy.access | GET /api/wallet/7ce8a801-deed-4e86-8cb4-a8c8abbd6703 | status=200 | 5.9ms | client=127.0.0.1
+2026-11-02 14:59:19 | INFO     | convoy.access | GET /api/wallet/7ce8a801-deed-4e86-8cb4-a8c8abbd6703/transactions | status=200 | 4.7ms | client=127.0.0.1
+2026-11-02 14:59:19 | INFO     | convoy.access | POST /api/wallet/85660729-3b50-47a6-8a1f-08ce4bb85bd8/recharges | status=201 | 13.0ms | client=127.0.0.1
+2026-11-02 14:59:19 | INFO     | convoy.access | POST /api/wallet/85660729-3b50-47a6-8a1f-08ce4bb85bd8/recharges/confirm | status=400 | 4.1ms | client=127.0.0.1
+2026-11-02 14:59:19 | INFO     | convoy.access | GET /api/wallet/85660729-3b50-47a6-8a1f-08ce4bb85bd8 | status=200 | 6.8ms | client=127.0.0.1
+2026-11-02 14:59:19 | INFO     | convoy.access | POST /api/wallet/7e9c84ff-8cd5-4a14-9be7-67a444fe6daa/recharges | status=201 | 15.4ms | client=127.0.0.1
+2026-11-02 14:59:19 | INFO     | convoy.access | GET /api/wallet/7e9c84ff-8cd5-4a14-9be7-67a444fe6daa/recharges/order_b1537ef3b0b5 | status=200 | 5.5ms | client=127.0.0.1
+2026-11-02 14:59:19 | INFO     | convoy.access | POST /api/wallet/7e9c84ff-8cd5-4a14-9be7-67a444fe6daa/recharges/confirm | status=200 | 13.4ms | client=127.0.0.1
+2026-11-02 14:59:19 | INFO     | convoy.access | GET /api/wallet/7e9c84ff-8cd5-4a14-9be7-67a444fe6daa/recharges/order_b1537ef3b0b5 | status=200 | 3.9ms | client=127.0.0.1
+2026-11-02 14:59:19 | INFO     | convoy.access | GET /api/wallet/7e9c84ff-8cd5-4a14-9be7-67a444fe6daa/recharges/order_nope | status=404 | 3.8ms | client=127.0.0.1
+2026-11-02 14:59:19 | INFO     | convoy.access | POST /api/wallet/1c203aa5-40dc-4e77-9389-bf919abd3c30/recharges | status=201 | 13.8ms | client=127.0.0.1
+2026-11-02 14:59:19 | INFO     | convoy.access | POST /api/webhooks/razorpay | status=400 | 2.0ms | client=127.0.0.1
+2026-11-02 14:59:19 | INFO     | convoy.access | POST /api/webhooks/razorpay | status=400 | 0.8ms | client=127.0.0.1
+2026-11-02 14:59:19 | INFO     | convoy.access | POST /api/webhooks/razorpay | status=200 | 10.8ms | client=127.0.0.1
+2026-11-02 14:59:19 | INFO     | convoy.access | POST /api/webhooks/razorpay | status=200 | 1.7ms | client=127.0.0.1
+2026-11-02 14:59:19 | INFO     | convoy.access | GET /api/wallet/1c203aa5-40dc-4e77-9389-bf919abd3c30 | status=200 | 5.8ms | client=127.0.0.1
+2026-11-02 14:59:20 | INFO     | convoy.access | POST /api/wallet/828288c5-309f-4c58-9b47-a286794b687f/recharges | status=201 | 13.5ms | client=127.0.0.1
+2026-11-02 14:59:20 | INFO     | convoy.access | POST /api/wallet/828288c5-309f-4c58-9b47-a286794b687f/recharges/confirm | status=200 | 14.0ms | client=127.0.0.1
+2026-11-02 14:59:20 | INFO     | convoy.access | POST /api/call-requests | status=201 | 18.0ms | client=127.0.0.1
+2026-11-02 14:59:27 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 24.4ms | client=192.168.1.131
+2026-11-02 14:59:39 | INFO     | convoy.access | GET /api/location-tracking/status | status=401 | 2.9ms | client=127.0.0.1
+2026-11-02 14:59:39 | INFO     | convoy.access | POST /api/location-tracking/stop | status=401 | 1.8ms | client=127.0.0.1
+2026-11-02 14:59:39 | INFO     | convoy.access | POST /api/location-tracking/location | status=401 | 2.1ms | client=127.0.0.1
+2026-11-02 14:59:39 | INFO     | convoy.access | POST /api/location-tracking/location | status=422 | 4.9ms | client=127.0.0.1
+2026-11-02 14:59:39 | INFO     | convoy.access | POST /api/location-tracking/location | status=422 | 3.2ms | client=127.0.0.1
+2026-11-02 14:59:39 | INFO     | convoy.access | POST /api/location-tracking/location | status=422 | 3.2ms | client=127.0.0.1
+2026-11-02 14:59:39 | INFO     | convoy.access | POST /api/location-tracking/location | status=422 | 3.1ms | client=127.0.0.1
+2026-11-02 14:59:39 | INFO     | convoy.access | GET /api/location-tracking/status | status=200 | 10.2ms | client=127.0.0.1
+2026-11-02 14:59:39 | INFO     | convoy.access | POST /api/location-tracking/location | status=200 | 5.2ms | client=127.0.0.1
+2026-11-02 14:59:39 | INFO     | convoy.access | GET /api/location-tracking/status | status=200 | 3.4ms | client=127.0.0.1
+2026-11-02 14:59:39 | INFO     | convoy.access | POST /api/location-tracking/location | status=200 | 20.7ms | client=127.0.0.1
+2026-11-02 14:59:39 | INFO     | convoy.access | POST /api/location-tracking/stop | status=200 | 5.5ms | client=127.0.0.1
+2026-11-02 14:59:39 | INFO     | convoy.access | POST /api/location-tracking/location | status=200 | 3.7ms | client=127.0.0.1
+2026-11-02 14:59:39 | INFO     | convoy.access | DELETE /api/posts/delete/0dfb3590-687c-4a25-8098-3f2f432de981 | status=200 | 12.4ms | client=127.0.0.1
+2026-11-02 14:59:39 | INFO     | convoy.access | GET /api/location-tracking/status | status=200 | 3.4ms | client=127.0.0.1
+2026-11-02 14:59:39 | INFO     | convoy.access | GET /api/location-tracking/status | status=200 | 5.6ms | client=127.0.0.1
+2026-11-02 14:59:40 | INFO     | convoy.access | POST /api/posts/create/54058658-9ab9-4e2d-a232-f408592c8784 | status=200 | 44.7ms | client=127.0.0.1
+2026-11-02 14:59:45 | INFO     | convoy.access | GET /api/location-tracking/status | status=200 | 7.9ms | client=127.0.0.1
+2026-11-02 14:59:45 | INFO     | convoy.access | POST /api/posts/create/5b36b619-c54e-426a-a3eb-d54bf643691a | status=200 | 43.0ms | client=127.0.0.1
+2026-11-02 14:59:47 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 22.2ms | client=192.168.1.131
+2026-11-02 15:00:07 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 21.3ms | client=192.168.1.131
+2026-11-02 15:00:12 | INFO     | convoy.access | GET /api/call-requests/incoming | status=401 | 3.2ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | POST /api/call-requests | status=402 | 12.5ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | POST /api/wallet/76642532-9aa8-4788-af8f-d1aafbf90a82/dev-credit | status=200 | 15.3ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | POST /api/call-requests | status=201 | 13.5ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | GET /api/wallet/76642532-9aa8-4788-af8f-d1aafbf90a82 | status=200 | 4.9ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 4.9ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 3.7ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | GET /api/call-requests/7493fa10-53e2-43d6-9618-0669d742763e | status=404 | 4.7ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | POST /api/call-requests/7493fa10-53e2-43d6-9618-0669d742763e/accept | status=403 | 4.2ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | POST /api/call-requests/7493fa10-53e2-43d6-9618-0669d742763e/accept | status=200 | 6.6ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | POST /api/call-requests/7493fa10-53e2-43d6-9618-0669d742763e/events | status=200 | 6.4ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | POST /api/call-requests/7493fa10-53e2-43d6-9618-0669d742763e/events | status=400 | 3.6ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | GET /api/call-requests/7493fa10-53e2-43d6-9618-0669d742763e | status=200 | 3.4ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | GET /api/call-requests/outgoing?activeOnly=true | status=200 | 5.0ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | POST /api/call-requests/7493fa10-53e2-43d6-9618-0669d742763e/feedback | status=200 | 10.8ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | GET /api/wallet/76642532-9aa8-4788-af8f-d1aafbf90a82 | status=200 | 4.2ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | GET /api/wallet/c5a7fc64-98a7-4cb3-8a23-36f8f1a65a2f | status=200 | 3.7ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | GET /api/wallet/c5a7fc64-98a7-4cb3-8a23-36f8f1a65a2f/transactions | status=200 | 4.1ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | POST /api/call-requests | status=201 | 10.4ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | GET /api/call-requests/not-a-uuid | status=400 | 4.8ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | POST /api/call-requests | status=400 | 3.6ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | POST /api/call-requests | status=422 | 3.6ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | POST /api/wallet/030a71c7-eaaa-413f-b682-15e7238c454e/dev-credit | status=403 | 6.7ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | POST /api/wallet/52228b02-81f3-4ef3-a0bd-7d488c5baedd/dev-credit | status=400 | 3.7ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | POST /api/wallet/52228b02-81f3-4ef3-a0bd-7d488c5baedd/dev-credit | status=200 | 11.9ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | POST /api/wallet/52228b02-81f3-4ef3-a0bd-7d488c5baedd/dev-credit | status=200 | 5.5ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | GET /api/wallet/52228b02-81f3-4ef3-a0bd-7d488c5baedd | status=200 | 10.5ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | POST /api/wallet/bb488437-5ba0-4472-82b8-8efd0cf8ff32/dev-credit | status=404 | 5.3ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | POST /api/call-requests | status=201 | 18.8ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | POST /api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/start | status=409 | 4.8ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | POST /api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/accept | status=200 | 7.9ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | POST /api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/start | status=403 | 3.6ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | POST /api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/start | status=200 | 6.6ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | GET /api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc | status=200 | 4.6ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | POST /api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/join | status=200 | 6.7ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | POST /api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/heartbeat | status=200 | 4.6ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | POST /api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/heartbeat | status=200 | 5.2ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | POST /api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/heartbeat | status=200 | 5.1ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | POST /api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/heartbeat | status=200 | 7.0ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | POST /api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/heartbeat | status=200 | 4.7ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | POST /api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/heartbeat | status=200 | 5.5ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | POST /api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/heartbeat | status=200 | 6.1ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | POST /api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/heartbeat | status=200 | 4.8ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | POST /api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/heartbeat | status=200 | 4.5ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | POST /api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/heartbeat | status=200 | 4.3ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | POST /api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/heartbeat | status=200 | 4.2ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | POST /api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/heartbeat | status=200 | 4.0ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | POST /api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/heartbeat | status=200 | 3.9ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | POST /api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/heartbeat | status=200 | 4.4ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | POST /api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/heartbeat | status=200 | 3.8ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | POST /api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/heartbeat | status=200 | 3.8ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | POST /api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/heartbeat | status=422 | 5.1ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | POST /api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/end | status=200 | 7.0ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | POST /api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/end | status=200 | 3.5ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | POST /api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/feedback | status=200 | 13.7ms | client=127.0.0.1
+2026-11-02 15:00:12 | INFO     | convoy.access | GET /api/wallet/89de9f6b-8b88-4f6f-bfb3-59b6ce0169de | status=200 | 7.9ms | client=127.0.0.1
+2026-11-02 15:00:13 | INFO     | convoy.access | POST /api/call-requests | status=201 | 22.6ms | client=127.0.0.1
+2026-11-02 15:00:13 | INFO     | convoy.access | POST /api/call-requests/d8549a16-a361-4295-bfe4-e3816a8a8c47/accept | status=200 | 9.7ms | client=127.0.0.1
+2026-11-02 15:00:13 | INFO     | convoy.access | POST /api/call-requests/d8549a16-a361-4295-bfe4-e3816a8a8c47/start | status=200 | 7.6ms | client=127.0.0.1
+2026-11-02 15:00:13 | INFO     | convoy.access | POST /api/call-requests/d8549a16-a361-4295-bfe4-e3816a8a8c47/join | status=409 | 4.0ms | client=127.0.0.1
+2026-11-02 15:00:13 | INFO     | convoy.access | POST /api/call-requests | status=201 | 57.0ms | client=127.0.0.1
+2026-11-02 15:00:13 | INFO     | convoy.access | POST /api/call-requests/2323c4cd-e870-47fb-970b-116ca903f750/events | status=200 | 7.8ms | client=127.0.0.1
+2026-11-02 15:00:13 | INFO     | convoy.access | POST /api/call-requests/2323c4cd-e870-47fb-970b-116ca903f750/events | status=200 | 5.0ms | client=127.0.0.1
+2026-11-02 15:00:13 | INFO     | convoy.access | POST /api/call-requests/2323c4cd-e870-47fb-970b-116ca903f750/events | status=200 | 5.0ms | client=127.0.0.1
+2026-11-02 15:00:13 | INFO     | convoy.access | POST /api/call-requests/2323c4cd-e870-47fb-970b-116ca903f750/events | status=200 | 5.1ms | client=127.0.0.1
+2026-11-02 15:00:13 | INFO     | convoy.access | POST /api/call-requests/2323c4cd-e870-47fb-970b-116ca903f750/events | status=200 | 4.5ms | client=127.0.0.1
+2026-11-02 15:00:13 | INFO     | convoy.access | POST /api/call-requests | status=201 | 17.7ms | client=127.0.0.1
+2026-11-02 15:00:13 | INFO     | convoy.access | POST /api/call-requests/3d92a379-af49-4b96-9bcd-6078e3fc99c9/events | status=200 | 7.2ms | client=127.0.0.1
+2026-11-02 15:00:13 | INFO     | convoy.access | POST /api/call-requests/a6d47bfb-2175-40dd-a8d1-b0f3d522aa2a/accept | status=200 | 9.5ms | client=127.0.0.1
+2026-11-02 15:00:13 | INFO     | convoy.access | POST /api/call-requests/a6d47bfb-2175-40dd-a8d1-b0f3d522aa2a/start | status=200 | 23.5ms | client=127.0.0.1
+2026-11-02 15:00:13 | INFO     | convoy.access | POST /api/call-requests/a6d47bfb-2175-40dd-a8d1-b0f3d522aa2a/join | status=200 | 14.1ms | client=127.0.0.1
+2026-11-02 15:00:13 | INFO     | convoy.access | GET /api/call-requests/a6d47bfb-2175-40dd-a8d1-b0f3d522aa2a | status=200 | 12.1ms | client=127.0.0.1
+2026-11-02 15:00:13 | INFO     | convoy.access | GET /api/call-requests/a6d47bfb-2175-40dd-a8d1-b0f3d522aa2a | status=200 | 9.0ms | client=127.0.0.1
+2026-11-02 15:00:13 | INFO     | convoy.access | POST /api/call-requests/a6d47bfb-2175-40dd-a8d1-b0f3d522aa2a/join | status=409 | 5.4ms | client=127.0.0.1
+2026-11-02 15:00:13 | INFO     | convoy.access | POST /api/call-requests/a6d47bfb-2175-40dd-a8d1-b0f3d522aa2a/end | status=409 | 7.8ms | client=127.0.0.1
+2026-11-02 15:00:13 | INFO     | convoy.access | POST /api/call-requests/a6d47bfb-2175-40dd-a8d1-b0f3d522aa2a/heartbeat | status=409 | 6.8ms | client=127.0.0.1
+2026-11-02 15:00:13 | INFO     | convoy.access | POST /api/call-requests/a6d47bfb-2175-40dd-a8d1-b0f3d522aa2a/heartbeat | status=200 | 5.5ms | client=127.0.0.1
+2026-11-02 15:00:13 | INFO     | convoy.access | GET /api/location-tracking/status | status=401 | 2.5ms | client=127.0.0.1
+2026-11-02 15:00:13 | INFO     | convoy.access | POST /api/location-tracking/stop | status=401 | 1.7ms | client=127.0.0.1
+2026-11-02 15:00:13 | INFO     | convoy.access | POST /api/location-tracking/location | status=401 | 2.0ms | client=127.0.0.1
+2026-11-02 15:00:13 | INFO     | convoy.access | POST /api/location-tracking/location | status=422 | 4.6ms | client=127.0.0.1
+2026-11-02 15:00:13 | INFO     | convoy.access | POST /api/location-tracking/location | status=422 | 3.1ms | client=127.0.0.1
+2026-11-02 15:00:13 | INFO     | convoy.access | POST /api/location-tracking/location | status=422 | 3.5ms | client=127.0.0.1
+2026-11-02 15:00:13 | INFO     | convoy.access | POST /api/location-tracking/location | status=422 | 3.1ms | client=127.0.0.1
+2026-11-02 15:00:13 | INFO     | convoy.access | GET /api/location-tracking/status | status=200 | 6.0ms | client=127.0.0.1
+2026-11-02 15:00:13 | INFO     | convoy.access | POST /api/location-tracking/location | status=200 | 4.3ms | client=127.0.0.1
+2026-11-02 15:00:13 | INFO     | convoy.access | GET /api/location-tracking/status | status=200 | 3.4ms | client=127.0.0.1
+2026-11-02 15:00:13 | INFO     | convoy.access | POST /api/location-tracking/location | status=200 | 19.0ms | client=127.0.0.1
+2026-11-02 15:00:13 | INFO     | convoy.access | POST /api/location-tracking/stop | status=200 | 4.3ms | client=127.0.0.1
+2026-11-02 15:00:13 | INFO     | convoy.access | POST /api/location-tracking/location | status=200 | 3.5ms | client=127.0.0.1
+2026-11-02 15:00:13 | INFO     | convoy.access | DELETE /api/posts/delete/93fa0851-74c9-4c0c-b77d-3b537ba03241 | status=200 | 11.7ms | client=127.0.0.1
+2026-11-02 15:00:13 | INFO     | convoy.access | GET /api/location-tracking/status | status=200 | 3.3ms | client=127.0.0.1
+2026-11-02 15:00:14 | INFO     | convoy.access | GET /api/location-tracking/status | status=200 | 5.2ms | client=127.0.0.1
+2026-11-02 15:00:14 | INFO     | convoy.access | POST /api/posts/create/e09a28e5-6731-4cef-a450-8a47d9c7bd36 | status=200 | 41.7ms | client=127.0.0.1
+2026-11-02 15:00:14 | INFO     | convoy.access | GET /api/location-tracking/status | status=200 | 4.2ms | client=127.0.0.1
+2026-11-02 15:00:14 | INFO     | convoy.access | GET /api/location-tracking/status | status=200 | 3.1ms | client=127.0.0.1
+2026-11-02 15:00:14 | INFO     | convoy.access | POST /api/posts/reactivate/51422cf3-fc38-49b7-b990-5838fc3303e7 | status=200 | 15.9ms | client=127.0.0.1
+2026-11-02 15:00:14 | INFO     | convoy.access | GET /api/location-tracking/status | status=200 | 3.1ms | client=127.0.0.1
+2026-11-02 15:00:14 | INFO     | convoy.access | GET /api/wallet/recharge/config | status=200 | 4.1ms | client=127.0.0.1
+2026-11-02 15:00:14 | INFO     | convoy.access | GET /api/wallet/recharge/config | status=200 | 3.7ms | client=127.0.0.1
+2026-11-02 15:00:14 | INFO     | convoy.access | GET /api/wallet/recharge/config | status=401 | 1.5ms | client=127.0.0.1
+2026-11-02 15:00:15 | INFO     | convoy.access | POST /api/wallet/1f52bf7f-8a66-4bf9-adc2-ff3d40cda549/recharges | status=201 | 14.1ms | client=127.0.0.1
+2026-11-02 15:00:15 | INFO     | convoy.access | POST /api/wallet/2b048da9-e98e-4f4e-9cf2-91779136ea93/recharges | status=400 | 5.8ms | client=127.0.0.1
+2026-11-02 15:00:15 | INFO     | convoy.access | POST /api/wallet/2b048da9-e98e-4f4e-9cf2-91779136ea93/recharges | status=422 | 3.7ms | client=127.0.0.1
+2026-11-02 15:00:15 | INFO     | convoy.access | POST /api/wallet/2b048da9-e98e-4f4e-9cf2-91779136ea93/recharges | status=422 | 3.6ms | client=127.0.0.1
+2026-11-02 15:00:15 | INFO     | convoy.access | POST /api/wallet/2b048da9-e98e-4f4e-9cf2-91779136ea93/recharges | status=422 | 3.7ms | client=127.0.0.1
+2026-11-02 15:00:15 | INFO     | convoy.access | POST /api/wallet/2b048da9-e98e-4f4e-9cf2-91779136ea93/recharges | status=422 | 3.5ms | client=127.0.0.1
+2026-11-02 15:00:15 | INFO     | convoy.access | POST /api/wallet/868ca1f3-b17e-4ff0-9617-cc7aa3d70719/recharges | status=403 | 4.7ms | client=127.0.0.1
+2026-11-02 15:00:15 | INFO     | convoy.access | POST /api/wallet/868ca1f3-b17e-4ff0-9617-cc7aa3d70719/recharges | status=201 | 11.6ms | client=127.0.0.1
+2026-11-02 15:00:15 | INFO     | convoy.access | POST /api/wallet/868ca1f3-b17e-4ff0-9617-cc7aa3d70719/recharges/confirm | status=403 | 3.7ms | client=127.0.0.1
+2026-11-02 15:00:15 | INFO     | convoy.access | POST /api/wallet/9e6835b6-43ad-480c-81b9-b81166ed867b/recharges/confirm | status=404 | 4.3ms | client=127.0.0.1
+2026-11-02 15:00:15 | INFO     | convoy.access | POST /api/wallet/23de4958-acc8-449c-97af-453aa0a16d52/recharges | status=201 | 13.4ms | client=127.0.0.1
+2026-11-02 15:00:15 | INFO     | convoy.access | POST /api/wallet/23de4958-acc8-449c-97af-453aa0a16d52/recharges/confirm | status=200 | 13.3ms | client=127.0.0.1
+2026-11-02 15:00:15 | INFO     | convoy.access | GET /api/wallet/23de4958-acc8-449c-97af-453aa0a16d52 | status=200 | 5.6ms | client=127.0.0.1
+2026-11-02 15:00:15 | INFO     | convoy.access | GET /api/wallet/23de4958-acc8-449c-97af-453aa0a16d52/transactions | status=200 | 4.3ms | client=127.0.0.1
+2026-11-02 15:00:15 | INFO     | convoy.access | POST /api/wallet/73391948-2da1-4cc6-8104-1dd298d8c593/recharges | status=201 | 13.2ms | client=127.0.0.1
+2026-11-02 15:00:15 | INFO     | convoy.access | POST /api/wallet/73391948-2da1-4cc6-8104-1dd298d8c593/recharges/confirm | status=400 | 4.2ms | client=127.0.0.1
+2026-11-02 15:00:15 | INFO     | convoy.access | GET /api/wallet/73391948-2da1-4cc6-8104-1dd298d8c593 | status=200 | 5.2ms | client=127.0.0.1
+2026-11-02 15:00:15 | INFO     | convoy.access | POST /api/wallet/5e67cd62-9cbf-49c5-a297-3d175a51d406/recharges | status=201 | 13.4ms | client=127.0.0.1
+2026-11-02 15:00:15 | INFO     | convoy.access | GET /api/wallet/5e67cd62-9cbf-49c5-a297-3d175a51d406/recharges/order_03548389557f | status=200 | 4.6ms | client=127.0.0.1
+2026-11-02 15:00:15 | INFO     | convoy.access | POST /api/wallet/5e67cd62-9cbf-49c5-a297-3d175a51d406/recharges/confirm | status=200 | 12.4ms | client=127.0.0.1
+2026-11-02 15:00:15 | INFO     | convoy.access | GET /api/wallet/5e67cd62-9cbf-49c5-a297-3d175a51d406/recharges/order_03548389557f | status=200 | 3.4ms | client=127.0.0.1
+2026-11-02 15:00:15 | INFO     | convoy.access | GET /api/wallet/5e67cd62-9cbf-49c5-a297-3d175a51d406/recharges/order_nope | status=404 | 3.3ms | client=127.0.0.1
+2026-11-02 15:00:15 | INFO     | convoy.access | POST /api/wallet/eba900e9-9555-411f-b844-559761b831de/recharges | status=201 | 12.6ms | client=127.0.0.1
+2026-11-02 15:00:15 | INFO     | convoy.access | POST /api/webhooks/razorpay | status=400 | 1.6ms | client=127.0.0.1
+2026-11-02 15:00:15 | INFO     | convoy.access | POST /api/webhooks/razorpay | status=400 | 0.7ms | client=127.0.0.1
+2026-11-02 15:00:15 | INFO     | convoy.access | POST /api/webhooks/razorpay | status=200 | 9.8ms | client=127.0.0.1
+2026-11-02 15:00:15 | INFO     | convoy.access | POST /api/webhooks/razorpay | status=200 | 1.7ms | client=127.0.0.1
+2026-11-02 15:00:15 | INFO     | convoy.access | GET /api/wallet/eba900e9-9555-411f-b844-559761b831de | status=200 | 5.9ms | client=127.0.0.1
+2026-11-02 15:00:15 | INFO     | convoy.access | POST /api/wallet/d51e592f-9da6-432b-9f71-b1d8c5d5fde0/recharges | status=201 | 13.3ms | client=127.0.0.1
+2026-11-02 15:00:15 | INFO     | convoy.access | POST /api/wallet/d51e592f-9da6-432b-9f71-b1d8c5d5fde0/recharges/confirm | status=200 | 12.6ms | client=127.0.0.1
+2026-11-02 15:00:15 | INFO     | convoy.access | POST /api/call-requests | status=201 | 17.2ms | client=127.0.0.1
+2026-11-02 15:00:28 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 11.8ms | client=192.168.1.131
+2026-11-02 15:00:48 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 11.7ms | client=192.168.1.131
+2026-11-02 15:01:08 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 12.9ms | client=192.168.1.131
+2026-11-02 15:01:28 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 8.0ms | client=192.168.1.131
+2026-11-02 15:01:48 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 8.9ms | client=192.168.1.131
+2026-11-02 15:05:32 | INFO     | convoy.access | GET /api/location-tracking/status | status=401 | 7.9ms | client=127.0.0.1
+2026-11-02 15:05:32 | INFO     | convoy.access | GET /openapi.json | status=200 | 3.3ms | client=127.0.0.1
+2026-11-02 15:06:51 | INFO     | convoy.access | GET /api/call-requests/incoming | status=401 | 3.4ms | client=127.0.0.1
+2026-11-02 15:06:51 | INFO     | convoy.access | POST /api/call-requests | status=402 | 13.1ms | client=127.0.0.1
+2026-11-02 15:06:51 | INFO     | convoy.access | POST /api/wallet/2dc6a748-5a43-4170-b346-ac9b533af293/dev-credit | status=200 | 16.1ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests | status=201 | 13.0ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | GET /api/wallet/2dc6a748-5a43-4170-b346-ac9b533af293 | status=200 | 4.7ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 4.6ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 3.0ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | GET /api/call-requests/388524f1-8f5a-4f66-ab41-52d3507d683e | status=404 | 4.2ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/388524f1-8f5a-4f66-ab41-52d3507d683e/accept | status=403 | 3.8ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/388524f1-8f5a-4f66-ab41-52d3507d683e/accept | status=200 | 6.2ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/388524f1-8f5a-4f66-ab41-52d3507d683e/events | status=200 | 6.0ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/388524f1-8f5a-4f66-ab41-52d3507d683e/events | status=400 | 3.7ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | GET /api/call-requests/388524f1-8f5a-4f66-ab41-52d3507d683e | status=200 | 3.4ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | GET /api/call-requests/outgoing?activeOnly=true | status=200 | 4.9ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/388524f1-8f5a-4f66-ab41-52d3507d683e/feedback | status=200 | 10.2ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | GET /api/wallet/2dc6a748-5a43-4170-b346-ac9b533af293 | status=200 | 4.3ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | GET /api/wallet/b9f46dc7-f007-4c9e-8884-27d77386a9b2 | status=200 | 3.8ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | GET /api/wallet/b9f46dc7-f007-4c9e-8884-27d77386a9b2/transactions | status=200 | 4.5ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests | status=201 | 9.5ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | GET /api/call-requests/not-a-uuid | status=400 | 5.1ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests | status=400 | 3.4ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests | status=422 | 3.2ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/wallet/fedce59b-220f-40e4-8cba-8f108325e12b/dev-credit | status=403 | 7.8ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/wallet/ab55a2cf-a61a-4ef3-89cf-d50b60663928/dev-credit | status=400 | 4.1ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/wallet/ab55a2cf-a61a-4ef3-89cf-d50b60663928/dev-credit | status=200 | 13.3ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/wallet/ab55a2cf-a61a-4ef3-89cf-d50b60663928/dev-credit | status=200 | 4.3ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | GET /api/wallet/ab55a2cf-a61a-4ef3-89cf-d50b60663928 | status=200 | 7.1ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/wallet/13b564df-abd2-43f6-adc7-64d9f418e599/dev-credit | status=404 | 4.9ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests | status=201 | 18.5ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/start | status=409 | 4.8ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/accept | status=200 | 9.4ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/start | status=403 | 5.5ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/start | status=200 | 21.6ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | GET /api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6 | status=200 | 6.4ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/join | status=200 | 8.1ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/heartbeat | status=200 | 7.8ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/heartbeat | status=200 | 6.9ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/heartbeat | status=200 | 7.1ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/heartbeat | status=200 | 11.6ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/heartbeat | status=200 | 5.8ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/heartbeat | status=200 | 6.1ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/heartbeat | status=200 | 5.8ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/heartbeat | status=200 | 5.4ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/heartbeat | status=200 | 5.1ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/heartbeat | status=200 | 6.0ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/heartbeat | status=200 | 5.3ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/heartbeat | status=200 | 5.1ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/heartbeat | status=200 | 5.0ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/heartbeat | status=200 | 5.1ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/heartbeat | status=200 | 5.2ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/heartbeat | status=200 | 5.1ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/heartbeat | status=422 | 5.6ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/end | status=200 | 9.0ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/end | status=200 | 4.7ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/feedback | status=200 | 12.2ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | GET /api/wallet/63b74b6f-f4ba-4f05-b6e9-9022b641c780 | status=200 | 6.5ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests | status=201 | 23.9ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/6b14ffc6-e237-41ab-a6d2-972a7b6819ef/accept | status=200 | 10.2ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/6b14ffc6-e237-41ab-a6d2-972a7b6819ef/start | status=200 | 9.0ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/6b14ffc6-e237-41ab-a6d2-972a7b6819ef/join | status=409 | 4.5ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests | status=201 | 62.9ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/81b6fd14-19b5-4ba2-8abd-45a0bc2eee16/events | status=200 | 9.5ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/81b6fd14-19b5-4ba2-8abd-45a0bc2eee16/events | status=200 | 8.2ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/81b6fd14-19b5-4ba2-8abd-45a0bc2eee16/events | status=200 | 6.8ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/81b6fd14-19b5-4ba2-8abd-45a0bc2eee16/events | status=200 | 6.6ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/81b6fd14-19b5-4ba2-8abd-45a0bc2eee16/events | status=200 | 6.2ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests | status=201 | 27.8ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/beb3bdc7-fb43-4ad4-990c-e0b6986e359f/events | status=200 | 10.1ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/a2ee6ab5-9c98-4a2a-9f94-560e6a1ddbe0/accept | status=200 | 11.6ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/a2ee6ab5-9c98-4a2a-9f94-560e6a1ddbe0/start | status=200 | 12.6ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/a2ee6ab5-9c98-4a2a-9f94-560e6a1ddbe0/join | status=200 | 13.1ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | GET /api/call-requests/a2ee6ab5-9c98-4a2a-9f94-560e6a1ddbe0 | status=200 | 10.0ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | GET /api/call-requests/a2ee6ab5-9c98-4a2a-9f94-560e6a1ddbe0 | status=200 | 5.6ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/a2ee6ab5-9c98-4a2a-9f94-560e6a1ddbe0/join | status=409 | 5.2ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/a2ee6ab5-9c98-4a2a-9f94-560e6a1ddbe0/end | status=409 | 4.7ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/a2ee6ab5-9c98-4a2a-9f94-560e6a1ddbe0/heartbeat | status=409 | 4.6ms | client=127.0.0.1
+2026-11-02 15:06:52 | INFO     | convoy.access | POST /api/call-requests/a2ee6ab5-9c98-4a2a-9f94-560e6a1ddbe0/heartbeat | status=200 | 6.2ms | client=127.0.0.1
+2026-11-02 15:06:53 | INFO     | convoy.access | GET /api/location-tracking/status | status=401 | 2.8ms | client=127.0.0.1
+2026-11-02 15:06:53 | INFO     | convoy.access | POST /api/location-tracking/stop | status=401 | 2.0ms | client=127.0.0.1
+2026-11-02 15:06:53 | INFO     | convoy.access | POST /api/location-tracking/location | status=401 | 2.3ms | client=127.0.0.1
+2026-11-02 15:06:53 | INFO     | convoy.access | POST /api/location-tracking/location | status=422 | 7.0ms | client=127.0.0.1
+2026-11-02 15:06:53 | INFO     | convoy.access | POST /api/location-tracking/location | status=422 | 4.5ms | client=127.0.0.1
+2026-11-02 15:06:53 | INFO     | convoy.access | POST /api/location-tracking/location | status=422 | 3.9ms | client=127.0.0.1
+2026-11-02 15:06:53 | INFO     | convoy.access | POST /api/location-tracking/location | status=422 | 4.3ms | client=127.0.0.1
+2026-11-02 15:06:53 | INFO     | convoy.access | GET /api/location-tracking/status | status=200 | 6.7ms | client=127.0.0.1
+2026-11-02 15:06:53 | INFO     | convoy.access | POST /api/location-tracking/location | status=200 | 5.5ms | client=127.0.0.1
+2026-11-02 15:06:53 | INFO     | convoy.access | GET /api/location-tracking/status | status=200 | 3.5ms | client=127.0.0.1
+2026-11-02 15:06:53 | INFO     | convoy.access | POST /api/location-tracking/location | status=200 | 19.8ms | client=127.0.0.1
+2026-11-02 15:06:53 | INFO     | convoy.access | POST /api/location-tracking/stop | status=200 | 4.9ms | client=127.0.0.1
+2026-11-02 15:06:53 | INFO     | convoy.access | POST /api/location-tracking/location | status=200 | 3.7ms | client=127.0.0.1
+2026-11-02 15:06:53 | INFO     | convoy.access | DELETE /api/posts/delete/4b8a5116-f732-4a6d-8eb8-e1913a5b6838 | status=200 | 12.2ms | client=127.0.0.1
+2026-11-02 15:06:53 | INFO     | convoy.access | GET /api/location-tracking/status | status=200 | 3.5ms | client=127.0.0.1
+2026-11-02 15:06:53 | INFO     | convoy.access | GET /api/location-tracking/status | status=200 | 5.7ms | client=127.0.0.1
+2026-11-02 15:06:53 | INFO     | convoy.access | POST /api/posts/create/d42e395d-0cc6-4179-b936-76ba4ee125f7 | status=200 | 43.6ms | client=127.0.0.1
+2026-11-02 15:06:53 | INFO     | convoy.access | GET /api/location-tracking/status | status=200 | 4.6ms | client=127.0.0.1
+2026-11-02 15:06:53 | INFO     | convoy.access | GET /api/location-tracking/status | status=200 | 5.5ms | client=127.0.0.1
+2026-11-02 15:06:53 | INFO     | convoy.access | POST /api/posts/reactivate/0dc518eb-f72a-4ea4-9be6-de314d357c3e | status=200 | 16.7ms | client=127.0.0.1
+2026-11-02 15:06:53 | INFO     | convoy.access | GET /api/location-tracking/status | status=200 | 5.8ms | client=127.0.0.1
+2026-11-02 15:06:54 | INFO     | convoy.access | GET /api/wallet/recharge/config | status=200 | 4.5ms | client=127.0.0.1
+2026-11-02 15:06:54 | INFO     | convoy.access | GET /api/wallet/recharge/config | status=200 | 4.7ms | client=127.0.0.1
+2026-11-02 15:06:54 | INFO     | convoy.access | GET /api/wallet/recharge/config | status=401 | 1.6ms | client=127.0.0.1
+2026-11-02 15:06:54 | INFO     | convoy.access | POST /api/wallet/b8316b9a-59ad-46ed-932a-4ab78e84c730/recharges | status=201 | 14.8ms | client=127.0.0.1
+2026-11-02 15:06:54 | INFO     | convoy.access | POST /api/wallet/614320e1-5eb7-41c0-b427-014b64fa8cdf/recharges | status=400 | 6.1ms | client=127.0.0.1
+2026-11-02 15:06:54 | INFO     | convoy.access | POST /api/wallet/614320e1-5eb7-41c0-b427-014b64fa8cdf/recharges | status=422 | 3.7ms | client=127.0.0.1
+2026-11-02 15:06:54 | INFO     | convoy.access | POST /api/wallet/614320e1-5eb7-41c0-b427-014b64fa8cdf/recharges | status=422 | 3.6ms | client=127.0.0.1
+2026-11-02 15:06:54 | INFO     | convoy.access | POST /api/wallet/614320e1-5eb7-41c0-b427-014b64fa8cdf/recharges | status=422 | 4.3ms | client=127.0.0.1
+2026-11-02 15:06:54 | INFO     | convoy.access | POST /api/wallet/614320e1-5eb7-41c0-b427-014b64fa8cdf/recharges | status=422 | 3.8ms | client=127.0.0.1
+2026-11-02 15:06:54 | INFO     | convoy.access | POST /api/wallet/76323bba-0413-454c-92cc-ed15ca44526b/recharges | status=403 | 5.3ms | client=127.0.0.1
+2026-11-02 15:06:54 | INFO     | convoy.access | POST /api/wallet/76323bba-0413-454c-92cc-ed15ca44526b/recharges | status=201 | 12.7ms | client=127.0.0.1
+2026-11-02 15:06:54 | INFO     | convoy.access | POST /api/wallet/76323bba-0413-454c-92cc-ed15ca44526b/recharges/confirm | status=403 | 4.3ms | client=127.0.0.1
+2026-11-02 15:06:54 | INFO     | convoy.access | POST /api/wallet/a2c1033a-828d-4e14-83c2-963c658350df/recharges/confirm | status=404 | 4.6ms | client=127.0.0.1
+2026-11-02 15:06:54 | INFO     | convoy.access | POST /api/wallet/f60f8d24-c789-4e14-a4fa-67f8e15e87b5/recharges | status=201 | 15.2ms | client=127.0.0.1
+2026-11-02 15:06:54 | INFO     | convoy.access | POST /api/wallet/f60f8d24-c789-4e14-a4fa-67f8e15e87b5/recharges/confirm | status=200 | 14.8ms | client=127.0.0.1
+2026-11-02 15:06:54 | INFO     | convoy.access | GET /api/wallet/f60f8d24-c789-4e14-a4fa-67f8e15e87b5 | status=200 | 6.5ms | client=127.0.0.1
+2026-11-02 15:06:54 | INFO     | convoy.access | GET /api/wallet/f60f8d24-c789-4e14-a4fa-67f8e15e87b5/transactions | status=200 | 5.0ms | client=127.0.0.1
+2026-11-02 15:06:55 | INFO     | convoy.access | POST /api/wallet/af1b4a32-4ce4-4dd6-88e2-256e282c856d/recharges | status=201 | 14.7ms | client=127.0.0.1
+2026-11-02 15:06:55 | INFO     | convoy.access | POST /api/wallet/af1b4a32-4ce4-4dd6-88e2-256e282c856d/recharges/confirm | status=400 | 4.4ms | client=127.0.0.1
+2026-11-02 15:06:55 | INFO     | convoy.access | GET /api/wallet/af1b4a32-4ce4-4dd6-88e2-256e282c856d | status=200 | 6.1ms | client=127.0.0.1
+2026-11-02 15:06:55 | INFO     | convoy.access | POST /api/wallet/27292f7e-4fc3-4faf-9da6-b3bffa2a9408/recharges | status=201 | 15.3ms | client=127.0.0.1
+2026-11-02 15:06:55 | INFO     | convoy.access | GET /api/wallet/27292f7e-4fc3-4faf-9da6-b3bffa2a9408/recharges/order_457b0def0a91 | status=200 | 5.2ms | client=127.0.0.1
+2026-11-02 15:06:55 | INFO     | convoy.access | POST /api/wallet/27292f7e-4fc3-4faf-9da6-b3bffa2a9408/recharges/confirm | status=200 | 13.8ms | client=127.0.0.1
+2026-11-02 15:06:55 | INFO     | convoy.access | GET /api/wallet/27292f7e-4fc3-4faf-9da6-b3bffa2a9408/recharges/order_457b0def0a91 | status=200 | 4.6ms | client=127.0.0.1
+2026-11-02 15:06:55 | INFO     | convoy.access | GET /api/wallet/27292f7e-4fc3-4faf-9da6-b3bffa2a9408/recharges/order_nope | status=404 | 3.6ms | client=127.0.0.1
+2026-11-02 15:06:55 | INFO     | convoy.access | POST /api/wallet/38716d16-8f05-48f0-aed5-c26fbd634818/recharges | status=201 | 14.6ms | client=127.0.0.1
+2026-11-02 15:06:55 | INFO     | convoy.access | POST /api/webhooks/razorpay | status=400 | 1.8ms | client=127.0.0.1
+2026-11-02 15:06:55 | INFO     | convoy.access | POST /api/webhooks/razorpay | status=400 | 0.8ms | client=127.0.0.1
+2026-11-02 15:06:55 | INFO     | convoy.access | POST /api/webhooks/razorpay | status=200 | 10.7ms | client=127.0.0.1
+2026-11-02 15:06:55 | INFO     | convoy.access | POST /api/webhooks/razorpay | status=200 | 2.1ms | client=127.0.0.1
+2026-11-02 15:06:55 | INFO     | convoy.access | GET /api/wallet/38716d16-8f05-48f0-aed5-c26fbd634818 | status=200 | 6.3ms | client=127.0.0.1
+2026-11-02 15:06:55 | INFO     | convoy.access | POST /api/wallet/2767d603-11bd-499a-92f8-68ac24c73531/recharges | status=201 | 14.7ms | client=127.0.0.1
+2026-11-02 15:06:55 | INFO     | convoy.access | POST /api/wallet/2767d603-11bd-499a-92f8-68ac24c73531/recharges/confirm | status=200 | 14.5ms | client=127.0.0.1
+2026-11-02 15:06:55 | INFO     | convoy.access | POST /api/call-requests | status=201 | 18.4ms | client=127.0.0.1
+2026-11-02 16:47:49 | INFO     | convoy.access | GET /api/user/profile/cb332d54-92a9-4c31-aa14-34d01c4719ef | status=200 | 26.6ms | client=192.168.1.131
+2026-11-02 16:47:50 | INFO     | convoy.access | GET /api/call-requests/outgoing?activeOnly=true | status=200 | 21.4ms | client=192.168.1.131
+2026-11-02 16:47:51 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 9.2ms | client=192.168.1.131
+2026-11-02 16:47:51 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 8.1ms | client=192.168.1.131
+2026-11-02 16:47:51 | INFO     | convoy.access | GET /api/user/profile/cb332d54-92a9-4c31-aa14-34d01c4719ef | status=200 | 5.2ms | client=192.168.1.131
+2026-11-02 16:47:51 | INFO     | convoy.access | GET /api/reels?limit=10&offset=0 | status=200 | 144.2ms | client=192.168.1.131
+2026-11-02 16:48:11 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 7.8ms | client=192.168.1.131
+2026-11-02 16:48:17 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 6.4ms | client=192.168.1.131
+2026-11-02 16:48:17 | INFO     | convoy.access | GET /api/call-requests/outgoing?activeOnly=true | status=200 | 11.3ms | client=192.168.1.131
+2026-11-02 16:48:31 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 15.8ms | client=192.168.1.131
+2026-11-02 16:48:52 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 13.8ms | client=192.168.1.131
+2026-11-02 16:48:54 | INFO     | convoy.access | GET /api/posts/my-posts/cb332d54-92a9-4c31-aa14-34d01c4719ef | status=200 | 56.1ms | client=192.168.1.131
+2026-11-02 16:48:58 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 8.4ms | client=192.168.1.131
+2026-11-02 16:49:18 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 8.6ms | client=192.168.1.131
+2026-11-02 16:49:39 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 6.5ms | client=192.168.1.131
+2026-11-02 16:49:59 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 10.4ms | client=192.168.1.131
+2026-11-02 16:50:19 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 8.0ms | client=192.168.1.131
+2026-11-02 16:50:23 | INFO     | convoy.access | GET /api/call-requests/outgoing?activeOnly=true | status=200 | 10.4ms | client=192.168.1.131
+2026-11-02 16:50:23 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 7.0ms | client=192.168.1.131
+2026-11-02 16:50:39 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 7.2ms | client=192.168.1.131
+2026-11-02 16:50:59 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 7.6ms | client=192.168.1.131
+2026-11-02 16:51:21 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 6.9ms | client=192.168.1.131
+2026-11-02 16:51:41 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 8.3ms | client=192.168.1.131
+2026-11-02 16:52:01 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 10.8ms | client=192.168.1.131
+2026-11-02 16:52:22 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 3.9ms | client=192.168.1.131
+2026-11-02 16:52:42 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 8.2ms | client=192.168.1.131
+2026-11-02 16:53:02 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 9.6ms | client=192.168.1.131
+2026-11-02 16:53:22 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 7.6ms | client=192.168.1.131
+2026-11-02 16:53:42 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 7.5ms | client=192.168.1.131
+2026-11-02 16:54:03 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 8.6ms | client=192.168.1.131
+2026-11-02 16:54:23 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 7.5ms | client=192.168.1.131
+2026-11-02 16:54:44 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 7.9ms | client=192.168.1.131
+2026-11-02 16:55:04 | INFO     | convoy.access | GET /api/call-requests/incoming | status=200 | 12.8ms | client=192.168.1.131

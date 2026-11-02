@@ -495,3 +495,16 @@ class ConfirmRechargeRequest(BaseModel):
     orderId: str = Field(..., min_length=1, max_length=64)
     paymentId: str = Field(..., min_length=1, max_length=64)
     signature: str = Field(..., min_length=1, max_length=256)
+
+
+class LocationReportRequest(BaseModel):
+    """One position from the phone's 30-minute background job (or an app-open update)."""
+
+    lat: float = Field(..., ge=-90, le=90)
+    lng: float = Field(..., ge=-180, le=180)
+    accuracy: Optional[float] = Field(default=None, ge=0, le=100000, description="metres")
+    # Where the phone is, in words, if it could work that out (updates the live post's label).
+    name: Optional[str] = Field(default=None, max_length=255)
+    city: Optional[str] = Field(default=None, max_length=128)
+    state: Optional[str] = Field(default=None, max_length=128)
+    pincode: Optional[str] = Field(default=None, max_length=16)

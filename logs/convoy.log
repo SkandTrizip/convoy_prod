@@ -45026,3 +45026,1020 @@ Response headers:
 2026-11-02 14:42:57 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 14:43:56 IST)" executed successfully
 2026-11-02 14:43:56 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 14:44:56 IST)" (scheduled at 2026-11-02 14:43:56.990479+05:30)
 2026-11-02 14:43:57 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 14:44:56 IST)" executed successfully
+2026-11-02 14:44:56 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 14:45:56 IST)" (scheduled at 2026-11-02 14:44:56.990479+05:30)
+2026-11-02 14:44:56 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 14:45:56 IST)" executed successfully
+2026-11-02 14:45:56 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 14:46:56 IST)" (scheduled at 2026-11-02 14:45:56.990479+05:30)
+2026-11-02 14:45:56 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 14:46:56 IST)" executed successfully
+2026-11-02 14:46:56 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 14:47:56 IST)" (scheduled at 2026-11-02 14:46:56.990479+05:30)
+2026-11-02 14:46:56 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 14:47:56 IST)" executed successfully
+2026-11-02 14:47:56 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 14:48:56 IST)" (scheduled at 2026-11-02 14:47:56.990479+05:30)
+2026-11-02 14:47:56 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 14:48:56 IST)" executed successfully
+2026-11-02 14:48:56 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 14:49:56 IST)" (scheduled at 2026-11-02 14:48:56.990479+05:30)
+2026-11-02 14:48:56 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 14:49:56 IST)" executed successfully
+2026-11-02 14:49:56 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 14:50:56 IST)" (scheduled at 2026-11-02 14:49:56.990479+05:30)
+2026-11-02 14:49:56 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 14:50:56 IST)" executed successfully
+2026-11-02 14:50:56 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 14:51:56 IST)" (scheduled at 2026-11-02 14:50:56.990479+05:30)
+2026-11-02 14:50:56 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 14:51:56 IST)" executed successfully
+2026-11-02 14:51:56 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 14:52:56 IST)" (scheduled at 2026-11-02 14:51:56.990479+05:30)
+2026-11-02 14:51:57 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 14:52:56 IST)" executed successfully
+2026-11-02 14:52:56 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 14:53:56 IST)" (scheduled at 2026-11-02 14:52:56.990479+05:30)
+2026-11-02 14:52:56 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 14:53:56 IST)" executed successfully
+2026-11-02 14:53:56 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 14:54:56 IST)" (scheduled at 2026-11-02 14:53:56.990479+05:30)
+2026-11-02 14:53:56 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 14:54:56 IST)" executed successfully
+2026-11-02 14:54:56 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 14:55:56 IST)" (scheduled at 2026-11-02 14:54:56.990479+05:30)
+2026-11-02 14:54:56 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 14:55:56 IST)" executed successfully
+2026-11-02 14:55:56 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 14:56:56 IST)" (scheduled at 2026-11-02 14:55:56.990479+05:30)
+2026-11-02 14:55:56 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 14:56:56 IST)" executed successfully
+2026-11-02 14:56:56 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 14:57:56 IST)" (scheduled at 2026-11-02 14:56:56.990479+05:30)
+2026-11-02 14:56:56 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 14:57:56 IST)" executed successfully
+2026-11-02 14:57:33 | INFO     | apscheduler.scheduler | Scheduler has been shut down
+2026-11-02 14:57:33 | INFO     | convoy | Shutting down Convoy API
+2026-11-02 14:57:34 | INFO     | convoy | Logging initialized - files: /Users/ankit/Documents/sharkship-others/convoy_prod/logs
+2026-11-02 14:57:35 | INFO     | convoy | Starting Convoy API
+2026-11-02 14:57:35 | INFO     | convoy | Creating table: user_location_tracking
+2026-11-02 14:57:35 | INFO     | convoy | Database initialized (PostGIS + tables)
+2026-11-02 14:57:35 | INFO     | apscheduler.scheduler | Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-11-02 14:57:35 | INFO     | apscheduler.scheduler | Added job "run_due_campaigns" to job store "default"
+2026-11-02 14:57:35 | INFO     | apscheduler.scheduler | Scheduler started
+2026-11-02 14:57:35 | INFO     | convoy | Campaign scheduler tick started (every minute)
+2026-11-02 14:57:57 | INFO     | apscheduler.scheduler | Scheduler has been shut down
+2026-11-02 14:57:57 | INFO     | convoy | Shutting down Convoy API
+2026-11-02 14:57:58 | INFO     | convoy | Logging initialized - files: /Users/ankit/Documents/sharkship-others/convoy_prod/logs
+2026-11-02 14:57:59 | INFO     | convoy | Starting Convoy API
+2026-11-02 14:57:59 | INFO     | convoy | Database initialized (PostGIS + tables)
+2026-11-02 14:57:59 | INFO     | apscheduler.scheduler | Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-11-02 14:57:59 | INFO     | apscheduler.scheduler | Added job "run_due_campaigns" to job store "default"
+2026-11-02 14:57:59 | INFO     | apscheduler.scheduler | Scheduler started
+2026-11-02 14:57:59 | INFO     | convoy | Campaign scheduler tick started (every minute)
+2026-11-02 14:57:59 | INFO     | apscheduler.scheduler | Scheduler has been shut down
+2026-11-02 14:57:59 | INFO     | convoy | Shutting down Convoy API
+2026-11-02 14:58:00 | INFO     | convoy | Logging initialized - files: /Users/ankit/Documents/sharkship-others/convoy_prod/logs
+2026-11-02 14:58:01 | INFO     | convoy | Starting Convoy API
+2026-11-02 14:58:01 | INFO     | convoy | Database initialized (PostGIS + tables)
+2026-11-02 14:58:01 | INFO     | apscheduler.scheduler | Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-11-02 14:58:01 | INFO     | apscheduler.scheduler | Added job "run_due_campaigns" to job store "default"
+2026-11-02 14:58:01 | INFO     | apscheduler.scheduler | Scheduler started
+2026-11-02 14:58:01 | INFO     | convoy | Campaign scheduler tick started (every minute)
+2026-11-02 14:58:04 | INFO     | convoy | Logging initialized - files: /Users/ankit/Documents/sharkship-others/convoy_prod/logs
+2026-11-02 14:58:04 | INFO     | apscheduler.scheduler | Scheduler has been shut down
+2026-11-02 14:58:04 | INFO     | convoy | Shutting down Convoy API
+2026-11-02 14:58:05 | INFO     | convoy | Logging initialized - files: /Users/ankit/Documents/sharkship-others/convoy_prod/logs
+2026-11-02 14:58:06 | INFO     | convoy | Starting Convoy API
+2026-11-02 14:58:06 | INFO     | convoy | Database initialized (PostGIS + tables)
+2026-11-02 14:58:06 | INFO     | apscheduler.scheduler | Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-11-02 14:58:06 | INFO     | apscheduler.scheduler | Added job "run_due_campaigns" to job store "default"
+2026-11-02 14:58:06 | INFO     | apscheduler.scheduler | Scheduler started
+2026-11-02 14:58:06 | INFO     | convoy | Campaign scheduler tick started (every minute)
+2026-11-02 14:58:39 | INFO     | apscheduler.scheduler | Scheduler has been shut down
+2026-11-02 14:58:39 | INFO     | convoy | Shutting down Convoy API
+2026-11-02 14:58:39 | INFO     | convoy | Logging initialized - files: /Users/ankit/Documents/sharkship-others/convoy_prod/logs
+2026-11-02 14:58:39 | INFO     | convoy | Logging initialized - files: /Users/ankit/Documents/sharkship-others/convoy_prod/logs
+2026-11-02 14:58:41 | INFO     | convoy | Starting Convoy API
+2026-11-02 14:58:41 | INFO     | convoy | Database initialized (PostGIS + tables)
+2026-11-02 14:58:41 | INFO     | apscheduler.scheduler | Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-11-02 14:58:41 | INFO     | apscheduler.scheduler | Added job "run_due_campaigns" to job store "default"
+2026-11-02 14:58:41 | INFO     | apscheduler.scheduler | Scheduler started
+2026-11-02 14:58:41 | INFO     | convoy | Campaign scheduler tick started (every minute)
+2026-11-02 14:58:41 | INFO     | apscheduler.scheduler | Scheduler has been shut down
+2026-11-02 14:58:41 | INFO     | convoy | Shutting down Convoy API
+2026-11-02 14:58:41 | INFO     | convoy | Logging initialized - files: /Users/ankit/Documents/sharkship-others/convoy_prod/logs
+2026-11-02 14:58:42 | INFO     | httpx | HTTP Request: GET http://test/api/location-tracking/status "HTTP/1.1 401 Unauthorized"
+2026-11-02 14:58:42 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/stop "HTTP/1.1 401 Unauthorized"
+2026-11-02 14:58:42 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/location "HTTP/1.1 401 Unauthorized"
+2026-11-02 14:58:42 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/location "HTTP/1.1 422 Unprocessable Entity"
+2026-11-02 14:58:42 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/location "HTTP/1.1 422 Unprocessable Entity"
+2026-11-02 14:58:42 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/location "HTTP/1.1 422 Unprocessable Entity"
+2026-11-02 14:58:42 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/location "HTTP/1.1 422 Unprocessable Entity"
+2026-11-02 14:58:42 | INFO     | httpx | HTTP Request: GET http://test/api/location-tracking/status "HTTP/1.1 200 OK"
+2026-11-02 14:58:42 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/location "HTTP/1.1 200 OK"
+2026-11-02 14:58:42 | INFO     | httpx | HTTP Request: GET http://test/api/location-tracking/status "HTTP/1.1 200 OK"
+2026-11-02 14:58:42 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/location "HTTP/1.1 200 OK"
+2026-11-02 14:58:42 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/stop "HTTP/1.1 200 OK"
+2026-11-02 14:58:43 | INFO     | httpx | HTTP Request: DELETE http://test/api/posts/delete/0da7492a-2421-4bf6-9f07-5bb2d974daa3 "HTTP/1.1 200 OK"
+2026-11-02 14:58:43 | INFO     | httpx | HTTP Request: GET http://test/api/location-tracking/status "HTTP/1.1 200 OK"
+2026-11-02 14:58:43 | INFO     | convoy | Starting Convoy API
+2026-11-02 14:58:43 | INFO     | convoy | Database initialized (PostGIS + tables)
+2026-11-02 14:58:43 | INFO     | apscheduler.scheduler | Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-11-02 14:58:43 | INFO     | apscheduler.scheduler | Added job "run_due_campaigns" to job store "default"
+2026-11-02 14:58:43 | INFO     | apscheduler.scheduler | Scheduler started
+2026-11-02 14:58:43 | INFO     | convoy | Campaign scheduler tick started (every minute)
+2026-11-02 14:58:50 | INFO     | convoy | Logging initialized - files: /Users/ankit/Documents/sharkship-others/convoy_prod/logs
+2026-11-02 14:59:08 | INFO     | apscheduler.scheduler | Scheduler has been shut down
+2026-11-02 14:59:08 | INFO     | convoy | Shutting down Convoy API
+2026-11-02 14:59:08 | INFO     | convoy | Logging initialized - files: /Users/ankit/Documents/sharkship-others/convoy_prod/logs
+2026-11-02 14:59:09 | INFO     | convoy | Logging initialized - files: /Users/ankit/Documents/sharkship-others/convoy_prod/logs
+2026-11-02 14:59:11 | INFO     | convoy | Starting Convoy API
+2026-11-02 14:59:11 | INFO     | convoy | Database initialized (PostGIS + tables)
+2026-11-02 14:59:11 | INFO     | apscheduler.scheduler | Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-11-02 14:59:11 | INFO     | apscheduler.scheduler | Added job "run_due_campaigns" to job store "default"
+2026-11-02 14:59:11 | INFO     | apscheduler.scheduler | Scheduler started
+2026-11-02 14:59:11 | INFO     | convoy | Campaign scheduler tick started (every minute)
+2026-11-02 14:59:14 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/abc123 "HTTP/1.1 200 OK"
+2026-11-02 14:59:14 | INFO     | httpx | HTTP Request: POST https://api.sandbox.push.apple.com/3/device/abc "HTTP/1.1 200 OK"
+2026-11-02 14:59:14 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/a "HTTP/1.1 200 OK"
+2026-11-02 14:59:14 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/b "HTTP/1.1 200 OK"
+2026-11-02 14:59:14 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/dead "HTTP/1.1 410 Gone"
+2026-11-02 14:59:14 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/dead "HTTP/1.1 400 Bad Request"
+2026-11-02 14:59:14 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/dead "HTTP/1.1 400 Bad Request"
+2026-11-02 14:59:14 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/tok "HTTP/1.1 403 Forbidden"
+2026-11-02 14:59:14 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/tok "HTTP/1.1 200 OK"
+2026-11-02 14:59:14 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/tok "HTTP/1.1 403 Forbidden"
+2026-11-02 14:59:14 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/tok "HTTP/1.1 403 Forbidden"
+2026-11-02 14:59:14 | ERROR    | convoy | APNs refused a VoIP push: 403 InvalidProviderToken
+2026-11-02 14:59:14 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/tok "HTTP/1.1 429 Too Many Requests"
+2026-11-02 14:59:14 | ERROR    | convoy | APNs refused a VoIP push: 429 TooManyRequests
+2026-11-02 14:59:14 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/tok "HTTP/1.1 500 Internal Server Error"
+2026-11-02 14:59:14 | ERROR    | convoy | APNs refused a VoIP push: 500 InternalServerError
+2026-11-02 14:59:14 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/tok "HTTP/1.1 503 Service Unavailable"
+2026-11-02 14:59:14 | ERROR    | convoy | APNs refused a VoIP push: 503 
+2026-11-02 14:59:14 | ERROR    | convoy | APNs VoIP push failed: no route
+2026-11-02 14:59:15 | ERROR    | convoy | Incoming-call push to device dev-79bd7024-cd19-4e87-b317-3274ded3c963 failed: boom
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: GET http://test/api/call-requests/incoming "HTTP/1.1 401 Unauthorized"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests "HTTP/1.1 402 Payment Required"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/f732c10c-577d-440f-a692-904f4ed5aa2b/dev-credit "HTTP/1.1 200 OK"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests "HTTP/1.1 201 Created"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/f732c10c-577d-440f-a692-904f4ed5aa2b "HTTP/1.1 200 OK"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: GET http://test/api/call-requests/incoming "HTTP/1.1 200 OK"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: GET http://test/api/call-requests/incoming "HTTP/1.1 200 OK"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: GET http://test/api/call-requests/00489ec3-c715-45a7-8faf-4f73407886fa "HTTP/1.1 404 Not Found"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/00489ec3-c715-45a7-8faf-4f73407886fa/accept "HTTP/1.1 403 Forbidden"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/00489ec3-c715-45a7-8faf-4f73407886fa/accept "HTTP/1.1 200 OK"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/00489ec3-c715-45a7-8faf-4f73407886fa/events "HTTP/1.1 200 OK"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/00489ec3-c715-45a7-8faf-4f73407886fa/events "HTTP/1.1 400 Bad Request"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: GET http://test/api/call-requests/00489ec3-c715-45a7-8faf-4f73407886fa "HTTP/1.1 200 OK"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: GET http://test/api/call-requests/outgoing?activeOnly=true "HTTP/1.1 200 OK"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/00489ec3-c715-45a7-8faf-4f73407886fa/feedback "HTTP/1.1 200 OK"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/f732c10c-577d-440f-a692-904f4ed5aa2b "HTTP/1.1 200 OK"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/5be65d1a-9f38-4e4a-8689-cfcd49955db2 "HTTP/1.1 200 OK"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/5be65d1a-9f38-4e4a-8689-cfcd49955db2/transactions "HTTP/1.1 200 OK"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests "HTTP/1.1 201 Created"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: GET http://test/api/call-requests/not-a-uuid "HTTP/1.1 400 Bad Request"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests "HTTP/1.1 400 Bad Request"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests "HTTP/1.1 422 Unprocessable Entity"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/88c6d2bc-2178-40d2-b37c-98fca4f4f120/dev-credit "HTTP/1.1 403 Forbidden"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/eb69da42-b35d-4c03-9eb1-40a8f33ffe7a/dev-credit "HTTP/1.1 400 Bad Request"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/eb69da42-b35d-4c03-9eb1-40a8f33ffe7a/dev-credit "HTTP/1.1 200 OK"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/eb69da42-b35d-4c03-9eb1-40a8f33ffe7a/dev-credit "HTTP/1.1 200 OK"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/eb69da42-b35d-4c03-9eb1-40a8f33ffe7a "HTTP/1.1 200 OK"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/5f7d64bd-9931-447a-ab2e-6cd3fb22d384/dev-credit "HTTP/1.1 404 Not Found"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests "HTTP/1.1 201 Created"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/start "HTTP/1.1 409 Conflict"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/accept "HTTP/1.1 200 OK"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/start "HTTP/1.1 403 Forbidden"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/start "HTTP/1.1 200 OK"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: GET http://test/api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6 "HTTP/1.1 200 OK"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/join "HTTP/1.1 200 OK"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/heartbeat "HTTP/1.1 422 Unprocessable Entity"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/end "HTTP/1.1 200 OK"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/end "HTTP/1.1 200 OK"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/8a14859c-5072-4006-80c1-37ff7b375af6/feedback "HTTP/1.1 200 OK"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/2ee8fc22-5862-4c18-9e2d-7d1855ca7ef7 "HTTP/1.1 200 OK"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests "HTTP/1.1 201 Created"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/aa750b7c-b2ae-4caa-a59e-ca4c3443295a/accept "HTTP/1.1 200 OK"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/aa750b7c-b2ae-4caa-a59e-ca4c3443295a/start "HTTP/1.1 200 OK"
+2026-11-02 14:59:17 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/aa750b7c-b2ae-4caa-a59e-ca4c3443295a/join "HTTP/1.1 409 Conflict"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests "HTTP/1.1 201 Created"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/d99b8270-2d5c-41c0-98fe-a95477f4b4cd/events "HTTP/1.1 200 OK"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/d99b8270-2d5c-41c0-98fe-a95477f4b4cd/events "HTTP/1.1 200 OK"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/d99b8270-2d5c-41c0-98fe-a95477f4b4cd/events "HTTP/1.1 200 OK"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/d99b8270-2d5c-41c0-98fe-a95477f4b4cd/events "HTTP/1.1 200 OK"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/d99b8270-2d5c-41c0-98fe-a95477f4b4cd/events "HTTP/1.1 200 OK"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests "HTTP/1.1 201 Created"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/07d33661-02f9-4a14-8efc-b65ae87d19b0/events "HTTP/1.1 200 OK"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/b90843d2-ca35-4620-bbab-9a2a655fad64/accept "HTTP/1.1 200 OK"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/b90843d2-ca35-4620-bbab-9a2a655fad64/start "HTTP/1.1 200 OK"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/b90843d2-ca35-4620-bbab-9a2a655fad64/join "HTTP/1.1 200 OK"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: GET http://test/api/call-requests/b90843d2-ca35-4620-bbab-9a2a655fad64 "HTTP/1.1 200 OK"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: GET http://test/api/call-requests/b90843d2-ca35-4620-bbab-9a2a655fad64 "HTTP/1.1 200 OK"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/b90843d2-ca35-4620-bbab-9a2a655fad64/join "HTTP/1.1 409 Conflict"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/b90843d2-ca35-4620-bbab-9a2a655fad64/end "HTTP/1.1 409 Conflict"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/b90843d2-ca35-4620-bbab-9a2a655fad64/heartbeat "HTTP/1.1 409 Conflict"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/b90843d2-ca35-4620-bbab-9a2a655fad64/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: GET http://test/api/location-tracking/status "HTTP/1.1 401 Unauthorized"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/stop "HTTP/1.1 401 Unauthorized"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/location "HTTP/1.1 401 Unauthorized"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/location "HTTP/1.1 422 Unprocessable Entity"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/location "HTTP/1.1 422 Unprocessable Entity"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/location "HTTP/1.1 422 Unprocessable Entity"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/location "HTTP/1.1 422 Unprocessable Entity"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: GET http://test/api/location-tracking/status "HTTP/1.1 200 OK"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/location "HTTP/1.1 200 OK"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: GET http://test/api/location-tracking/status "HTTP/1.1 200 OK"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/location "HTTP/1.1 200 OK"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/stop "HTTP/1.1 200 OK"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/location "HTTP/1.1 200 OK"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: DELETE http://test/api/posts/delete/6a622e69-bc0b-43a2-b3bc-551c90f5d477 "HTTP/1.1 200 OK"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: GET http://test/api/location-tracking/status "HTTP/1.1 200 OK"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:18 | ERROR    | convoy | Razorpay POST /orders unreachable: no route
+2026-11-02 14:59:18 | ERROR    | convoy | Creating a Razorpay order failed for user 585789fa-db86-445c-8e37-790a8b5d26cd: Razorpay could not be reached
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 400 Bad Request"
+2026-11-02 14:59:18 | ERROR    | convoy | Razorpay POST /orders -> 400 bad
+2026-11-02 14:59:18 | ERROR    | convoy | Creating a Razorpay order failed for user 7cfb065f-a2c6-4b4a-9a0c-289f033195c2: bad
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:18 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_d5028526553d "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_2de5af2c3027 "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_a8815dbb0e1d "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | ERROR    | convoy | Recharge for order order_614a3a5f3e2d needs review: payment pay_a8815dbb0e1d does not match the order
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_9f8de3a5a46b "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | ERROR    | convoy | Recharge for order order_9218e9fd46a1 needs review: payment pay_9f8de3a5a46b does not match the order
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_d1b62c4eb47d "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/payments/pay_d1b62c4eb47d/capture "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_269b4f01c378 "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_8989eb36085e "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_70e92d12d022 "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | ERROR    | convoy | Razorpay GET /payments/pay_64bd163782e3 unreachable: no route
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_64bd163782e3 "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_0aa71ed0028b "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | ERROR    | convoy | Recharge for order order_2a42c63f7ef3 needs review: credit refused: Wallet is frozen, contact support
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_0aa71ed0028b "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_d42b4491265e "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_58dbe490b16c "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | ERROR    | convoy | Recharge for order order_773673cd35f3 needs review: webhook payment pay_49748f534192 does not match the order
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_960f856a8833 "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_d08be3a514e9 "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_e8366b348ecd "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_fc92d81e83fd "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/recharge/config "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/recharge/config "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/recharge/config "HTTP/1.1 401 Unauthorized"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/ba3b89a2-5e1b-45c9-af48-898616b6818f/recharges "HTTP/1.1 201 Created"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/ab0420d6-2f68-4064-8e7c-694ae1ec57c3/recharges "HTTP/1.1 400 Bad Request"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/ab0420d6-2f68-4064-8e7c-694ae1ec57c3/recharges "HTTP/1.1 422 Unprocessable Entity"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/ab0420d6-2f68-4064-8e7c-694ae1ec57c3/recharges "HTTP/1.1 422 Unprocessable Entity"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/ab0420d6-2f68-4064-8e7c-694ae1ec57c3/recharges "HTTP/1.1 422 Unprocessable Entity"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/ab0420d6-2f68-4064-8e7c-694ae1ec57c3/recharges "HTTP/1.1 422 Unprocessable Entity"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/e60d8a65-0dca-42ba-9648-eb2c7d2f8944/recharges "HTTP/1.1 403 Forbidden"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/e60d8a65-0dca-42ba-9648-eb2c7d2f8944/recharges "HTTP/1.1 201 Created"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/e60d8a65-0dca-42ba-9648-eb2c7d2f8944/recharges/confirm "HTTP/1.1 403 Forbidden"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/da38f2c9-9a46-4d7a-a312-fec612446443/recharges/confirm "HTTP/1.1 404 Not Found"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/7ce8a801-deed-4e86-8cb4-a8c8abbd6703/recharges "HTTP/1.1 201 Created"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_0cb6c4fed266 "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/7ce8a801-deed-4e86-8cb4-a8c8abbd6703/recharges/confirm "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/7ce8a801-deed-4e86-8cb4-a8c8abbd6703 "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/7ce8a801-deed-4e86-8cb4-a8c8abbd6703/transactions "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/85660729-3b50-47a6-8a1f-08ce4bb85bd8/recharges "HTTP/1.1 201 Created"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/85660729-3b50-47a6-8a1f-08ce4bb85bd8/recharges/confirm "HTTP/1.1 400 Bad Request"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/85660729-3b50-47a6-8a1f-08ce4bb85bd8 "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/7e9c84ff-8cd5-4a14-9be7-67a444fe6daa/recharges "HTTP/1.1 201 Created"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/7e9c84ff-8cd5-4a14-9be7-67a444fe6daa/recharges/order_b1537ef3b0b5 "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_78a6388b83aa "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/7e9c84ff-8cd5-4a14-9be7-67a444fe6daa/recharges/confirm "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/7e9c84ff-8cd5-4a14-9be7-67a444fe6daa/recharges/order_b1537ef3b0b5 "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/7e9c84ff-8cd5-4a14-9be7-67a444fe6daa/recharges/order_nope "HTTP/1.1 404 Not Found"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/1c203aa5-40dc-4e77-9389-bf919abd3c30/recharges "HTTP/1.1 201 Created"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST http://test/api/webhooks/razorpay "HTTP/1.1 400 Bad Request"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST http://test/api/webhooks/razorpay "HTTP/1.1 400 Bad Request"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST http://test/api/webhooks/razorpay "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: POST http://test/api/webhooks/razorpay "HTTP/1.1 200 OK"
+2026-11-02 14:59:19 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/1c203aa5-40dc-4e77-9389-bf919abd3c30 "HTTP/1.1 200 OK"
+2026-11-02 14:59:20 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 14:59:20 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/828288c5-309f-4c58-9b47-a286794b687f/recharges "HTTP/1.1 201 Created"
+2026-11-02 14:59:20 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_54c4c2e0b204 "HTTP/1.1 200 OK"
+2026-11-02 14:59:20 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/828288c5-309f-4c58-9b47-a286794b687f/recharges/confirm "HTTP/1.1 200 OK"
+2026-11-02 14:59:20 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests "HTTP/1.1 201 Created"
+2026-11-02 14:59:37 | INFO     | apscheduler.scheduler | Scheduler has been shut down
+2026-11-02 14:59:37 | INFO     | convoy | Shutting down Convoy API
+2026-11-02 14:59:37 | INFO     | convoy | Logging initialized - files: /Users/ankit/Documents/sharkship-others/convoy_prod/logs
+2026-11-02 14:59:37 | INFO     | convoy | Logging initialized - files: /Users/ankit/Documents/sharkship-others/convoy_prod/logs
+2026-11-02 14:59:39 | INFO     | convoy | Starting Convoy API
+2026-11-02 14:59:39 | INFO     | convoy | Database initialized (PostGIS + tables)
+2026-11-02 14:59:39 | INFO     | apscheduler.scheduler | Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-11-02 14:59:39 | INFO     | apscheduler.scheduler | Added job "run_due_campaigns" to job store "default"
+2026-11-02 14:59:39 | INFO     | apscheduler.scheduler | Scheduler started
+2026-11-02 14:59:39 | INFO     | convoy | Campaign scheduler tick started (every minute)
+2026-11-02 14:59:39 | INFO     | httpx | HTTP Request: GET http://test/api/location-tracking/status "HTTP/1.1 401 Unauthorized"
+2026-11-02 14:59:39 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/stop "HTTP/1.1 401 Unauthorized"
+2026-11-02 14:59:39 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/location "HTTP/1.1 401 Unauthorized"
+2026-11-02 14:59:39 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/location "HTTP/1.1 422 Unprocessable Entity"
+2026-11-02 14:59:39 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/location "HTTP/1.1 422 Unprocessable Entity"
+2026-11-02 14:59:39 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/location "HTTP/1.1 422 Unprocessable Entity"
+2026-11-02 14:59:39 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/location "HTTP/1.1 422 Unprocessable Entity"
+2026-11-02 14:59:39 | INFO     | httpx | HTTP Request: GET http://test/api/location-tracking/status "HTTP/1.1 200 OK"
+2026-11-02 14:59:39 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/location "HTTP/1.1 200 OK"
+2026-11-02 14:59:39 | INFO     | httpx | HTTP Request: GET http://test/api/location-tracking/status "HTTP/1.1 200 OK"
+2026-11-02 14:59:39 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/location "HTTP/1.1 200 OK"
+2026-11-02 14:59:39 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/stop "HTTP/1.1 200 OK"
+2026-11-02 14:59:39 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/location "HTTP/1.1 200 OK"
+2026-11-02 14:59:39 | INFO     | httpx | HTTP Request: DELETE http://test/api/posts/delete/0dfb3590-687c-4a25-8098-3f2f432de981 "HTTP/1.1 200 OK"
+2026-11-02 14:59:39 | INFO     | httpx | HTTP Request: GET http://test/api/location-tracking/status "HTTP/1.1 200 OK"
+2026-11-02 14:59:39 | INFO     | httpx | HTTP Request: GET http://test/api/location-tracking/status "HTTP/1.1 200 OK"
+2026-11-02 14:59:40 | INFO     | httpx | HTTP Request: POST http://test/api/posts/create/54058658-9ab9-4e2d-a232-f408592c8784 "HTTP/1.1 200 OK"
+2026-11-02 14:59:44 | INFO     | convoy | Logging initialized - files: /Users/ankit/Documents/sharkship-others/convoy_prod/logs
+2026-11-02 14:59:45 | INFO     | httpx | HTTP Request: GET http://test/api/location-tracking/status "HTTP/1.1 200 OK"
+2026-11-02 14:59:45 | INFO     | httpx | HTTP Request: POST http://test/api/posts/create/5b36b619-c54e-426a-a3eb-d54bf643691a "HTTP/1.1 200 OK"
+2026-11-02 14:59:56 | INFO     | convoy | Logging initialized - files: /Users/ankit/Documents/sharkship-others/convoy_prod/logs
+2026-11-02 14:59:57 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/abc123 "HTTP/1.1 200 OK"
+2026-11-02 14:59:57 | INFO     | httpx | HTTP Request: POST https://api.sandbox.push.apple.com/3/device/abc "HTTP/1.1 200 OK"
+2026-11-02 14:59:57 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/a "HTTP/1.1 200 OK"
+2026-11-02 14:59:57 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/b "HTTP/1.1 200 OK"
+2026-11-02 14:59:57 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/dead "HTTP/1.1 410 Gone"
+2026-11-02 14:59:57 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/dead "HTTP/1.1 400 Bad Request"
+2026-11-02 14:59:57 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/dead "HTTP/1.1 400 Bad Request"
+2026-11-02 14:59:57 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/tok "HTTP/1.1 403 Forbidden"
+2026-11-02 14:59:57 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/tok "HTTP/1.1 200 OK"
+2026-11-02 14:59:57 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/tok "HTTP/1.1 403 Forbidden"
+2026-11-02 14:59:57 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/tok "HTTP/1.1 403 Forbidden"
+2026-11-02 14:59:57 | ERROR    | convoy | APNs refused a VoIP push: 403 InvalidProviderToken
+2026-11-02 14:59:57 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/tok "HTTP/1.1 429 Too Many Requests"
+2026-11-02 14:59:57 | ERROR    | convoy | APNs refused a VoIP push: 429 TooManyRequests
+2026-11-02 14:59:57 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/tok "HTTP/1.1 500 Internal Server Error"
+2026-11-02 14:59:57 | ERROR    | convoy | APNs refused a VoIP push: 500 InternalServerError
+2026-11-02 14:59:57 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/tok "HTTP/1.1 503 Service Unavailable"
+2026-11-02 14:59:57 | ERROR    | convoy | APNs refused a VoIP push: 503 
+2026-11-02 14:59:57 | ERROR    | convoy | APNs VoIP push failed: no route
+2026-11-02 15:00:04 | INFO     | apscheduler.scheduler | Scheduler has been shut down
+2026-11-02 15:00:04 | INFO     | convoy | Shutting down Convoy API
+2026-11-02 15:00:04 | INFO     | convoy | Logging initialized - files: /Users/ankit/Documents/sharkship-others/convoy_prod/logs
+2026-11-02 15:00:04 | INFO     | convoy | Logging initialized - files: /Users/ankit/Documents/sharkship-others/convoy_prod/logs
+2026-11-02 15:00:06 | INFO     | convoy | Starting Convoy API
+2026-11-02 15:00:06 | INFO     | convoy | Database initialized (PostGIS + tables)
+2026-11-02 15:00:06 | INFO     | apscheduler.scheduler | Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-11-02 15:00:06 | INFO     | apscheduler.scheduler | Added job "run_due_campaigns" to job store "default"
+2026-11-02 15:00:06 | INFO     | apscheduler.scheduler | Scheduler started
+2026-11-02 15:00:06 | INFO     | convoy | Campaign scheduler tick started (every minute)
+2026-11-02 15:00:09 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/abc123 "HTTP/1.1 200 OK"
+2026-11-02 15:00:09 | INFO     | httpx | HTTP Request: POST https://api.sandbox.push.apple.com/3/device/abc "HTTP/1.1 200 OK"
+2026-11-02 15:00:09 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/a "HTTP/1.1 200 OK"
+2026-11-02 15:00:09 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/b "HTTP/1.1 200 OK"
+2026-11-02 15:00:09 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/dead "HTTP/1.1 410 Gone"
+2026-11-02 15:00:09 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/dead "HTTP/1.1 400 Bad Request"
+2026-11-02 15:00:09 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/dead "HTTP/1.1 400 Bad Request"
+2026-11-02 15:00:09 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/tok "HTTP/1.1 403 Forbidden"
+2026-11-02 15:00:09 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/tok "HTTP/1.1 200 OK"
+2026-11-02 15:00:09 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/tok "HTTP/1.1 403 Forbidden"
+2026-11-02 15:00:09 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/tok "HTTP/1.1 403 Forbidden"
+2026-11-02 15:00:09 | ERROR    | convoy | APNs refused a VoIP push: 403 InvalidProviderToken
+2026-11-02 15:00:09 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/tok "HTTP/1.1 429 Too Many Requests"
+2026-11-02 15:00:09 | ERROR    | convoy | APNs refused a VoIP push: 429 TooManyRequests
+2026-11-02 15:00:09 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/tok "HTTP/1.1 500 Internal Server Error"
+2026-11-02 15:00:09 | ERROR    | convoy | APNs refused a VoIP push: 500 InternalServerError
+2026-11-02 15:00:09 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/tok "HTTP/1.1 503 Service Unavailable"
+2026-11-02 15:00:09 | ERROR    | convoy | APNs refused a VoIP push: 503 
+2026-11-02 15:00:09 | ERROR    | convoy | APNs VoIP push failed: no route
+2026-11-02 15:00:10 | ERROR    | convoy | Incoming-call push to device dev-50d2424d-b5f2-4675-8562-c262453bfb5b failed: boom
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: GET http://test/api/call-requests/incoming "HTTP/1.1 401 Unauthorized"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests "HTTP/1.1 402 Payment Required"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/76642532-9aa8-4788-af8f-d1aafbf90a82/dev-credit "HTTP/1.1 200 OK"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests "HTTP/1.1 201 Created"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/76642532-9aa8-4788-af8f-d1aafbf90a82 "HTTP/1.1 200 OK"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: GET http://test/api/call-requests/incoming "HTTP/1.1 200 OK"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: GET http://test/api/call-requests/incoming "HTTP/1.1 200 OK"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: GET http://test/api/call-requests/7493fa10-53e2-43d6-9618-0669d742763e "HTTP/1.1 404 Not Found"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/7493fa10-53e2-43d6-9618-0669d742763e/accept "HTTP/1.1 403 Forbidden"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/7493fa10-53e2-43d6-9618-0669d742763e/accept "HTTP/1.1 200 OK"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/7493fa10-53e2-43d6-9618-0669d742763e/events "HTTP/1.1 200 OK"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/7493fa10-53e2-43d6-9618-0669d742763e/events "HTTP/1.1 400 Bad Request"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: GET http://test/api/call-requests/7493fa10-53e2-43d6-9618-0669d742763e "HTTP/1.1 200 OK"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: GET http://test/api/call-requests/outgoing?activeOnly=true "HTTP/1.1 200 OK"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/7493fa10-53e2-43d6-9618-0669d742763e/feedback "HTTP/1.1 200 OK"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/76642532-9aa8-4788-af8f-d1aafbf90a82 "HTTP/1.1 200 OK"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/c5a7fc64-98a7-4cb3-8a23-36f8f1a65a2f "HTTP/1.1 200 OK"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/c5a7fc64-98a7-4cb3-8a23-36f8f1a65a2f/transactions "HTTP/1.1 200 OK"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests "HTTP/1.1 201 Created"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: GET http://test/api/call-requests/not-a-uuid "HTTP/1.1 400 Bad Request"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests "HTTP/1.1 400 Bad Request"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests "HTTP/1.1 422 Unprocessable Entity"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/030a71c7-eaaa-413f-b682-15e7238c454e/dev-credit "HTTP/1.1 403 Forbidden"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/52228b02-81f3-4ef3-a0bd-7d488c5baedd/dev-credit "HTTP/1.1 400 Bad Request"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/52228b02-81f3-4ef3-a0bd-7d488c5baedd/dev-credit "HTTP/1.1 200 OK"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/52228b02-81f3-4ef3-a0bd-7d488c5baedd/dev-credit "HTTP/1.1 200 OK"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/52228b02-81f3-4ef3-a0bd-7d488c5baedd "HTTP/1.1 200 OK"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/bb488437-5ba0-4472-82b8-8efd0cf8ff32/dev-credit "HTTP/1.1 404 Not Found"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests "HTTP/1.1 201 Created"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/start "HTTP/1.1 409 Conflict"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/accept "HTTP/1.1 200 OK"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/start "HTTP/1.1 403 Forbidden"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/start "HTTP/1.1 200 OK"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: GET http://test/api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc "HTTP/1.1 200 OK"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/join "HTTP/1.1 200 OK"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/heartbeat "HTTP/1.1 422 Unprocessable Entity"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/end "HTTP/1.1 200 OK"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/end "HTTP/1.1 200 OK"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/be302baf-2ac7-4613-bc04-7ea3df36d2bc/feedback "HTTP/1.1 200 OK"
+2026-11-02 15:00:12 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/89de9f6b-8b88-4f6f-bfb3-59b6ce0169de "HTTP/1.1 200 OK"
+2026-11-02 15:00:13 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests "HTTP/1.1 201 Created"
+2026-11-02 15:00:13 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/d8549a16-a361-4295-bfe4-e3816a8a8c47/accept "HTTP/1.1 200 OK"
+2026-11-02 15:00:13 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/d8549a16-a361-4295-bfe4-e3816a8a8c47/start "HTTP/1.1 200 OK"
+2026-11-02 15:00:13 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/d8549a16-a361-4295-bfe4-e3816a8a8c47/join "HTTP/1.1 409 Conflict"
+2026-11-02 15:00:13 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests "HTTP/1.1 201 Created"
+2026-11-02 15:00:13 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/2323c4cd-e870-47fb-970b-116ca903f750/events "HTTP/1.1 200 OK"
+2026-11-02 15:00:13 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/2323c4cd-e870-47fb-970b-116ca903f750/events "HTTP/1.1 200 OK"
+2026-11-02 15:00:13 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/2323c4cd-e870-47fb-970b-116ca903f750/events "HTTP/1.1 200 OK"
+2026-11-02 15:00:13 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/2323c4cd-e870-47fb-970b-116ca903f750/events "HTTP/1.1 200 OK"
+2026-11-02 15:00:13 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/2323c4cd-e870-47fb-970b-116ca903f750/events "HTTP/1.1 200 OK"
+2026-11-02 15:00:13 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests "HTTP/1.1 201 Created"
+2026-11-02 15:00:13 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/3d92a379-af49-4b96-9bcd-6078e3fc99c9/events "HTTP/1.1 200 OK"
+2026-11-02 15:00:13 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/a6d47bfb-2175-40dd-a8d1-b0f3d522aa2a/accept "HTTP/1.1 200 OK"
+2026-11-02 15:00:13 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/a6d47bfb-2175-40dd-a8d1-b0f3d522aa2a/start "HTTP/1.1 200 OK"
+2026-11-02 15:00:13 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/a6d47bfb-2175-40dd-a8d1-b0f3d522aa2a/join "HTTP/1.1 200 OK"
+2026-11-02 15:00:13 | INFO     | httpx | HTTP Request: GET http://test/api/call-requests/a6d47bfb-2175-40dd-a8d1-b0f3d522aa2a "HTTP/1.1 200 OK"
+2026-11-02 15:00:13 | INFO     | httpx | HTTP Request: GET http://test/api/call-requests/a6d47bfb-2175-40dd-a8d1-b0f3d522aa2a "HTTP/1.1 200 OK"
+2026-11-02 15:00:13 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/a6d47bfb-2175-40dd-a8d1-b0f3d522aa2a/join "HTTP/1.1 409 Conflict"
+2026-11-02 15:00:13 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/a6d47bfb-2175-40dd-a8d1-b0f3d522aa2a/end "HTTP/1.1 409 Conflict"
+2026-11-02 15:00:13 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/a6d47bfb-2175-40dd-a8d1-b0f3d522aa2a/heartbeat "HTTP/1.1 409 Conflict"
+2026-11-02 15:00:13 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/a6d47bfb-2175-40dd-a8d1-b0f3d522aa2a/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 15:00:13 | INFO     | httpx | HTTP Request: GET http://test/api/location-tracking/status "HTTP/1.1 401 Unauthorized"
+2026-11-02 15:00:13 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/stop "HTTP/1.1 401 Unauthorized"
+2026-11-02 15:00:13 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/location "HTTP/1.1 401 Unauthorized"
+2026-11-02 15:00:13 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/location "HTTP/1.1 422 Unprocessable Entity"
+2026-11-02 15:00:13 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/location "HTTP/1.1 422 Unprocessable Entity"
+2026-11-02 15:00:13 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/location "HTTP/1.1 422 Unprocessable Entity"
+2026-11-02 15:00:13 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/location "HTTP/1.1 422 Unprocessable Entity"
+2026-11-02 15:00:13 | INFO     | httpx | HTTP Request: GET http://test/api/location-tracking/status "HTTP/1.1 200 OK"
+2026-11-02 15:00:13 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/location "HTTP/1.1 200 OK"
+2026-11-02 15:00:13 | INFO     | httpx | HTTP Request: GET http://test/api/location-tracking/status "HTTP/1.1 200 OK"
+2026-11-02 15:00:13 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/location "HTTP/1.1 200 OK"
+2026-11-02 15:00:13 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/stop "HTTP/1.1 200 OK"
+2026-11-02 15:00:13 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/location "HTTP/1.1 200 OK"
+2026-11-02 15:00:13 | INFO     | httpx | HTTP Request: DELETE http://test/api/posts/delete/93fa0851-74c9-4c0c-b77d-3b537ba03241 "HTTP/1.1 200 OK"
+2026-11-02 15:00:13 | INFO     | httpx | HTTP Request: GET http://test/api/location-tracking/status "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: GET http://test/api/location-tracking/status "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: POST http://test/api/posts/create/e09a28e5-6731-4cef-a450-8a47d9c7bd36 "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: GET http://test/api/location-tracking/status "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: GET http://test/api/location-tracking/status "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: POST http://test/api/posts/reactivate/51422cf3-fc38-49b7-b990-5838fc3303e7 "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: GET http://test/api/location-tracking/status "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | ERROR    | convoy | Razorpay POST /orders unreachable: no route
+2026-11-02 15:00:14 | ERROR    | convoy | Creating a Razorpay order failed for user 62958052-c85b-4563-935c-5774cbbade4a: Razorpay could not be reached
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 400 Bad Request"
+2026-11-02 15:00:14 | ERROR    | convoy | Razorpay POST /orders -> 400 bad
+2026-11-02 15:00:14 | ERROR    | convoy | Creating a Razorpay order failed for user 688e8209-f4d1-4b85-b1d9-a41cbfa52440: bad
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_094b3eb492b2 "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_bdea60e39043 "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_a9c56d078a14 "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | ERROR    | convoy | Recharge for order order_5bca1feb15c9 needs review: payment pay_a9c56d078a14 does not match the order
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_9c669466b26d "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | ERROR    | convoy | Recharge for order order_563a228fab5a needs review: payment pay_9c669466b26d does not match the order
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_42f2816b4975 "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/payments/pay_42f2816b4975/capture "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_2c541268957f "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_91832244ff88 "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_06a83156e6ae "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | ERROR    | convoy | Razorpay GET /payments/pay_60750979f4f6 unreachable: no route
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_60750979f4f6 "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_f09d5cf58e0c "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | ERROR    | convoy | Recharge for order order_b00026936fb5 needs review: credit refused: Wallet is frozen, contact support
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_f09d5cf58e0c "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_62a4d74064ae "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_38d41b2eb00c "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | ERROR    | convoy | Recharge for order order_51093122274a needs review: webhook payment pay_0ded288f8f30 does not match the order
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_c549f485b5da "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_226997206a19 "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_9e506c24a7eb "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_3156a2fd893a "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/recharge/config "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/recharge/config "HTTP/1.1 200 OK"
+2026-11-02 15:00:14 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/recharge/config "HTTP/1.1 401 Unauthorized"
+2026-11-02 15:00:15 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:15 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/1f52bf7f-8a66-4bf9-adc2-ff3d40cda549/recharges "HTTP/1.1 201 Created"
+2026-11-02 15:00:15 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/2b048da9-e98e-4f4e-9cf2-91779136ea93/recharges "HTTP/1.1 400 Bad Request"
+2026-11-02 15:00:15 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/2b048da9-e98e-4f4e-9cf2-91779136ea93/recharges "HTTP/1.1 422 Unprocessable Entity"
+2026-11-02 15:00:15 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/2b048da9-e98e-4f4e-9cf2-91779136ea93/recharges "HTTP/1.1 422 Unprocessable Entity"
+2026-11-02 15:00:15 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/2b048da9-e98e-4f4e-9cf2-91779136ea93/recharges "HTTP/1.1 422 Unprocessable Entity"
+2026-11-02 15:00:15 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/2b048da9-e98e-4f4e-9cf2-91779136ea93/recharges "HTTP/1.1 422 Unprocessable Entity"
+2026-11-02 15:00:15 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/868ca1f3-b17e-4ff0-9617-cc7aa3d70719/recharges "HTTP/1.1 403 Forbidden"
+2026-11-02 15:00:15 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:15 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/868ca1f3-b17e-4ff0-9617-cc7aa3d70719/recharges "HTTP/1.1 201 Created"
+2026-11-02 15:00:15 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/868ca1f3-b17e-4ff0-9617-cc7aa3d70719/recharges/confirm "HTTP/1.1 403 Forbidden"
+2026-11-02 15:00:15 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/9e6835b6-43ad-480c-81b9-b81166ed867b/recharges/confirm "HTTP/1.1 404 Not Found"
+2026-11-02 15:00:15 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:15 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/23de4958-acc8-449c-97af-453aa0a16d52/recharges "HTTP/1.1 201 Created"
+2026-11-02 15:00:15 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_4155742a2c77 "HTTP/1.1 200 OK"
+2026-11-02 15:00:15 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/23de4958-acc8-449c-97af-453aa0a16d52/recharges/confirm "HTTP/1.1 200 OK"
+2026-11-02 15:00:15 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/23de4958-acc8-449c-97af-453aa0a16d52 "HTTP/1.1 200 OK"
+2026-11-02 15:00:15 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/23de4958-acc8-449c-97af-453aa0a16d52/transactions "HTTP/1.1 200 OK"
+2026-11-02 15:00:15 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:15 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/73391948-2da1-4cc6-8104-1dd298d8c593/recharges "HTTP/1.1 201 Created"
+2026-11-02 15:00:15 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/73391948-2da1-4cc6-8104-1dd298d8c593/recharges/confirm "HTTP/1.1 400 Bad Request"
+2026-11-02 15:00:15 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/73391948-2da1-4cc6-8104-1dd298d8c593 "HTTP/1.1 200 OK"
+2026-11-02 15:00:15 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:15 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/5e67cd62-9cbf-49c5-a297-3d175a51d406/recharges "HTTP/1.1 201 Created"
+2026-11-02 15:00:15 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/5e67cd62-9cbf-49c5-a297-3d175a51d406/recharges/order_03548389557f "HTTP/1.1 200 OK"
+2026-11-02 15:00:15 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_371b19487a4c "HTTP/1.1 200 OK"
+2026-11-02 15:00:15 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/5e67cd62-9cbf-49c5-a297-3d175a51d406/recharges/confirm "HTTP/1.1 200 OK"
+2026-11-02 15:00:15 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/5e67cd62-9cbf-49c5-a297-3d175a51d406/recharges/order_03548389557f "HTTP/1.1 200 OK"
+2026-11-02 15:00:15 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/5e67cd62-9cbf-49c5-a297-3d175a51d406/recharges/order_nope "HTTP/1.1 404 Not Found"
+2026-11-02 15:00:15 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:15 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/eba900e9-9555-411f-b844-559761b831de/recharges "HTTP/1.1 201 Created"
+2026-11-02 15:00:15 | INFO     | httpx | HTTP Request: POST http://test/api/webhooks/razorpay "HTTP/1.1 400 Bad Request"
+2026-11-02 15:00:15 | INFO     | httpx | HTTP Request: POST http://test/api/webhooks/razorpay "HTTP/1.1 400 Bad Request"
+2026-11-02 15:00:15 | INFO     | httpx | HTTP Request: POST http://test/api/webhooks/razorpay "HTTP/1.1 200 OK"
+2026-11-02 15:00:15 | INFO     | httpx | HTTP Request: POST http://test/api/webhooks/razorpay "HTTP/1.1 200 OK"
+2026-11-02 15:00:15 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/eba900e9-9555-411f-b844-559761b831de "HTTP/1.1 200 OK"
+2026-11-02 15:00:15 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:00:15 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/d51e592f-9da6-432b-9f71-b1d8c5d5fde0/recharges "HTTP/1.1 201 Created"
+2026-11-02 15:00:15 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_f4d0dbcb49c4 "HTTP/1.1 200 OK"
+2026-11-02 15:00:15 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/d51e592f-9da6-432b-9f71-b1d8c5d5fde0/recharges/confirm "HTTP/1.1 200 OK"
+2026-11-02 15:00:15 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests "HTTP/1.1 201 Created"
+2026-11-02 15:01:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:02:06 IST)" (scheduled at 2026-11-02 15:01:06.071401+05:30)
+2026-11-02 15:01:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:02:06 IST)" executed successfully
+2026-11-02 15:02:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:03:06 IST)" (scheduled at 2026-11-02 15:02:06.071401+05:30)
+2026-11-02 15:02:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:03:06 IST)" executed successfully
+2026-11-02 15:03:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:04:06 IST)" (scheduled at 2026-11-02 15:03:06.071401+05:30)
+2026-11-02 15:03:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:04:06 IST)" executed successfully
+2026-11-02 15:04:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:05:06 IST)" (scheduled at 2026-11-02 15:04:06.071401+05:30)
+2026-11-02 15:04:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:05:06 IST)" executed successfully
+2026-11-02 15:05:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:06:06 IST)" (scheduled at 2026-11-02 15:05:06.071401+05:30)
+2026-11-02 15:05:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:06:06 IST)" executed successfully
+2026-11-02 15:06:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:07:06 IST)" (scheduled at 2026-11-02 15:06:06.071401+05:30)
+2026-11-02 15:06:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:07:06 IST)" executed successfully
+2026-11-02 15:06:44 | INFO     | convoy | Logging initialized - files: /Users/ankit/Documents/sharkship-others/convoy_prod/logs
+2026-11-02 15:06:49 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/abc123 "HTTP/1.1 200 OK"
+2026-11-02 15:06:49 | INFO     | httpx | HTTP Request: POST https://api.sandbox.push.apple.com/3/device/abc "HTTP/1.1 200 OK"
+2026-11-02 15:06:49 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/a "HTTP/1.1 200 OK"
+2026-11-02 15:06:49 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/b "HTTP/1.1 200 OK"
+2026-11-02 15:06:49 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/dead "HTTP/1.1 410 Gone"
+2026-11-02 15:06:49 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/dead "HTTP/1.1 400 Bad Request"
+2026-11-02 15:06:49 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/dead "HTTP/1.1 400 Bad Request"
+2026-11-02 15:06:49 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/tok "HTTP/1.1 403 Forbidden"
+2026-11-02 15:06:49 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/tok "HTTP/1.1 200 OK"
+2026-11-02 15:06:49 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/tok "HTTP/1.1 403 Forbidden"
+2026-11-02 15:06:49 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/tok "HTTP/1.1 403 Forbidden"
+2026-11-02 15:06:49 | ERROR    | convoy | APNs refused a VoIP push: 403 InvalidProviderToken
+2026-11-02 15:06:49 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/tok "HTTP/1.1 429 Too Many Requests"
+2026-11-02 15:06:49 | ERROR    | convoy | APNs refused a VoIP push: 429 TooManyRequests
+2026-11-02 15:06:49 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/tok "HTTP/1.1 500 Internal Server Error"
+2026-11-02 15:06:49 | ERROR    | convoy | APNs refused a VoIP push: 500 InternalServerError
+2026-11-02 15:06:49 | INFO     | httpx | HTTP Request: POST https://api.push.apple.com/3/device/tok "HTTP/1.1 503 Service Unavailable"
+2026-11-02 15:06:49 | ERROR    | convoy | APNs refused a VoIP push: 503 
+2026-11-02 15:06:49 | ERROR    | convoy | APNs VoIP push failed: no route
+2026-11-02 15:06:49 | ERROR    | convoy | Incoming-call push to device dev-444e6673-e4dc-4a57-a612-7220f2f8420c failed: boom
+2026-11-02 15:06:51 | INFO     | httpx | HTTP Request: GET http://test/api/call-requests/incoming "HTTP/1.1 401 Unauthorized"
+2026-11-02 15:06:51 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests "HTTP/1.1 402 Payment Required"
+2026-11-02 15:06:51 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/2dc6a748-5a43-4170-b346-ac9b533af293/dev-credit "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests "HTTP/1.1 201 Created"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/2dc6a748-5a43-4170-b346-ac9b533af293 "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: GET http://test/api/call-requests/incoming "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: GET http://test/api/call-requests/incoming "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: GET http://test/api/call-requests/388524f1-8f5a-4f66-ab41-52d3507d683e "HTTP/1.1 404 Not Found"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/388524f1-8f5a-4f66-ab41-52d3507d683e/accept "HTTP/1.1 403 Forbidden"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/388524f1-8f5a-4f66-ab41-52d3507d683e/accept "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/388524f1-8f5a-4f66-ab41-52d3507d683e/events "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/388524f1-8f5a-4f66-ab41-52d3507d683e/events "HTTP/1.1 400 Bad Request"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: GET http://test/api/call-requests/388524f1-8f5a-4f66-ab41-52d3507d683e "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: GET http://test/api/call-requests/outgoing?activeOnly=true "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/388524f1-8f5a-4f66-ab41-52d3507d683e/feedback "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/2dc6a748-5a43-4170-b346-ac9b533af293 "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/b9f46dc7-f007-4c9e-8884-27d77386a9b2 "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/b9f46dc7-f007-4c9e-8884-27d77386a9b2/transactions "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests "HTTP/1.1 201 Created"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: GET http://test/api/call-requests/not-a-uuid "HTTP/1.1 400 Bad Request"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests "HTTP/1.1 400 Bad Request"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests "HTTP/1.1 422 Unprocessable Entity"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/fedce59b-220f-40e4-8cba-8f108325e12b/dev-credit "HTTP/1.1 403 Forbidden"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/ab55a2cf-a61a-4ef3-89cf-d50b60663928/dev-credit "HTTP/1.1 400 Bad Request"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/ab55a2cf-a61a-4ef3-89cf-d50b60663928/dev-credit "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/ab55a2cf-a61a-4ef3-89cf-d50b60663928/dev-credit "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/ab55a2cf-a61a-4ef3-89cf-d50b60663928 "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/13b564df-abd2-43f6-adc7-64d9f418e599/dev-credit "HTTP/1.1 404 Not Found"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests "HTTP/1.1 201 Created"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/start "HTTP/1.1 409 Conflict"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/accept "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/start "HTTP/1.1 403 Forbidden"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/start "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: GET http://test/api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6 "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/join "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/heartbeat "HTTP/1.1 422 Unprocessable Entity"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/end "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/end "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/dccd0dde-e595-4ed6-aba4-71cc9a20f8f6/feedback "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/63b74b6f-f4ba-4f05-b6e9-9022b641c780 "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests "HTTP/1.1 201 Created"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/6b14ffc6-e237-41ab-a6d2-972a7b6819ef/accept "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/6b14ffc6-e237-41ab-a6d2-972a7b6819ef/start "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/6b14ffc6-e237-41ab-a6d2-972a7b6819ef/join "HTTP/1.1 409 Conflict"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests "HTTP/1.1 201 Created"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/81b6fd14-19b5-4ba2-8abd-45a0bc2eee16/events "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/81b6fd14-19b5-4ba2-8abd-45a0bc2eee16/events "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/81b6fd14-19b5-4ba2-8abd-45a0bc2eee16/events "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/81b6fd14-19b5-4ba2-8abd-45a0bc2eee16/events "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/81b6fd14-19b5-4ba2-8abd-45a0bc2eee16/events "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests "HTTP/1.1 201 Created"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/beb3bdc7-fb43-4ad4-990c-e0b6986e359f/events "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/a2ee6ab5-9c98-4a2a-9f94-560e6a1ddbe0/accept "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/a2ee6ab5-9c98-4a2a-9f94-560e6a1ddbe0/start "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/a2ee6ab5-9c98-4a2a-9f94-560e6a1ddbe0/join "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: GET http://test/api/call-requests/a2ee6ab5-9c98-4a2a-9f94-560e6a1ddbe0 "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: GET http://test/api/call-requests/a2ee6ab5-9c98-4a2a-9f94-560e6a1ddbe0 "HTTP/1.1 200 OK"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/a2ee6ab5-9c98-4a2a-9f94-560e6a1ddbe0/join "HTTP/1.1 409 Conflict"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/a2ee6ab5-9c98-4a2a-9f94-560e6a1ddbe0/end "HTTP/1.1 409 Conflict"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/a2ee6ab5-9c98-4a2a-9f94-560e6a1ddbe0/heartbeat "HTTP/1.1 409 Conflict"
+2026-11-02 15:06:52 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests/a2ee6ab5-9c98-4a2a-9f94-560e6a1ddbe0/heartbeat "HTTP/1.1 200 OK"
+2026-11-02 15:06:53 | INFO     | httpx | HTTP Request: GET http://test/api/location-tracking/status "HTTP/1.1 401 Unauthorized"
+2026-11-02 15:06:53 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/stop "HTTP/1.1 401 Unauthorized"
+2026-11-02 15:06:53 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/location "HTTP/1.1 401 Unauthorized"
+2026-11-02 15:06:53 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/location "HTTP/1.1 422 Unprocessable Entity"
+2026-11-02 15:06:53 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/location "HTTP/1.1 422 Unprocessable Entity"
+2026-11-02 15:06:53 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/location "HTTP/1.1 422 Unprocessable Entity"
+2026-11-02 15:06:53 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/location "HTTP/1.1 422 Unprocessable Entity"
+2026-11-02 15:06:53 | INFO     | httpx | HTTP Request: GET http://test/api/location-tracking/status "HTTP/1.1 200 OK"
+2026-11-02 15:06:53 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/location "HTTP/1.1 200 OK"
+2026-11-02 15:06:53 | INFO     | httpx | HTTP Request: GET http://test/api/location-tracking/status "HTTP/1.1 200 OK"
+2026-11-02 15:06:53 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/location "HTTP/1.1 200 OK"
+2026-11-02 15:06:53 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/stop "HTTP/1.1 200 OK"
+2026-11-02 15:06:53 | INFO     | httpx | HTTP Request: POST http://test/api/location-tracking/location "HTTP/1.1 200 OK"
+2026-11-02 15:06:53 | INFO     | httpx | HTTP Request: DELETE http://test/api/posts/delete/4b8a5116-f732-4a6d-8eb8-e1913a5b6838 "HTTP/1.1 200 OK"
+2026-11-02 15:06:53 | INFO     | httpx | HTTP Request: GET http://test/api/location-tracking/status "HTTP/1.1 200 OK"
+2026-11-02 15:06:53 | INFO     | httpx | HTTP Request: GET http://test/api/location-tracking/status "HTTP/1.1 200 OK"
+2026-11-02 15:06:53 | INFO     | httpx | HTTP Request: POST http://test/api/posts/create/d42e395d-0cc6-4179-b936-76ba4ee125f7 "HTTP/1.1 200 OK"
+2026-11-02 15:06:53 | INFO     | httpx | HTTP Request: GET http://test/api/location-tracking/status "HTTP/1.1 200 OK"
+2026-11-02 15:06:53 | INFO     | httpx | HTTP Request: GET http://test/api/location-tracking/status "HTTP/1.1 200 OK"
+2026-11-02 15:06:53 | INFO     | httpx | HTTP Request: POST http://test/api/posts/reactivate/0dc518eb-f72a-4ea4-9be6-de314d357c3e "HTTP/1.1 200 OK"
+2026-11-02 15:06:53 | INFO     | httpx | HTTP Request: GET http://test/api/location-tracking/status "HTTP/1.1 200 OK"
+2026-11-02 15:06:53 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:53 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:53 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | ERROR    | convoy | Razorpay POST /orders unreachable: no route
+2026-11-02 15:06:54 | ERROR    | convoy | Creating a Razorpay order failed for user ab4ad5a2-b11e-4731-bee9-a4d15bbadf83: Razorpay could not be reached
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 400 Bad Request"
+2026-11-02 15:06:54 | ERROR    | convoy | Razorpay POST /orders -> 400 bad
+2026-11-02 15:06:54 | ERROR    | convoy | Creating a Razorpay order failed for user d321f08a-1ed6-4906-b5b4-08aaed630d0b: bad
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_7bdf2488da82 "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_b45f302dbbcc "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_c02caa056ce6 "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | ERROR    | convoy | Recharge for order order_22b9925f18d3 needs review: payment pay_c02caa056ce6 does not match the order
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_de1dce928e88 "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | ERROR    | convoy | Recharge for order order_264027d7c29a needs review: payment pay_de1dce928e88 does not match the order
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_55e9ae6ec4bd "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/payments/pay_55e9ae6ec4bd/capture "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_5d41950cbea7 "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_e9344648e3ad "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_98ca7b9f14ad "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | ERROR    | convoy | Razorpay GET /payments/pay_f6d5e72738da unreachable: no route
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_f6d5e72738da "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_280262ef6720 "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | ERROR    | convoy | Recharge for order order_fb4614230d5e needs review: credit refused: Wallet is frozen, contact support
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_280262ef6720 "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_6ce352d75454 "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_84e089e5ac09 "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | ERROR    | convoy | Recharge for order order_64d0ed98dc85 needs review: webhook payment pay_e43a4dfae98e does not match the order
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_330e78c33c52 "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_16d2ee4398d7 "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_c7c6bf1771f1 "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_d816217d4b51 "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/recharge/config "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/recharge/config "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/recharge/config "HTTP/1.1 401 Unauthorized"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/b8316b9a-59ad-46ed-932a-4ab78e84c730/recharges "HTTP/1.1 201 Created"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/614320e1-5eb7-41c0-b427-014b64fa8cdf/recharges "HTTP/1.1 400 Bad Request"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/614320e1-5eb7-41c0-b427-014b64fa8cdf/recharges "HTTP/1.1 422 Unprocessable Entity"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/614320e1-5eb7-41c0-b427-014b64fa8cdf/recharges "HTTP/1.1 422 Unprocessable Entity"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/614320e1-5eb7-41c0-b427-014b64fa8cdf/recharges "HTTP/1.1 422 Unprocessable Entity"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/614320e1-5eb7-41c0-b427-014b64fa8cdf/recharges "HTTP/1.1 422 Unprocessable Entity"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/76323bba-0413-454c-92cc-ed15ca44526b/recharges "HTTP/1.1 403 Forbidden"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/76323bba-0413-454c-92cc-ed15ca44526b/recharges "HTTP/1.1 201 Created"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/76323bba-0413-454c-92cc-ed15ca44526b/recharges/confirm "HTTP/1.1 403 Forbidden"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/a2c1033a-828d-4e14-83c2-963c658350df/recharges/confirm "HTTP/1.1 404 Not Found"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/f60f8d24-c789-4e14-a4fa-67f8e15e87b5/recharges "HTTP/1.1 201 Created"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_1e8177f82b5a "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/f60f8d24-c789-4e14-a4fa-67f8e15e87b5/recharges/confirm "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/f60f8d24-c789-4e14-a4fa-67f8e15e87b5 "HTTP/1.1 200 OK"
+2026-11-02 15:06:54 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/f60f8d24-c789-4e14-a4fa-67f8e15e87b5/transactions "HTTP/1.1 200 OK"
+2026-11-02 15:06:55 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:55 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/af1b4a32-4ce4-4dd6-88e2-256e282c856d/recharges "HTTP/1.1 201 Created"
+2026-11-02 15:06:55 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/af1b4a32-4ce4-4dd6-88e2-256e282c856d/recharges/confirm "HTTP/1.1 400 Bad Request"
+2026-11-02 15:06:55 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/af1b4a32-4ce4-4dd6-88e2-256e282c856d "HTTP/1.1 200 OK"
+2026-11-02 15:06:55 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:55 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/27292f7e-4fc3-4faf-9da6-b3bffa2a9408/recharges "HTTP/1.1 201 Created"
+2026-11-02 15:06:55 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/27292f7e-4fc3-4faf-9da6-b3bffa2a9408/recharges/order_457b0def0a91 "HTTP/1.1 200 OK"
+2026-11-02 15:06:55 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_2779cc1132c6 "HTTP/1.1 200 OK"
+2026-11-02 15:06:55 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/27292f7e-4fc3-4faf-9da6-b3bffa2a9408/recharges/confirm "HTTP/1.1 200 OK"
+2026-11-02 15:06:55 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/27292f7e-4fc3-4faf-9da6-b3bffa2a9408/recharges/order_457b0def0a91 "HTTP/1.1 200 OK"
+2026-11-02 15:06:55 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/27292f7e-4fc3-4faf-9da6-b3bffa2a9408/recharges/order_nope "HTTP/1.1 404 Not Found"
+2026-11-02 15:06:55 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:55 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/38716d16-8f05-48f0-aed5-c26fbd634818/recharges "HTTP/1.1 201 Created"
+2026-11-02 15:06:55 | INFO     | httpx | HTTP Request: POST http://test/api/webhooks/razorpay "HTTP/1.1 400 Bad Request"
+2026-11-02 15:06:55 | INFO     | httpx | HTTP Request: POST http://test/api/webhooks/razorpay "HTTP/1.1 400 Bad Request"
+2026-11-02 15:06:55 | INFO     | httpx | HTTP Request: POST http://test/api/webhooks/razorpay "HTTP/1.1 200 OK"
+2026-11-02 15:06:55 | INFO     | httpx | HTTP Request: POST http://test/api/webhooks/razorpay "HTTP/1.1 200 OK"
+2026-11-02 15:06:55 | INFO     | httpx | HTTP Request: GET http://test/api/wallet/38716d16-8f05-48f0-aed5-c26fbd634818 "HTTP/1.1 200 OK"
+2026-11-02 15:06:55 | INFO     | httpx | HTTP Request: POST https://api.razorpay.com/v1/orders "HTTP/1.1 200 OK"
+2026-11-02 15:06:55 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/2767d603-11bd-499a-92f8-68ac24c73531/recharges "HTTP/1.1 201 Created"
+2026-11-02 15:06:55 | INFO     | httpx | HTTP Request: GET https://api.razorpay.com/v1/payments/pay_2e3841429d92 "HTTP/1.1 200 OK"
+2026-11-02 15:06:55 | INFO     | httpx | HTTP Request: POST http://test/api/wallet/2767d603-11bd-499a-92f8-68ac24c73531/recharges/confirm "HTTP/1.1 200 OK"
+2026-11-02 15:06:55 | INFO     | httpx | HTTP Request: POST http://test/api/call-requests "HTTP/1.1 201 Created"
+2026-11-02 15:07:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:08:06 IST)" (scheduled at 2026-11-02 15:07:06.071401+05:30)
+2026-11-02 15:07:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:08:06 IST)" executed successfully
+2026-11-02 15:08:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:09:06 IST)" (scheduled at 2026-11-02 15:08:06.071401+05:30)
+2026-11-02 15:08:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:09:06 IST)" executed successfully
+2026-11-02 15:09:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:10:06 IST)" (scheduled at 2026-11-02 15:09:06.071401+05:30)
+2026-11-02 15:09:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:10:06 IST)" executed successfully
+2026-11-02 15:10:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:11:06 IST)" (scheduled at 2026-11-02 15:10:06.071401+05:30)
+2026-11-02 15:10:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:11:06 IST)" executed successfully
+2026-11-02 15:11:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:12:06 IST)" (scheduled at 2026-11-02 15:11:06.071401+05:30)
+2026-11-02 15:11:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:12:06 IST)" executed successfully
+2026-11-02 15:12:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:13:06 IST)" (scheduled at 2026-11-02 15:12:06.071401+05:30)
+2026-11-02 15:12:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:13:06 IST)" executed successfully
+2026-11-02 15:13:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:14:06 IST)" (scheduled at 2026-11-02 15:13:06.071401+05:30)
+2026-11-02 15:13:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:14:06 IST)" executed successfully
+2026-11-02 15:14:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:15:06 IST)" (scheduled at 2026-11-02 15:14:06.071401+05:30)
+2026-11-02 15:14:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:15:06 IST)" executed successfully
+2026-11-02 15:15:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:16:06 IST)" (scheduled at 2026-11-02 15:15:06.071401+05:30)
+2026-11-02 15:15:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:16:06 IST)" executed successfully
+2026-11-02 15:16:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:17:06 IST)" (scheduled at 2026-11-02 15:16:06.071401+05:30)
+2026-11-02 15:16:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:17:06 IST)" executed successfully
+2026-11-02 15:17:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:18:06 IST)" (scheduled at 2026-11-02 15:17:06.071401+05:30)
+2026-11-02 15:17:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:18:06 IST)" executed successfully
+2026-11-02 15:18:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:19:06 IST)" (scheduled at 2026-11-02 15:18:06.071401+05:30)
+2026-11-02 15:18:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:19:06 IST)" executed successfully
+2026-11-02 15:19:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:20:06 IST)" (scheduled at 2026-11-02 15:19:06.071401+05:30)
+2026-11-02 15:19:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:20:06 IST)" executed successfully
+2026-11-02 15:20:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:21:06 IST)" (scheduled at 2026-11-02 15:20:06.071401+05:30)
+2026-11-02 15:20:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:21:06 IST)" executed successfully
+2026-11-02 15:21:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:22:06 IST)" (scheduled at 2026-11-02 15:21:06.071401+05:30)
+2026-11-02 15:21:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:22:06 IST)" executed successfully
+2026-11-02 15:22:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:23:06 IST)" (scheduled at 2026-11-02 15:22:06.071401+05:30)
+2026-11-02 15:22:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:23:06 IST)" executed successfully
+2026-11-02 15:23:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:24:06 IST)" (scheduled at 2026-11-02 15:23:06.071401+05:30)
+2026-11-02 15:23:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:24:06 IST)" executed successfully
+2026-11-02 15:24:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:25:06 IST)" (scheduled at 2026-11-02 15:24:06.071401+05:30)
+2026-11-02 15:24:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:25:06 IST)" executed successfully
+2026-11-02 15:25:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:26:06 IST)" (scheduled at 2026-11-02 15:25:06.071401+05:30)
+2026-11-02 15:25:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:26:06 IST)" executed successfully
+2026-11-02 15:26:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:27:06 IST)" (scheduled at 2026-11-02 15:26:06.071401+05:30)
+2026-11-02 15:26:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:27:06 IST)" executed successfully
+2026-11-02 15:27:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:28:06 IST)" (scheduled at 2026-11-02 15:27:06.071401+05:30)
+2026-11-02 15:27:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:28:06 IST)" executed successfully
+2026-11-02 15:28:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:29:06 IST)" (scheduled at 2026-11-02 15:28:06.071401+05:30)
+2026-11-02 15:28:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:29:06 IST)" executed successfully
+2026-11-02 15:29:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:30:06 IST)" (scheduled at 2026-11-02 15:29:06.071401+05:30)
+2026-11-02 15:29:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:30:06 IST)" executed successfully
+2026-11-02 15:30:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:31:06 IST)" (scheduled at 2026-11-02 15:30:06.071401+05:30)
+2026-11-02 15:30:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:31:06 IST)" executed successfully
+2026-11-02 15:44:48 | WARNING  | apscheduler.executors.default | Run time of job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:45:06 IST)" was missed by 0:00:42.915309
+2026-11-02 15:45:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:46:06 IST)" (scheduled at 2026-11-02 15:45:06.071401+05:30)
+2026-11-02 15:45:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:46:06 IST)" executed successfully
+2026-11-02 15:49:07 | WARNING  | apscheduler.executors.default | Run time of job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:50:06 IST)" was missed by 0:00:01.801511
+2026-11-02 15:54:25 | WARNING  | apscheduler.executors.default | Run time of job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:55:06 IST)" was missed by 0:00:19.886513
+2026-11-02 15:55:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:56:06 IST)" (scheduled at 2026-11-02 15:55:06.071401+05:30)
+2026-11-02 15:55:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:56:06 IST)" executed successfully
+2026-11-02 15:56:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:57:06 IST)" (scheduled at 2026-11-02 15:56:06.071401+05:30)
+2026-11-02 15:56:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:57:06 IST)" executed successfully
+2026-11-02 15:57:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:58:06 IST)" (scheduled at 2026-11-02 15:57:06.071401+05:30)
+2026-11-02 15:57:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:58:06 IST)" executed successfully
+2026-11-02 15:58:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:59:06 IST)" (scheduled at 2026-11-02 15:58:06.071401+05:30)
+2026-11-02 15:58:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 15:59:06 IST)" executed successfully
+2026-11-02 16:07:39 | WARNING  | apscheduler.executors.default | Run time of job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:08:06 IST)" was missed by 0:00:33.688763
+2026-11-02 16:08:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:09:06 IST)" (scheduled at 2026-11-02 16:08:06.071401+05:30)
+2026-11-02 16:08:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:09:06 IST)" executed successfully
+2026-11-02 16:09:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:10:06 IST)" (scheduled at 2026-11-02 16:09:06.071401+05:30)
+2026-11-02 16:09:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:10:06 IST)" executed successfully
+2026-11-02 16:10:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:11:06 IST)" (scheduled at 2026-11-02 16:10:06.071401+05:30)
+2026-11-02 16:10:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:11:06 IST)" executed successfully
+2026-11-02 16:11:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:12:06 IST)" (scheduled at 2026-11-02 16:11:06.071401+05:30)
+2026-11-02 16:11:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:12:06 IST)" executed successfully
+2026-11-02 16:12:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:13:06 IST)" (scheduled at 2026-11-02 16:12:06.071401+05:30)
+2026-11-02 16:12:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:13:06 IST)" executed successfully
+2026-11-02 16:13:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:14:06 IST)" (scheduled at 2026-11-02 16:13:06.071401+05:30)
+2026-11-02 16:13:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:14:06 IST)" executed successfully
+2026-11-02 16:14:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:15:06 IST)" (scheduled at 2026-11-02 16:14:06.071401+05:30)
+2026-11-02 16:14:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:15:06 IST)" executed successfully
+2026-11-02 16:15:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:16:06 IST)" (scheduled at 2026-11-02 16:15:06.071401+05:30)
+2026-11-02 16:15:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:16:06 IST)" executed successfully
+2026-11-02 16:16:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:17:06 IST)" (scheduled at 2026-11-02 16:16:06.071401+05:30)
+2026-11-02 16:16:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:17:06 IST)" executed successfully
+2026-11-02 16:17:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:18:06 IST)" (scheduled at 2026-11-02 16:17:06.071401+05:30)
+2026-11-02 16:17:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:18:06 IST)" executed successfully
+2026-11-02 16:18:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:19:06 IST)" (scheduled at 2026-11-02 16:18:06.071401+05:30)
+2026-11-02 16:18:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:19:06 IST)" executed successfully
+2026-11-02 16:19:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:20:06 IST)" (scheduled at 2026-11-02 16:19:06.071401+05:30)
+2026-11-02 16:19:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:20:06 IST)" executed successfully
+2026-11-02 16:20:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:21:06 IST)" (scheduled at 2026-11-02 16:20:06.071401+05:30)
+2026-11-02 16:20:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:21:06 IST)" executed successfully
+2026-11-02 16:21:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:22:06 IST)" (scheduled at 2026-11-02 16:21:06.071401+05:30)
+2026-11-02 16:21:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:22:06 IST)" executed successfully
+2026-11-02 16:22:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:23:06 IST)" (scheduled at 2026-11-02 16:22:06.071401+05:30)
+2026-11-02 16:22:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:23:06 IST)" executed successfully
+2026-11-02 16:23:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:24:06 IST)" (scheduled at 2026-11-02 16:23:06.071401+05:30)
+2026-11-02 16:23:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:24:06 IST)" executed successfully
+2026-11-02 16:24:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:25:06 IST)" (scheduled at 2026-11-02 16:24:06.071401+05:30)
+2026-11-02 16:24:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:25:06 IST)" executed successfully
+2026-11-02 16:25:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:26:06 IST)" (scheduled at 2026-11-02 16:25:06.071401+05:30)
+2026-11-02 16:25:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:26:06 IST)" executed successfully
+2026-11-02 16:26:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:27:06 IST)" (scheduled at 2026-11-02 16:26:06.071401+05:30)
+2026-11-02 16:26:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:27:06 IST)" executed successfully
+2026-11-02 16:27:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:28:06 IST)" (scheduled at 2026-11-02 16:27:06.071401+05:30)
+2026-11-02 16:27:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:28:06 IST)" executed successfully
+2026-11-02 16:28:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:29:06 IST)" (scheduled at 2026-11-02 16:28:06.071401+05:30)
+2026-11-02 16:28:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:29:06 IST)" executed successfully
+2026-11-02 16:29:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:30:06 IST)" (scheduled at 2026-11-02 16:29:06.071401+05:30)
+2026-11-02 16:29:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:30:06 IST)" executed successfully
+2026-11-02 16:30:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:31:06 IST)" (scheduled at 2026-11-02 16:30:06.071401+05:30)
+2026-11-02 16:30:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:31:06 IST)" executed successfully
+2026-11-02 16:31:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:32:06 IST)" (scheduled at 2026-11-02 16:31:06.071401+05:30)
+2026-11-02 16:31:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:32:06 IST)" executed successfully
+2026-11-02 16:32:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:33:06 IST)" (scheduled at 2026-11-02 16:32:06.071401+05:30)
+2026-11-02 16:32:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:33:06 IST)" executed successfully
+2026-11-02 16:33:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:34:06 IST)" (scheduled at 2026-11-02 16:33:06.071401+05:30)
+2026-11-02 16:33:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:34:06 IST)" executed successfully
+2026-11-02 16:34:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:35:06 IST)" (scheduled at 2026-11-02 16:34:06.071401+05:30)
+2026-11-02 16:34:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:35:06 IST)" executed successfully
+2026-11-02 16:35:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:36:06 IST)" (scheduled at 2026-11-02 16:35:06.071401+05:30)
+2026-11-02 16:35:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:36:06 IST)" executed successfully
+2026-11-02 16:36:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:37:06 IST)" (scheduled at 2026-11-02 16:36:06.071401+05:30)
+2026-11-02 16:36:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:37:06 IST)" executed successfully
+2026-11-02 16:37:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:38:06 IST)" (scheduled at 2026-11-02 16:37:06.071401+05:30)
+2026-11-02 16:37:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:38:06 IST)" executed successfully
+2026-11-02 16:38:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:39:06 IST)" (scheduled at 2026-11-02 16:38:06.071401+05:30)
+2026-11-02 16:38:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:39:06 IST)" executed successfully
+2026-11-02 16:39:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:40:06 IST)" (scheduled at 2026-11-02 16:39:06.071401+05:30)
+2026-11-02 16:39:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:40:06 IST)" executed successfully
+2026-11-02 16:40:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:41:06 IST)" (scheduled at 2026-11-02 16:40:06.071401+05:30)
+2026-11-02 16:40:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:41:06 IST)" executed successfully
+2026-11-02 16:41:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:42:06 IST)" (scheduled at 2026-11-02 16:41:06.071401+05:30)
+2026-11-02 16:41:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:42:06 IST)" executed successfully
+2026-11-02 16:42:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:43:06 IST)" (scheduled at 2026-11-02 16:42:06.071401+05:30)
+2026-11-02 16:42:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:43:06 IST)" executed successfully
+2026-11-02 16:43:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:44:06 IST)" (scheduled at 2026-11-02 16:43:06.071401+05:30)
+2026-11-02 16:43:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:44:06 IST)" executed successfully
+2026-11-02 16:44:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:45:06 IST)" (scheduled at 2026-11-02 16:44:06.071401+05:30)
+2026-11-02 16:44:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:45:06 IST)" executed successfully
+2026-11-02 16:45:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:46:06 IST)" (scheduled at 2026-11-02 16:45:06.071401+05:30)
+2026-11-02 16:45:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:46:06 IST)" executed successfully
+2026-11-02 16:46:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:47:06 IST)" (scheduled at 2026-11-02 16:46:06.071401+05:30)
+2026-11-02 16:46:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:47:06 IST)" executed successfully
+2026-11-02 16:47:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:48:06 IST)" (scheduled at 2026-11-02 16:47:06.071401+05:30)
+2026-11-02 16:47:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:48:06 IST)" executed successfully
+2026-11-02 16:48:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:49:06 IST)" (scheduled at 2026-11-02 16:48:06.071401+05:30)
+2026-11-02 16:48:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:49:06 IST)" executed successfully
+2026-11-02 16:49:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:50:06 IST)" (scheduled at 2026-11-02 16:49:06.071401+05:30)
+2026-11-02 16:49:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:50:06 IST)" executed successfully
+2026-11-02 16:50:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:51:06 IST)" (scheduled at 2026-11-02 16:50:06.071401+05:30)
+2026-11-02 16:50:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:51:06 IST)" executed successfully
+2026-11-02 16:51:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:52:06 IST)" (scheduled at 2026-11-02 16:51:06.071401+05:30)
+2026-11-02 16:51:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:52:06 IST)" executed successfully
+2026-11-02 16:52:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:53:06 IST)" (scheduled at 2026-11-02 16:52:06.071401+05:30)
+2026-11-02 16:52:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:53:06 IST)" executed successfully
+2026-11-02 16:53:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:54:06 IST)" (scheduled at 2026-11-02 16:53:06.071401+05:30)
+2026-11-02 16:53:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:54:06 IST)" executed successfully
+2026-11-02 16:54:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:55:06 IST)" (scheduled at 2026-11-02 16:54:06.071401+05:30)
+2026-11-02 16:54:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:55:06 IST)" executed successfully
+2026-11-02 16:55:06 | INFO     | apscheduler.executors.default | Running job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:56:06 IST)" (scheduled at 2026-11-02 16:55:06.071401+05:30)
+2026-11-02 16:55:06 | INFO     | apscheduler.executors.default | Job "run_due_campaigns (trigger: interval[0:01:00], next run at: 2026-11-02 16:56:06 IST)" executed successfully

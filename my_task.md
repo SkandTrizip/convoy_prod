@@ -620,6 +620,38 @@ silently. Both are Android phones, same channel name, same app id, so it is not 
   ```
   Deploy the backend only after this (the new code reads those columns). Not needed for the iPhone: a call screen already shown by a VoIP push cannot be dismissed by a silent push (iOS limit), so on iPhone the other phone keeps ringing until the ring ends; answering there gets the "on another device" message.
 
+### Part J: Location sharing for 48 hours after a truck post (2 Nov)
+
+Built (backend + `convoynew`), tested with fakes, **not yet tried on a real phone**. After a truck is posted (or an expired post is reactivated) the phone sends its location now and then for 48 hours
+(about every 30 minutes, not continuous); each report moves the pin of the live post and is kept as the user's last known position. Details: `docs/LOCATION_TRACKING_API.md`.
+
+Your answers I built to: (1) update the live post's pin **and** keep a per-user last location (so hours 24-48, after the post expired, still update the user); (2) Android = a WorkManager job, iPhone = update when the app is opened;
+(3) never block posting: ask for "Allow all the time", and if refused just update when the app is opened; (4) stops after 48 h, on logout, or when the post that started it is deleted (and no other post is live).
+
+- **Notice:** a dialog before every new post and before reactivating ("Share your location for 48 hours?"), a line under the form, and a note on the "posted" screen. hi/kn/mr texts are mine: native-speaker check please.
+- **Server:** new table `user_location_tracking` (migration 028, already applied to your local `convoy_dev` and the scratch DB), new endpoints `/api/location-tracking/status|location|stop`, hooks in post create / reactivate / delete, a sweep that forgets positions of finished windows. 262 backend tests pass (18 new).
+- **App:** `lib/features/location_tracking/`; the job runs in its own isolate (`locationWorkerDispatcher`, started in `main.dart`); app open/resume syncs with the server; logout stops it. New package `workmanager`, new Android permission `ACCESS_BACKGROUND_LOCATION`, new wording in the iOS location text.
+- **Not done on purpose:** iPhone background updates. iOS has no reliable 30-minute timer: it needs "Always" location plus native "significant location change" code, which can't be written or tested without a real iPhone. For now an iPhone updates when the app is opened. Say if you want that later.
+- **Known limits:** the name on the post's pin is only refreshed when the phone can look up the address (it can fail offline), otherwise the old label stays with new coordinates; Android may delay the job on low battery or "deep sleep" (Samsung); one window per person, so a second phone signed into the same account also reports (the server drops anything faster than once a minute).
+
+- [ ] **Step J1: Try it on the Android phone** (needs a fresh install, not hot reload, because of the new package and permission): `flutter run` on the phone, post a truck, read the dialog, tap "Agree and continue", then on the permission screens choose "Allow all the time".
+  To see the job run without waiting 30 minutes, with the phone on USB (job name `convoy-location-sharing`):
+  ```bash
+  adb shell dumpsys jobscheduler | grep -i -B2 -A8 "convoy"      # shows the job is scheduled
+  ```
+  then check the server got positions:
+  ```bash
+  /opt/homebrew/opt/postgresql@17/bin/psql postgresql://postgres:postgres@127.0.0.1:5433/convoy_dev -c "select user_id, started_at, ends_at, last_lat, last_lng, last_reported_at, report_count, stopped_at, stop_reason from user_location_tracking order by started_at desc limit 5"
+  ```
+  Tell me what you see and I will read the phone's log if the job did not run.
+- [ ] **Step J2: Try the stops:** log out (the row should show `stop_reason = logout` and no position), delete the post (`post_deleted`), and check "Reactivate" shows the dialog again.
+- [ ] **Step J3 (before deploying): apply migration 028 to production.** Back up first. (The API also creates the table by itself at startup, so this only makes it explicit.)
+  ```bash
+  pg_dump "$DATABASE_URL" -Fc -f ~/convoy_backup_$(date +%Y%m%d_%H%M).dump
+  psql "$DATABASE_URL" -v ON_ERROR_STOP=1 --single-transaction -f migrations/028_user_location_tracking.sql
+  ```
+- [ ] **Step J4 (before the Play Store release): background location needs a declaration.** In Play Console > App content > Sensitive permissions, declare background location for "sharing the truck's location for 48 hours after a post so people can send service requests", and upload the short screen recording Google asks for (the consent dialog is the in-app disclosure). Also update your privacy policy: location is collected in the background for 48 hours after posting and kept only as the last position.
+
 ### Stage 6 (the phone rings like a phone call: CallKit on iPhone, full-screen call on Android)
 
 Built, not yet tried on real phones (it can't be tried on the simulator): when the driver starts a call, the requester's phone shows the

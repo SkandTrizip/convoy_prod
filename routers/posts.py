@@ -12,6 +12,7 @@ from db.serializers import parse_uuid, scratch_card_to_dict, truck_route_to_dict
 from middleware.auth import authorize_user_id, get_current_user, require_path_user
 from models import CreateTruckPostRequest, EditTruckPostRequest
 from services.activity import record_post_activity
+from services import location_tracking
 from services.matching import process_smart_match_notifications
 from services.scratch_service import maybe_create_scratch_card
 from services.destinations import (
@@ -99,6 +100,7 @@ async def create_truck_post(
         await session.refresh(route)
 
         await record_post_activity(session, user_uuid, route.id)
+        await location_tracking.start_tracking_quietly(session, user_uuid, route.id)
 
         post_dict = truck_route_to_dict(route, destinations)
         await process_smart_match_notifications(session, route, destinations)
@@ -205,6 +207,7 @@ async def reactivate_post(
         apply_post_reactivation(post)
         await session.commit()
         await session.refresh(post)
+        await location_tracking.start_tracking_quietly(session, post.user_id, post.id)
 
         destinations = await get_destinations_for_route(session, post.id)
         post_dict = truck_route_to_dict(post, destinations)
@@ -239,6 +242,7 @@ async def delete_post(
             raise HTTPException(status_code=404, detail="Post not found")
 
         authorize_user_id(str(post.user_id), current_user)
+        owner_id = post.user_id
 
         result = await session.execute(
             delete(TruckRoute).where(TruckRoute.id == post_uuid)
@@ -248,6 +252,7 @@ async def delete_post(
         if result.rowcount == 0:
             raise HTTPException(status_code=404, detail="Post not found")
 
+        await location_tracking.on_post_deleted(session, owner_id, post_uuid)
         return {"success": True, "message": "Post deleted successfully"}
     except HTTPException:
         raise

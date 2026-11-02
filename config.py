@@ -26,6 +26,14 @@ POST_EXPIRE_CHECK_INTERVAL_SECONDS = int(
     os.environ.get("POST_EXPIRE_CHECK_INTERVAL_SECONDS", "300")
 )
 
+# After a truck post (or reactivation) the app reports the poster's location now and then, for
+# this long, so service requests can find them. Not live tracking: one update every
+# REPORT_INTERVAL_MINUTES from a background job; the server drops anything faster than
+# REPORT_MIN_SECONDS (e.g. an app-open update right after a background one).
+LOCATION_TRACKING_HOURS = int(os.environ.get("LOCATION_TRACKING_HOURS", "48"))
+LOCATION_REPORT_INTERVAL_MINUTES = int(os.environ.get("LOCATION_REPORT_INTERVAL_MINUTES", "30"))
+LOCATION_REPORT_MIN_SECONDS = int(os.environ.get("LOCATION_REPORT_MIN_SECONDS", "60"))
+
 # Stale push-device cleanup (judged on last_app_seen, not last_token_sync —
 # see db/base.py's UserDevice)
 DEVICE_CLEANUP_CHECK_INTERVAL_SECONDS = int(

@@ -14,6 +14,7 @@ from routers import (
     follows,
     heatmap,
     kyc,
+    location_tracking,
     locations,
     misc,
     notifications,
@@ -70,4 +71,5 @@ protected_router.include_router(follows.router)
 protected_router.include_router(heatmap.router)
 protected_router.include_router(creator_reels.router)
 protected_router.include_router(call_requests.router)
+protected_router.include_router(location_tracking.router)
 api_router.include_router(protected_router)

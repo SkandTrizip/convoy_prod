@@ -842,6 +842,30 @@ def _sql_in(values: tuple[str, ...]) -> str:
     return ", ".join(f"'{v}'" for v in values)
 
 
+class UserLocationTracking(Base):
+    """The 48-hour window in which a user's phone reports its location now and then, after they
+    post a truck (see services/location_tracking.py). One row per user; a new post or a
+    reactivation restarts it. The last known position is kept only while the window is on:
+    stopping (logout, post deleted) or running out clears it."""
+
+    __tablename__ = "user_location_tracking"
+
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), primary_key=True
+    )
+    # The post that started this window (no foreign key: the post may be deleted, which stops it).
+    post_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), nullable=True)
+    started_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), nullable=False)
+    ends_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), nullable=False)
+    stopped_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=False), nullable=True)
+    stop_reason: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    last_lat: Mapped[float | None] = mapped_column(Float, nullable=True)
+    last_lng: Mapped[float | None] = mapped_column(Float, nullable=True)
+    last_accuracy_m: Mapped[float | None] = mapped_column(Float, nullable=True)
+    last_reported_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=False), nullable=True)
+    report_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+
+
 class CallRequest(Base):
     """One paid 1:1 call request, from the request through the Agora call to
     settlement. The wallet side of it lives in WalletTransaction rows whose
