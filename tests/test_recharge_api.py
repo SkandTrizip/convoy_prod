@@ -141,21 +141,3 @@ async def test_the_webhook_needs_no_login_only_razorpays_signature(api, rz):
 
     wallet = (await api.get(f"/api/wallet/{user.id}", headers=auth(user))).json()["wallet"]
     assert wallet["availableBalance"] == "250.00"
-
-
-async def test_a_recharged_wallet_can_fund_a_one_to_one_offer(api, rz):
-    """The whole point: money in through Razorpay, then a call request uses it."""
-    from tests.test_call_requests import make_post
-
-    requester = await make_user(api.factory, "Asha")
-    driver = await make_user(api.factory, "Vikram")
-    post = await make_post(api.factory, driver)
-    recharge = await start(api, requester, "200")
-    await api.post(f"/api/wallet/{requester.id}/recharges/confirm", json=paid_confirmation(rz, recharge), headers=auth(requester))
-
-    r = await api.post(
-        "/api/call-requests",
-        json={"providerId": str(driver.id), "truckRouteId": str(post.id), "topic": "Load", "durationMinutes": 10, "amount": "150"},
-        headers=auth(requester),
-    )
-    assert r.status_code == 201, r.text

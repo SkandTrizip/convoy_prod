@@ -817,16 +817,18 @@ class OneToOneCall(Base):
 
 
 # --- Paid 1:1 calls ---------------------------------------------------------
-# pending -> accepted -> ringing -> live -> awaiting_feedback -> completed
-#   side exits: rejected (provider), cancelled (requester), expired (30 min
-#   window), failed (call ended before connecting for the threshold). Every
-#   exit except `completed` releases the requester's hold in full.
+# NEW FLOW (this branch): no wallet. pending -> accepted -> ringing -> live
+#   -> awaiting_payment -> completed (`payment_outcome` says paid / refused /
+#   declined / expired). Side exits: rejected (provider), cancelled (requester),
+#   expired (30 min window), failed (the call never connected at all).
+#   `awaiting_feedback` is the classic (wallet) flow's status: never written here.
 CALL_STATUSES = (
     "pending",
     "accepted",
     "ringing",
     "live",
     "awaiting_feedback",
+    "awaiting_payment",
     "completed",
     "rejected",
     "cancelled",
@@ -835,13 +837,23 @@ CALL_STATUSES = (
 )
 # At most one of these per requester/provider pair (partial unique index below).
 CALL_OPEN_STATUSES = ("pending", "accepted", "ringing", "live")
-# Statuses in which the requester's hold is still frozen and the rest of the
-# offer may still be charged — what the wallet counts as "committed".
-CALL_HOLDING_STATUSES = CALL_OPEN_STATUSES + ("awaiting_feedback",)
 
 
 def _sql_in(values: tuple[str, ...]) -> str:
     return ", ".join(f"'{v}'" for v in values)
+
+
+class CallPaymentStanding(Base):
+    """An admin forgave this user's unpaid-call strikes at `reset_at`: only strikes after that time
+    count towards the block (see services/call_payments.py)."""
+
+    __tablename__ = "call_payment_standing"
+
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), primary_key=True
+    )
+    reset_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), nullable=False)
+    reset_by: Mapped[str | None] = mapped_column(String(255), nullable=True)
 
 
 class UserLocationTracking(Base):
@@ -934,7 +946,29 @@ class CallRequest(Base):
     requester_device_id: Mapped[str | None] = mapped_column(String(255), nullable=True)
     provider_device_id: Mapped[str | None] = mapped_column(String(255), nullable=True)
 
-    # Settlement.
+    # Direct payment (new flow): the requester pays the provider's UPI ID after the call.
+    # `hold_amount` is the MINIMUM payable (no money is frozen anywhere any more).
+    payment_outcome: Mapped[str | None] = mapped_column(String(16), nullable=True)
+    paid_amount: Mapped[Decimal | None] = mapped_column(Numeric(12, 2), nullable=True)
+    payment_decided_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=False), nullable=True)
+    payment_reason: Mapped[str | None] = mapped_column(Text, nullable=True)
+    payee_upi_id: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    upi_reference: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    provider_confirmed: Mapped[bool | None] = mapped_column(Boolean, nullable=True)
+    provider_confirmed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=False), nullable=True)
+    threshold_met: Mapped[bool | None] = mapped_column(Boolean, nullable=True)
+    provider_media_on: Mapped[bool | None] = mapped_column(Boolean, nullable=True)
+    counts_as_strike: Mapped[bool] = mapped_column(Boolean, default=False, server_default=text("false"), nullable=False)
+    # One count per heartbeat while both were in the call; the fractions say how long a mic / camera was on.
+    provider_beats: Mapped[int] = mapped_column(Integer, default=0, server_default=text("0"), nullable=False)
+    provider_mic_beats: Mapped[int] = mapped_column(Integer, default=0, server_default=text("0"), nullable=False)
+    provider_camera_beats: Mapped[int] = mapped_column(Integer, default=0, server_default=text("0"), nullable=False)
+    requester_beats: Mapped[int] = mapped_column(Integer, default=0, server_default=text("0"), nullable=False)
+    requester_mic_beats: Mapped[int] = mapped_column(Integer, default=0, server_default=text("0"), nullable=False)
+    requester_camera_beats: Mapped[int] = mapped_column(Integer, default=0, server_default=text("0"), nullable=False)
+    requester_saw_video_beats: Mapped[int] = mapped_column(Integer, default=0, server_default=text("0"), nullable=False)
+
+    # Settlement (classic flow; unused by the new one except `feedback_deadline`, the payment deadline).
     feedback_deadline: Mapped[datetime | None] = mapped_column(DateTime(timezone=False), nullable=True)
     satisfied: Mapped[bool | None] = mapped_column(Boolean, nullable=True)
     settled_amount: Mapped[Decimal | None] = mapped_column(Numeric(12, 2), nullable=True)

@@ -17,7 +17,7 @@ from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
 import app as app_module
 from database import get_session
-from db.base import CallBehaviourEvent, CallRequest, WalletTransaction
+from db.base import CallBehaviourEvent, CallRequest
 from middleware.auth import create_access_token
 from services import call_requests as svc
 from services import wallet as wallet_service
@@ -30,7 +30,6 @@ from tests.test_call_requests import (  # noqa: F401  (fixtures are used by name
     _asyncpg_url,
     anyio_backend,
     connect_call,
-    fund,
     make_post,
     make_user,
     needs_db,
@@ -80,7 +79,6 @@ async def test_full_flow_over_http(api):
     # no token -> 401
     assert (await api.get("/api/call-requests/incoming")).status_code == 401
 
-    # an empty wallet: 402 with a plain-string detail AND the machine-readable code + shortfall
     body = {
         "providerId": str(provider.id),
         "truckRouteId": str(post.id),
@@ -88,29 +86,18 @@ async def test_full_flow_over_http(api):
         "durationMinutes": 15,
         "amount": "150",
     }
-    r = await api.post("/api/call-requests", json=body, headers=auth(requester))
-    assert r.status_code == 402
-    assert isinstance(r.json()["detail"], str)
-    assert r.json()["code"] == "INSUFFICIENT_BALANCE" and r.json()["shortfall"] == "150.00"
-
-    # recharge (dev path), then the request goes through
-    r = await api.post(
-        f"/api/wallet/{requester.id}/dev-credit",
-        json={"amount": "500", "idempotencyKey": str(uuid.uuid4())},
-        headers=auth(requester),
-    )
-    assert r.status_code == 200
+    # no wallet, no balance needed: the request just goes through
     r = await api.post("/api/call-requests", json=body, headers=auth(requester))
     assert r.status_code == 201, r.text
     req = r.json()["request"]
     assert req["status"] == "pending" and req["role"] == "requester"
-    assert req["amount"] == "150.00" and req["holdAmount"] == "37.50"
+    assert req["amount"] == "150.00" and req["holdAmount"] == "37.50" and req["minimumAmount"] == "37.50"
     assert req["requester"]["name"] == "Asha" and req["provider"]["name"] == "Vikram"
+    assert req["payment"] is None and req["paymentOutcome"] is None
 
-    # wallet shows the freeze and the commitment the app uses for "spendable"
+    # nothing is held anywhere
     w = (await api.get(f"/api/wallet/{requester.id}", headers=auth(requester))).json()["wallet"]
-    assert (w["availableBalance"], w["reservedBalance"]) == ("462.50", "37.50")
-    assert (w["callCommitments"], w["spendableBalance"]) == ("112.50", "350.00")
+    assert (w["availableBalance"], w["reservedBalance"]) == ("0.00", "0.00")
 
     # the driver's queue
     q = (await api.get("/api/call-requests/incoming", headers=auth(provider))).json()
@@ -138,27 +125,104 @@ async def test_full_flow_over_http(api):
     )
     assert r.status_code == 400 and r.json()["code"] == "UNKNOWN_EVENT"
 
-    # the call happens (call stage not built yet: stand in for it), requester is satisfied
+    # the call happens (stand in for it): the requester is asked to pay and is shown whom to pay
     await connect_call(api.factory, type("R", (), {"id": uuid.UUID(req["id"])}), seconds=240)
     r = await api.get(f"/api/call-requests/{req['id']}", headers=auth(requester))
-    assert r.json()["request"]["status"] == "awaiting_feedback"
+    shown = r.json()["request"]
+    assert shown["status"] == "awaiting_payment" and shown["thresholdMet"] is True
+    assert shown["payment"]["upiId"] == provider.upi_id and shown["payment"]["payeeName"] == "Vikram"
+    assert (shown["payment"]["fullAmount"], shown["payment"]["minimumAmount"]) == ("150.00", "37.50")
+    assert shown["payment"]["thresholdMet"] is True and shown["payment"]["deadline"]
+    # the driver never sees the "pay" block, and an outsider sees nothing at all
+    assert (await api.get(f"/api/call-requests/{req['id']}", headers=auth(provider))).json()["request"]["payment"] is None
     assert (await api.get("/api/call-requests/outgoing?activeOnly=true", headers=auth(requester))).json()["requests"][0]["id"] == req["id"]
 
-    r = await api.post(f"/api/call-requests/{req['id']}/feedback", json={"satisfied": True}, headers=auth(requester))
-    assert r.status_code == 200
-    done = r.json()["request"]
-    assert done["status"] == "completed" and done["settledAmount"] == "150.00" and done["satisfied"] is True
+    # bad amount types are refused, the driver cannot pay for the requester
+    r = await api.post(f"/api/call-requests/{req['id']}/payment/paid", json={"amountType": "half"}, headers=auth(requester))
+    assert r.status_code == 400 and r.json()["code"] == "INVALID_AMOUNT_TYPE"
+    r = await api.post(f"/api/call-requests/{req['id']}/payment/paid", json={"amountType": "full"}, headers=auth(provider))
+    assert r.status_code == 403 and r.json()["code"] == "NOT_REQUESTER"
 
-    rw = (await api.get(f"/api/wallet/{requester.id}", headers=auth(requester))).json()["wallet"]
-    pw = (await api.get(f"/api/wallet/{provider.id}", headers=auth(provider))).json()["wallet"]
-    assert (rw["availableBalance"], rw["reservedBalance"]) == ("350.00", "0.00")
-    assert pw["availableBalance"] == "150.00"
-    txns = (await api.get(f"/api/wallet/{provider.id}/transactions", headers=auth(provider))).json()["transactions"]
-    assert any(t["type"] == "call_earning" and t["referenceType"] == "call_request" for t in txns)
+    r = await api.post(
+        f"/api/call-requests/{req['id']}/payment/paid",
+        json={"amountType": "full", "upiReference": "UPI-TXN-1"},
+        headers=auth(requester),
+    )
+    assert r.status_code == 200, r.text
+    done = r.json()["request"]
+    assert done["status"] == "completed" and done["paymentOutcome"] == "paid" and done["paidAmount"] == "150.00"
+    assert done["payment"] is None and done["providerConfirmed"] is None
+
+    # the driver confirms they got it
+    r = await api.post(f"/api/call-requests/{req['id']}/payment/confirm", json={"received": True}, headers=auth(provider))
+    assert r.json()["request"]["providerConfirmed"] is True
+    r = await api.post(f"/api/call-requests/{req['id']}/payment/confirm", json={"received": True}, headers=auth(requester))
+    assert r.status_code == 403 and r.json()["code"] == "NOT_PROVIDER"
+
+    # no wallet money moved for anyone
+    for user in (requester, provider):
+        w = (await api.get(f"/api/wallet/{user.id}", headers=auth(user))).json()["wallet"]
+        assert (w["availableBalance"], w["reservedBalance"]) == ("0.00", "0.00")
 
     # the finished request no longer blocks a new one for the same pair
     r = await api.post("/api/call-requests", json=body, headers=auth(requester))
     assert r.status_code == 201
+
+
+async def test_declining_over_http_and_the_three_strike_block(api):
+    requester = await make_user(api.factory, "Asha")
+
+    async def counted_call(media="both"):
+        provider = await make_user(api.factory, "Driver")
+        post = await make_post(api.factory, provider)
+        r = await api.post(
+            "/api/call-requests",
+            json={"providerId": str(provider.id), "truckRouteId": str(post.id), "topic": "Load", "durationMinutes": 10, "amount": "100"},
+            headers=auth(requester),
+        )
+        assert r.status_code == 201, r.text
+        rid = r.json()["request"]["id"]
+        await connect_call(api.factory, type("R", (), {"id": uuid.UUID(rid)}), seconds=60, provider_media=media)
+        return provider, post, rid
+
+    # a short call needs a reason
+    provider, post, rid = await counted_call()
+    async with api.factory() as s:
+        row = await s.get(CallRequest, uuid.UUID(rid))
+        row.connected_seconds, row.threshold_met = 10, False
+        await s.commit()
+    r = await api.post(f"/api/call-requests/{rid}/payment/decline", json={}, headers=auth(requester))
+    assert r.status_code == 400 and r.json()["code"] == "REASON_REQUIRED"
+    r = await api.post(f"/api/call-requests/{rid}/payment/decline", json={"reason": "The driver left early"}, headers=auth(requester))
+    assert r.status_code == 200
+    got = r.json()["request"]
+    assert got["paymentOutcome"] == "declined" and got["paymentReason"] == "The driver left early"
+
+    # three counted refusals, then the block
+    for _ in range(3):
+        provider, post, rid = await counted_call()
+        r = await api.post(f"/api/call-requests/{rid}/payment/decline", json={}, headers=auth(requester))
+        assert r.status_code == 200 and r.json()["request"]["paymentOutcome"] == "refused"
+    mine = (await api.get("/api/call-requests/payment-standing/me", headers=auth(requester))).json()["standing"]
+    assert (mine["strikes"], mine["blocked"], mine["strikeLimit"]) == (3, True, 3)
+    r = await api.post(
+        "/api/call-requests",
+        json={"providerId": str(provider.id), "truckRouteId": str(post.id), "topic": "Load", "durationMinutes": 10, "amount": "100"},
+        headers=auth(requester),
+    )
+    assert r.status_code == 403 and r.json()["code"] == "CALL_PAYMENTS_BLOCKED" and isinstance(r.json()["detail"], str)
+
+
+async def test_a_driver_without_a_upi_id_gets_a_clear_409(api):
+    requester = await make_user(api.factory, "Asha")
+    provider = await make_user(api.factory, "Vikram", upi=False)
+    post = await make_post(api.factory, provider)
+    r = await api.post(
+        "/api/call-requests",
+        json={"providerId": str(provider.id), "truckRouteId": str(post.id), "topic": "Load", "durationMinutes": 10, "amount": "100"},
+        headers=auth(requester),
+    )
+    assert r.status_code == 409 and r.json()["code"] == "PROVIDER_UPI_MISSING"
 
 
 async def test_bad_input_and_ids(api):
@@ -212,7 +276,6 @@ async def test_the_call_itself_over_http(api, clock):  # noqa: F811
     requester = await make_user(api.factory, "Asha")
     provider = await make_user(api.factory, "Vikram")
     post = await make_post(api.factory, provider)
-    await fund(api.factory, requester, "500")
 
     r = await api.post(
         "/api/call-requests",
@@ -247,30 +310,29 @@ async def test_the_call_itself_over_http(api, clock):  # noqa: F811
     assert r.json()["request"]["ringEndsAt"] is None  # only shown while it is ringing
     assert r.json()["call"]["audioOnly"] is True and r.json()["call"]["channelName"] == call["channelName"]
 
-    # 40 s of heartbeats from both apps
+    # 40 s of heartbeats from both apps (the apps also say whether mic / camera / video are on)
     state = None
+    media = {"peerPresent": True, "micOn": True, "cameraOn": True}
     for _ in range(8):
         clock.advance(5)
-        state = (await api.post(f"{base}/heartbeat", json={"peerPresent": True}, headers=auth(requester))).json()
-        await api.post(f"{base}/heartbeat", json={"peerPresent": True}, headers=auth(provider))
+        state = (await api.post(f"{base}/heartbeat", json={**media, "cameraOn": False, "peerVideoOn": True}, headers=auth(requester))).json()
+        await api.post(f"{base}/heartbeat", json=media, headers=auth(provider))
     assert state["status"] == "live" and state["connectedSeconds"] >= 30 and state["remainingSeconds"] > 0
     assert (await api.post(f"{base}/heartbeat", json={}, headers=auth(provider))).status_code == 422  # peerPresent is required
 
-    # hang up -> satisfaction prompt -> paid in full
+    # hang up -> the requester is asked to pay
     r = await api.post(f"{base}/end", headers=auth(provider))
-    assert r.json()["request"]["status"] == "awaiting_feedback"
-    assert (await api.post(f"{base}/end", headers=auth(requester))).json()["request"]["status"] == "awaiting_feedback"
-    r = await api.post(f"{base}/feedback", json={"satisfied": True}, headers=auth(requester))
-    assert r.json()["request"]["settledAmount"] == "200.00"
-    pw = (await api.get(f"/api/wallet/{provider.id}", headers=auth(provider))).json()["wallet"]
-    assert pw["availableBalance"] == "200.00"
+    assert r.json()["request"]["status"] == "awaiting_payment"
+    assert (await api.post(f"{base}/end", headers=auth(requester))).json()["request"]["status"] == "awaiting_payment"
+    async with api.factory() as s:
+        row = await s.get(CallRequest, uuid.UUID(rid))
+    assert row.provider_media_on is True and row.threshold_met is True and row.requester_saw_video_beats >= 7
 
 
 async def test_a_missed_ring_is_a_409_the_app_can_act_on(api, clock):  # noqa: F811
     requester = await make_user(api.factory)
     provider = await make_user(api.factory)
     post = await make_post(api.factory, provider)
-    await fund(api.factory, requester, "500")
     rid = (
         await api.post(
             "/api/call-requests",
@@ -290,7 +352,6 @@ async def test_events_with_the_timestamps_the_apps_really_send_are_stored(api, c
     requester = await make_user(api.factory, "Asha")
     provider = await make_user(api.factory, "Vikram")
     post = await make_post(api.factory, provider)
-    await fund(api.factory, requester, "500")
     r = await api.post(
         "/api/call-requests",
         json={"providerId": str(provider.id), "truckRouteId": str(post.id), "topic": "Load", "durationMinutes": 10, "amount": "100"},
@@ -324,7 +385,6 @@ async def test_a_wildly_wrong_phone_clock_cannot_put_events_in_the_future(api, c
     requester = await make_user(api.factory, "Asha")
     provider = await make_user(api.factory, "Vikram")
     post = await make_post(api.factory, provider)
-    await fund(api.factory, requester, "500")
     r = await api.post(
         "/api/call-requests",
         json={"providerId": str(provider.id), "truckRouteId": str(post.id), "topic": "Load", "durationMinutes": 10, "amount": "100"},
@@ -345,7 +405,6 @@ async def test_the_device_header_keeps_a_live_call_on_one_phone(api):
     post = await make_post(api.factory, provider)
     from tests.test_call_requests import request_call
 
-    await fund(api.factory, requester, "500")
     req = await request_call(api.factory, requester, provider, post)
     phone = lambda user, device: {**auth(user), "X-Device-Id": device}  # noqa: E731
     assert (await api.post(f"/api/call-requests/{req.id}/accept", headers=auth(provider))).status_code == 200

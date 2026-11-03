@@ -1,4 +1,4 @@
-"""Paid 1:1 call requests (request -> accept -> hold -> call -> settle).
+"""Paid 1:1 call requests, new flow (request -> accept -> call -> the requester pays the driver's UPI ID).
 
 Rule violations raise services.call_requests.CallRequestError, turned into
 `{"detail": <message>, "code": <STABLE_CODE>, ...numbers}` by the handler in
@@ -18,11 +18,13 @@ from db.serializers import call_request_to_dict
 from middleware.auth import get_current_user
 from models import (
     CallBehaviourEventsRequest,
-    CallFeedbackRequest,
+    CallConfirmPaymentRequest,
+    CallDeclineRequest,
     CallHeartbeatRequest,
+    CallPayRequest,
     CreateCallRequestRequest,
 )
-from services import call_requests as svc
+from services import call_payment_standing, call_requests as svc
 from services.call_requests import CallRequestError
 
 router = APIRouter(prefix="/call-requests", tags=["call-requests"])
@@ -68,9 +70,10 @@ async def create_call_request(
     session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user),
 ):
-    """Ask a driver for a paid 1:1 call. The whole offer must be in the wallet
-    (otherwise `402 INSUFFICIENT_BALANCE` with the `shortfall` to recharge); only
-    the call amount (`holdAmount`: 25% of the offer, at least ₹25) is frozen."""
+    """Ask a driver for a paid 1:1 call. No wallet, nothing is held: the requester pays the
+    driver's UPI ID after the call. `409 PROVIDER_UPI_MISSING` if the driver hasn't added
+    a UPI ID; `403 CALL_PAYMENTS_BLOCKED` after too many unpaid calls. `holdAmount` /
+    `minimumAmount` is the least payable (25% of the offer, at least ₹25)."""
     request = await svc.create_request(
         session,
         current_user,
@@ -104,7 +107,7 @@ async def outgoing_requests(
     device_id: DeviceId = None,
 ):
     """The caller's own requests, newest first. `activeOnly=true` keeps only the
-    ones still going (open, or waiting for their "were you satisfied?" answer)."""
+    ones still going (open, or `awaiting_payment`: the call is over and not paid yet)."""
     requests = await svc.list_outgoing(session, current_user.id, active_only=active_only)
     return {"success": True, "requests": await _respond(session, requests, current_user, device_id)}
 
@@ -137,7 +140,7 @@ async def reject_call_request(
     session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user),
 ):
-    """Driver says no. The requester's frozen money is released."""
+    """Driver says no."""
     request = await svc.reject(session, _uuid(request_id, "request id"), current_user.id)
     return await _one(session, request, current_user)
 
@@ -198,9 +201,17 @@ async def call_heartbeat(
     """Both apps call this every ~5 s on the call screen. Returns the live state:
     `status`, `connectedSeconds`, `remainingSeconds`, `peerOnline`. When `status` is no
     longer `live` the call is over: leave the channel and, for the requester,
-    show the satisfaction prompt if it is `awaiting_feedback`."""
+    show the payment sheet if it is `awaiting_payment`. `micOn`, `cameraOn` and
+    `peerVideoOn` are optional and counted for the call's behaviour record."""
     state = await svc.heartbeat(
-        session, _uuid(request_id, "request id"), current_user.id, body.peerPresent, device_id
+        session,
+        _uuid(request_id, "request id"),
+        current_user.id,
+        body.peerPresent,
+        device_id,
+        mic_on=body.micOn,
+        camera_on=body.cameraOn,
+        peer_video_on=body.peerVideoOn,
     )
     return {"success": True, **state}
 
@@ -213,25 +224,63 @@ async def end_call(
     device_id: DeviceId = None,
 ):
     """Hang up. Ringing: the driver cancels the ring (can start again), the requester
-    declines it (request cancelled, money released). Live: the call ends and is settled
-    from the connected time (under 30 s costs nothing, otherwise the requester is
-    asked if they were satisfied). Already over: returned unchanged."""
+    declines it (request cancelled). Live: the call ends and the requester is asked to pay
+    (`awaiting_payment`) unless it never connected at all (`failed`). Already over:
+    returned unchanged."""
     request = await svc.end_call(session, _uuid(request_id, "request id"), current_user.id, device_id)
     return await _one(session, request, current_user, device_id)
 
 
-@router.post("/{request_id}/feedback")
-async def call_request_feedback(
+@router.post("/{request_id}/payment/paid")
+async def call_request_paid(
     request_id: str,
-    body: CallFeedbackRequest,
+    body: CallPayRequest,
     session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user),
 ):
-    """Requester's answer to "were you satisfied?" after a call that connected.
-    `satisfied: true` pays the full offer, `false` only the call amount. Safe to
-    retry with the same answer."""
-    request = await svc.submit_feedback(session, _uuid(request_id, "request id"), current_user.id, body.satisfied)
+    """Requester: "I paid the driver's UPI ID" (after the app opened a UPI app and they
+    came back). `amountType` is `full` or `minimum`. The server can't see the money: it
+    records the claim and asks the driver to confirm. Safe to retry with the same answer."""
+    request = await svc.pay(
+        session, _uuid(request_id, "request id"), current_user.id, body.amountType, body.upiReference
+    )
     return await _one(session, request, current_user)
+
+
+@router.post("/{request_id}/payment/decline")
+async def call_request_decline_payment(
+    request_id: str,
+    body: CallDeclineRequest,
+    session: AsyncSession = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+):
+    """Requester will not pay. After a call that reached the threshold this is a refusal
+    (flagged, and a strike when the driver's mic and camera were on); a shorter call needs a
+    `reason` (`400 REASON_REQUIRED`), which the driver is told."""
+    request = await svc.decline(session, _uuid(request_id, "request id"), current_user.id, body.reason)
+    return await _one(session, request, current_user)
+
+
+@router.post("/{request_id}/payment/confirm")
+async def call_request_confirm_payment(
+    request_id: str,
+    body: CallConfirmPaymentRequest,
+    session: AsyncSession = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+):
+    """Driver: "yes, I received it" / "no, I did not" for a payment the requester says they
+    made. Only recorded."""
+    request = await svc.confirm_received(session, _uuid(request_id, "request id"), current_user.id, body.received)
+    return await _one(session, request, current_user)
+
+
+@router.get("/payment-standing/me")
+async def my_payment_standing(
+    session: AsyncSession = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+):
+    """The caller's own record of unpaid calls: `blocked`, `strikes`, `strikeLimit`."""
+    return {"success": True, "standing": await call_payment_standing.standing(session, current_user.id)}
 
 
 @router.post("/{request_id}/events")

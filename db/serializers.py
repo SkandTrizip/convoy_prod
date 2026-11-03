@@ -329,6 +329,21 @@ def call_request_party_to_dict(user: User | None) -> dict:
     }
 
 
+def payment_details(request: CallRequest, provider: User | None, viewer_id: uuid.UUID) -> dict | None:
+    """What the requester needs to pay (the driver's UPI ID is shown to them only, and only while a payment
+    is due). None for everyone else / at any other time."""
+    if request.status != "awaiting_payment" or viewer_id != request.requester_id:
+        return None
+    return {
+        "upiId": request.payee_upi_id or (provider.upi_id if provider else None),
+        "payeeName": provider.name if provider else None,
+        "fullAmount": str(request.amount),
+        "minimumAmount": str(request.hold_amount),
+        "thresholdMet": bool(request.threshold_met),
+        "deadline": request.feedback_deadline.isoformat() if request.feedback_deadline else None,
+    }
+
+
 def call_request_to_dict(
     request: CallRequest,
     requester: User | None,
@@ -336,9 +351,8 @@ def call_request_to_dict(
     viewer_id: uuid.UUID,
     on_another_device: bool = False,
 ) -> dict:
-    """`role` tells the app which side the caller is. `holdAmount` is the "call
-    amount" (frozen at request time, owed once the call connects); `amount` is
-    the full offer paid if the requester says they were satisfied. `onAnotherDevice`: the
+    """`role` tells the app which side the caller is. `amount` is the offer; `holdAmount` /
+    `minimumAmount` is the least payable (nothing is held in the new flow). `onAnotherDevice`: the
     call is on the viewer's OTHER phone (they are signed in on several), so this phone must
     not offer to join, rejoin or decline it."""
     return {
@@ -363,7 +377,14 @@ def call_request_to_dict(
         "callEndedAt": request.call_ended_at.isoformat() if request.call_ended_at else None,
         "connectedSeconds": request.connected_seconds,
         "feedbackDeadline": request.feedback_deadline.isoformat() if request.feedback_deadline else None,
-        "satisfied": request.satisfied,
-        "settledAmount": str(request.settled_amount) if request.settled_amount is not None else None,
+        # New flow: `holdAmount` is the minimum payable. Nothing is held; the requester pays UPI directly.
+        "minimumAmount": str(request.hold_amount),
+        "thresholdMet": request.threshold_met,
+        "paymentOutcome": request.payment_outcome,
+        "paidAmount": str(request.paid_amount) if request.paid_amount is not None else None,
+        "paymentReason": request.payment_reason,
+        "paymentDecidedAt": request.payment_decided_at.isoformat() if request.payment_decided_at else None,
+        "providerConfirmed": request.provider_confirmed,
+        "payment": payment_details(request, provider, viewer_id),
         "onAnotherDevice": on_another_device,
     }

@@ -20,6 +20,7 @@ from services.blob_storage import (
     upload_profile_photo,
 )
 from services.notifications import send_push_notification
+from services import call_payment_standing
 from services.user_deletion import delete_user_cascade
 from services.wallet import list_pending_redeems, mark_redeem_paid, reject_redeem
 
@@ -348,6 +349,25 @@ def _redeem_request_to_dict(redeem_req) -> dict:
         "status": redeem_req.status,
         "createdAt": redeem_req.created_at.isoformat(),
     }
+
+
+@router.get("/call-payments/flagged")
+async def flagged_call_requesters(session: AsyncSession = Depends(get_session)):
+    """Everyone who refused to pay (or never answered the payment sheet) for a call that reached
+    the threshold: `flaggedCalls`, `strikes` (the ones where the driver's mic and camera were on),
+    and `blocked` (strikes reached the limit)."""
+    return {"success": True, "users": await call_payment_standing.list_flagged(session)}
+
+
+@router.post("/call-payments/{user_id}/reset")
+async def reset_call_payment_standing(
+    user_id: str,
+    admin: AdminUser = Depends(get_current_admin),
+    session: AsyncSession = Depends(get_session),
+):
+    """Forgive a user's unpaid-call strikes so far: they can request calls again (new strikes count)."""
+    standing = await call_payment_standing.reset_standing(session, parse_uuid(user_id), str(admin.id))
+    return {"success": True, "standing": standing}
 
 
 @router.get("/wallet/redeem/pending")

@@ -89,20 +89,27 @@ async def live(sessions, **kwargs):
     return requester, provider, req
 
 
-async def beat(sessions, req, user, present=True):
+async def beat(sessions, req, user, present=True, **media):
     async with sessions() as s:
-        return await svc.heartbeat(s, req.id, user.id, present)
+        return await svc.heartbeat(s, req.id, user.id, present, **media)
 
 
 async def both_beat(sessions, clock, req, requester, provider, seconds, step=5, *, requester_present=True,
-                    provider_present=True, requester_beats=True, provider_beats=True):
+                    provider_present=True, requester_beats=True, provider_beats=True,
+                    provider_mic=True, provider_camera=True, requester_saw_video=True):
     state = None
     for _ in range(seconds // step):
         clock.advance(step)
         if requester_beats:
-            state = await beat(sessions, req, requester, requester_present)
+            state = await beat(
+                sessions, req, requester, requester_present,
+                mic_on=True, camera_on=False, peer_video_on=requester_saw_video,
+            )
         if provider_beats:
-            state = await beat(sessions, req, provider, provider_present)
+            state = await beat(
+                sessions, req, provider, provider_present,
+                mic_on=provider_mic, camera_on=provider_camera, peer_video_on=False,
+            )
     return state
 
 
@@ -190,13 +197,11 @@ async def test_a_ring_that_is_not_answered_in_time_is_missed_and_the_driver_can_
     assert (await reload(sessions, req)).status == "live"
 
 
-async def test_the_requester_declining_the_ring_cancels_and_releases_everything(sessions):
-    requester, provider, req = await accepted(sessions, amount="200", balance="500")
+async def test_the_requester_declining_the_ring_cancels_the_request(sessions):
+    requester, provider, req = await accepted(sessions, amount="200")
     await ring(sessions, req, provider)
     r = await end(sessions, req, requester)
     assert r.status == "cancelled"
-    w = await wallet_of(sessions, requester)
-    assert (w.available_balance, w.reserved_balance) == (D("500.00"), D("0.00"))
 
 
 async def test_the_driver_cancelling_the_ring_takes_the_call_screen_off_the_requesters_phone(sessions):
@@ -225,7 +230,7 @@ async def test_the_driver_cancelling_the_ring_can_start_again(sessions):
 
 async def test_the_whole_request_window_still_ends_a_ringing_request(sessions, clock):
     await drain(sessions)
-    requester, provider, req = await accepted(sessions, amount="200", balance="500")
+    requester, provider, req = await accepted(sessions, amount="200")
     await ring(sessions, req, provider)
     clock.advance(31 * 60)
     await sweep(sessions)
@@ -263,27 +268,30 @@ async def test_a_driver_who_stops_reporting_stops_the_clock_after_the_grace_peri
     assert r.connected_ms // 1000 == 15 + CALL_HEARTBEAT_GRACE_SECONDS
 
 
-async def test_hanging_up_before_30_seconds_costs_nothing(sessions, clock):
-    requester, provider, req = await live(sessions, amount="200", balance="500")
+async def test_hanging_up_before_30_seconds_leaves_a_short_call_to_pay_or_decline(sessions, clock):
+    requester, provider, req = await live(sessions, amount="200")
     await both_beat(sessions, clock, req, requester, provider, 20)  # 15 s
     r = await end(sessions, req, provider)
-    assert r.status == "failed" and r.end_reason == "ended_by_provider"
-    w = await wallet_of(sessions, requester)
-    assert (w.available_balance, w.reserved_balance) == (D("500.00"), D("0.00"))
-    assert (await wallet_of(sessions, provider)).available_balance == D("0.00")
+    assert r.status == "awaiting_payment" and r.end_reason == "ended_by_provider"
+    assert r.connected_seconds == 15 and r.threshold_met is False
 
 
-async def test_a_call_past_30_seconds_asks_the_requester_how_it_went(sessions, clock):
-    requester, provider, req = await live(sessions, amount="200", balance="500")
+async def test_hanging_up_when_nobody_ever_connected_is_a_failed_call(sessions, clock):
+    requester, provider, req = await live(sessions, amount="200")
+    r = await end(sessions, req, provider)  # not one beat from either side
+    assert r.status == "failed" and r.connected_seconds == 0
+
+
+async def test_a_call_past_30_seconds_asks_the_requester_to_pay(sessions, clock):
+    requester, provider, req = await live(sessions, amount="200")
     await both_beat(sessions, clock, req, requester, provider, 40)
     r = await end(sessions, req, requester)
-    assert r.status == "awaiting_feedback" and r.connected_seconds == 35
-    assert (requester.id, "call_feedback_needed") in sessions.pushes
+    assert r.status == "awaiting_payment" and r.connected_seconds == 35 and r.threshold_met is True
+    assert (requester.id, "call_payment_due") in sessions.pushes
 
     async with sessions() as s:
-        done = await svc.submit_feedback(s, req.id, requester.id, True)
-    assert done.settled_amount == D("200.00")
-    assert (await wallet_of(sessions, provider)).available_balance == D("200.00")
+        done = await svc.pay(s, req.id, requester.id, "full")
+    assert done.paid_amount == D("200.00") and done.payment_outcome == "paid"
 
 
 async def test_either_side_can_end_and_a_second_tap_is_harmless(sessions, clock):
@@ -291,9 +299,9 @@ async def test_either_side_can_end_and_a_second_tap_is_harmless(sessions, clock)
     await both_beat(sessions, clock, req, requester, provider, 40)
     first = await end(sessions, req, provider)
     again = await end(sessions, req, requester)
-    assert first.status == again.status == "awaiting_feedback"
+    assert first.status == again.status == "awaiting_payment"
     state = await beat(sessions, req, provider)  # the other app learns it is over
-    assert state["status"] == "awaiting_feedback"
+    assert state["status"] == "awaiting_payment"
 
 
 async def test_ending_a_request_nobody_started_is_refused(sessions):
@@ -329,22 +337,22 @@ async def test_live_call_tokens_end_with_the_chosen_duration(sessions, clock):
 
 async def test_a_call_whose_other_side_never_comes_back_is_ended_from_the_time_so_far(sessions, clock):
     await drain(sessions)
-    requester, provider, req = await live(sessions, amount="200", balance="500")
+    requester, provider, req = await live(sessions, amount="200")
     await both_beat(sessions, clock, req, requester, provider, 40)  # 35 s connected
     clock.advance(CALL_RECONNECT_WINDOW_SECONDS + 1)  # both silent past the window
     await sweep(sessions)
     r = await reload(sessions, req)
-    assert r.status == "awaiting_feedback" and r.end_reason == "disconnected" and r.connected_seconds == 35
+    assert r.status == "awaiting_payment" and r.end_reason == "disconnected" and r.connected_seconds == 35
 
 
-async def test_a_drop_before_30_seconds_that_never_reconnects_costs_nothing(sessions, clock):
+async def test_a_drop_before_30_seconds_that_never_reconnects_is_a_short_call(sessions, clock):
     await drain(sessions)
-    requester, provider, req = await live(sessions, amount="200", balance="500")
+    requester, provider, req = await live(sessions, amount="200")
     await both_beat(sessions, clock, req, requester, provider, 20)  # 15 s
     clock.advance(CALL_RECONNECT_WINDOW_SECONDS + 1)
     await sweep(sessions)
-    assert (await reload(sessions, req)).status == "failed"
-    assert (await wallet_of(sessions, requester)).reserved_balance == D("0.00")
+    r = await reload(sessions, req)
+    assert r.status == "awaiting_payment" and r.threshold_met is False
 
 
 async def test_a_short_drop_inside_the_reconnect_window_keeps_the_call_alive(sessions, clock):
@@ -360,11 +368,11 @@ async def test_a_short_drop_inside_the_reconnect_window_keeps_the_call_alive(ses
 
 async def test_the_call_is_ended_at_the_chosen_duration(sessions, clock):
     await drain(sessions)
-    requester, provider, req = await live(sessions, duration=10, amount="200", balance="500")
+    requester, provider, req = await live(sessions, duration=10, amount="200")
     await both_beat(sessions, clock, req, requester, provider, 100)
     clock.advance(10 * 60)  # well past duration + grace, with beats still arriving
     state = await beat(sessions, req, requester)
-    assert state["status"] == "awaiting_feedback"
+    assert state["status"] == "awaiting_payment"
     r = await reload(sessions, req)
     assert r.end_reason == "time_limit" and r.connected_seconds >= 30
 
@@ -394,11 +402,11 @@ async def events_of(sessions, req):
 
 
 async def test_the_whole_call_leaves_a_readable_trail_for_both_sides(sessions, clock):
-    requester, provider, req = await live(sessions, amount="200", balance="500")
+    requester, provider, req = await live(sessions, amount="200")
     await both_beat(sessions, clock, req, requester, provider, 40)
     await end(sessions, req, provider)
     async with sessions() as s:
-        await svc.submit_feedback(s, req.id, requester.id, False)
+        await svc.decline(s, req.id, requester.id, None)
     trail = await events_of(sessions, req)
     for expected in (
         "request_created",
@@ -406,8 +414,55 @@ async def test_the_whole_call_leaves_a_readable_trail_for_both_sides(sessions, c
         "call_started_by_provider",
         "call_answered",
         "call_ended",
-        "call_connected_enough",
-        "feedback_not_satisfied",
+        "payment_due",
+        "payment_refused",
+        "requester_flagged",
     ):
         assert expected in trail, expected
     assert trail.index("call_started_by_provider") < trail.index("call_answered") < trail.index("call_ended")
+
+
+# --- what each side reports while both are in the call -----------------------------------------------
+
+
+async def test_beats_record_who_had_a_mic_and_camera_on_and_whether_the_requester_saw_video(sessions, clock):
+    requester, provider, req = await live(sessions)
+    await both_beat(sessions, clock, req, requester, provider, 40, provider_camera=False, requester_saw_video=False)
+    r = await reload(sessions, req)
+    assert (r.provider_beats, r.provider_mic_beats, r.provider_camera_beats) == (8, 8, 0)
+    # The requester's very first beat comes before the driver has reported at all, so it isn't "both in" yet.
+    assert (r.requester_beats, r.requester_mic_beats, r.requester_camera_beats) == (7, 7, 0)
+    assert r.requester_saw_video_beats == 0
+
+
+async def test_beats_before_both_are_in_the_call_are_not_counted(sessions, clock):
+    requester, provider, req = await live(sessions)
+    await both_beat(sessions, clock, req, requester, provider, 20, requester_present=False)
+    r = await reload(sessions, req)
+    assert r.provider_beats == 0 and r.requester_beats == 0
+
+
+async def test_a_provider_whose_mic_and_camera_were_on_for_most_of_the_call_counts_as_media_on(sessions, clock):
+    requester, provider, req = await live(sessions)
+    await both_beat(sessions, clock, req, requester, provider, 60)  # 12 beats, all on
+    await both_beat(sessions, clock, req, requester, provider, 25, provider_camera=False)  # 5 beats, camera off
+    r = await end(sessions, req, requester)
+    assert r.provider_media_on is True  # camera on for 12 of 17 beats
+
+
+async def test_a_provider_whose_camera_was_mostly_off_does_not_count_as_media_on(sessions, clock):
+    requester, provider, req = await live(sessions)
+    await both_beat(sessions, clock, req, requester, provider, 20)  # 4 beats on
+    await both_beat(sessions, clock, req, requester, provider, 60, provider_camera=False)  # 12 beats off
+    r = await end(sessions, req, requester)
+    assert r.threshold_met is True and r.provider_media_on is False
+
+
+async def test_an_app_that_reports_nothing_about_its_media_never_counts_as_media_on(sessions, clock):
+    requester, provider, req = await live(sessions)
+    for _ in range(8):
+        clock.advance(5)
+        await beat(sessions, req, requester)
+        await beat(sessions, req, provider)  # an older app: no micOn / cameraOn
+    r = await end(sessions, req, requester)
+    assert r.threshold_met is True and r.provider_media_on is False

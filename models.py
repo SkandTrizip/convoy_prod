@@ -462,10 +462,26 @@ class CreateCallRequestRequest(BaseModel):
     amount: Decimal = Field(..., gt=0, max_digits=12, decimal_places=2, description="Offer in INR (50 to 10000)")
 
 
-class CallFeedbackRequest(BaseModel):
-    satisfied: bool = Field(
-        ..., description="True pays the full offer; false pays only the call amount (the part frozen up front)"
+class CallPayRequest(BaseModel):
+    amountType: str = Field(
+        ..., description='"full" (the whole offer) or "minimum" (max(25% of the offer, Rs25)): what the requester paid'
     )
+    upiReference: Optional[str] = Field(
+        None, max_length=100, description="The UPI transaction id, if the UPI app handed it back"
+    )
+
+
+class CallDeclineRequest(BaseModel):
+    reason: Optional[str] = Field(
+        None,
+        max_length=500,
+        description="Why the requester isn't paying. Required (3+ characters) when the call was shorter than the "
+        "threshold; optional after a longer call, where declining is a refusal.",
+    )
+
+
+class CallConfirmPaymentRequest(BaseModel):
+    received: bool = Field(..., description="Did the provider receive the money the requester says they paid?")
 
 
 class CallHeartbeatRequest(BaseModel):
@@ -475,6 +491,9 @@ class CallHeartbeatRequest(BaseModel):
         "(e.g. from the SDK's user-joined / user-offline events)? Time only counts "
         "while both sides say yes.",
     )
+    micOn: Optional[bool] = Field(None, description="Is this phone's own microphone on right now?")
+    cameraOn: Optional[bool] = Field(None, description="Is this phone's own camera on right now?")
+    peerVideoOn: Optional[bool] = Field(None, description="Is the other person's video showing on this phone?")
 
 
 class CallBehaviourEventItem(BaseModel):

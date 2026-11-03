@@ -93,9 +93,13 @@ CALL_DURATION_OPTIONS_MINUTES = (10, 15, 30)
 # One window from creation covers pending + accepted + ringing; then the hold is released.
 CALL_REQUEST_TTL_MINUTES = int(os.environ.get("CALL_REQUEST_TTL_MINUTES", "30"))
 CALL_RING_SECONDS = int(os.environ.get("CALL_RING_SECONDS", "45"))
-# After a call that connected, the requester gets this long to answer "were you
-# satisfied?"; no answer means they pay only the call amount.
+# After a call that connected, the requester gets this long to pay (or decline). Not answering
+# counts as not paying.
 CALL_FEEDBACK_TTL_HOURS = int(os.environ.get("CALL_FEEDBACK_TTL_HOURS", "24"))
+# A requester whose calls of >= CALL_CONNECT_THRESHOLD_SECONDS (with the provider's mic and camera on for
+# at least CALL_MEDIA_ON_MIN_FRACTION of it) went unpaid this many times can't request calls any more.
+CALL_PAYMENT_STRIKE_LIMIT = int(os.environ.get("CALL_PAYMENT_STRIKE_LIMIT", "3"))
+CALL_MEDIA_ON_MIN_FRACTION = float(os.environ.get("CALL_MEDIA_ON_MIN_FRACTION", "0.5"))
 CALL_SWEEP_INTERVAL_SECONDS = int(os.environ.get("CALL_SWEEP_INTERVAL_SECONDS", "30"))
 # A live call: each app reports in every few seconds. A side counts as "in the call"
 # if the server heard from it within HEARTBEAT_GRACE; time counts toward the 30 s
