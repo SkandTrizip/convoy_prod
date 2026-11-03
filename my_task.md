@@ -705,15 +705,15 @@ Two things I added that you didn't ask for, because the server can't see a UPI p
 
 **The database (your question):** the new flow needs migration 030 (additive: new columns on `call_requests`, one wider status check, one new table). I checked the classic backend's own 279 tests against a database that has it: all pass. But a request left **open** (pending / accepted / ringing / live) by one flow breaks the other backend's background sweep (the classic one tries to give back a hold that was never taken), so I made the new flow use a **separate database**. One command makes it from your current one; the classic backend keeps using the original, untouched.
 
-- [ ] **Step M1: Make the new-flow database.** From `convoy_prod/` (copies the database you name, adds migration 030 to the copy, changes nothing in the original; works on a local database, for Azure use its admin URL):
+- [ ] **Step M1: Make the new-flow database.** From `convoy_prod/` (copies the database you name, adds migration 030 to the copy, changes nothing in the original; I have only tried it on the local database, on Azure it needs permission to create a database and the PostGIS extension):
   ```bash
   scripts/new_flow_db.sh postgresql://postgres:postgres@127.0.0.1:5433/convoy_dev
   ```
   It prints the `DATABASE_URL` to use (`.../convoy_newflow`). Re-run it later (after `DROP DATABASE convoy_newflow;`) for a fresh copy of your newest data.
-- [ ] **Step M2: Run each flow's backend.** Switch branch, then start with the matching database (stop the other one first, they both use port 8000):
+- [ ] **Step M2: Run each flow's backend.** Switch the backend branch (classic = `main`, new = `feat/new-demand-call-flow`), then start with the matching database (stop the other one first, they both use port 8000):
   ```bash
   # classic (wallet hold):
-  git checkout feat/new-changes   # or main
+  git checkout main
   FIREBASE_CREDENTIALS_PATH=credentials/firebase-admin.json DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:5433/convoy_dev DEV_WALLET_CREDIT_ENABLED=true .venv/bin/uvicorn server:app --host 0.0.0.0 --port 8000 --reload
   # new (direct UPI payment):
   git checkout feat/new-demand-call-flow
