@@ -38,7 +38,7 @@ The app opens a UPI app (`upi://pay?pa=<upiId>&pn=<name>&am=<amount>&cu=INR&tn=<
 - Not answering within `CALL_FEEDBACK_TTL_HOURS` (24): the sweep closes it as `expired`, the same as a refusal for a call that counted.
 - The driver's UPI ID is copied onto the request when the call ends (`payee_upi_id`), so changing it later cannot redirect a payment.
 
-## Payments ledger (Profile > Transactions History)
+## Payments ledger (Profile > Transactions History page)
 
 `GET /api/call-requests/payments?direction=received|sent&limit=20&offset=0` (limit 1 to 100): the caller's calls that ended `paid`, newest payment first. `received` = the caller was the driver, `sent` = the caller was the requester. Calls that were refused, declined, expired or are still waiting for payment are not listed.
 
