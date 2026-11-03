@@ -652,6 +652,41 @@ Your answers I built to: (1) update the live post's pin **and** keep a per-user 
   ```
 - [ ] **Step J4 (before the Play Store release): background location needs a declaration.** In Play Console > App content > Sensitive permissions, declare background location for "sharing the truck's location for 48 hours after a post so people can send service requests", and upload the short screen recording Google asks for (the consent dialog is the in-app disclosure). Also update your privacy policy: location is collected in the background for 48 hours after posting and kept only as the last position.
 
+### Part K: The active truck post on Home, slideable with the 1:1 requests (2 Nov)
+
+Built in `convoynew` only (no backend change), tested with fakes, **not yet looked at on a phone**. At the bottom of Home, where the 1:1 request pill floats, the driver now also sees their **active post**:
+line 1 `Pune → Delhi +2` (origin, first destination, how many other stops), line 2 the truck number. Tapping it does nothing (it isn't a button).
+
+- With **both** an active post and waiting requests they are two slides with dots: **requests first**, the post one swipe away. A **new** request slides in by itself if you are looking at the post; nothing else ever moves it on its own.
+  With only one of them it shows alone (no dots, requests look exactly as before); with neither, nothing shows.
+- "Active" = the post has not expired (a person has at most one). The card hides itself at the expiry time, is refreshed when a post is made, edited, reactivated or deleted, and when the app comes back to the front.
+- The two slides are equally tall, as tall as the taller one: the request pill grows on a narrow phone with a long name, so the slide height is not fixed.
+- The place names are shortened to the part before the first comma ("Pune, Maharashtra" shows as "Pune") so the route fits on one line.
+- It shows even when 1:1 requests are switched off (`FeatureFlags.oneToOneEnabled`); then there is just the post card.
+- Code: `lib/features/home/presentation/widgets/home_bottom_cards.dart` and `active_trip_card.dart`; `HomeScreen` uses `HomeBottomCards`. The request banner is unchanged except it exposes `waitingRequests()`. No new texts to translate. App: 487 tests pass (19 new in `test/features/home/`), only the old template test fails.
+
+- [ ] **Step K1: Look at it on a phone** (hot restart is enough): post a truck, go Home: the card should be at the bottom; have another account send a 1:1 request: it should slide in with dots; swipe between them; tap the post card: nothing opens.
+
+### Part L: Wallet on the Profile page, UPI ID and withdrawing (3 Nov)
+
+Built (backend + `convoynew`), tested with fakes, **not yet looked at on a phone**. Details for the app developer: `docs/WALLET_WITHDRAW_API.md`.
+
+- **Profile page:** the top box is now a card (navy, like the wallet card): photo (or initials), name, a **KYC chip** ("KYC: ✓ Done", "KYC: Pending", "KYC: In Review", "KYC: Rejected", "KYC: Photo Pending") and the **wallet amount, underlined** so it looks tappable. It shows even though the Wallet tab is still switched off (`FeatureFlags.walletEnabled`). If the wallet can't be loaded the amount shows `₹ --` and a tap tries again; it reloads when you come back to the tab and when the app returns to the front.
+- **Tap the amount:** a bottom sheet with the balance, the minimum, the **UPI ID** (a field to add one right there; once saved it shows with a "Change" button) and a **Withdraw** button. Withdraw is off until: a UPI ID is saved, the spendable balance is at least the minimum, KYC is approved (existing rule, kept at your request) and the wallet isn't frozen. The reason is written under the button.
+- **Minimum is ₹250** (was ₹500). It lives in `config.py` (`MIN_REDEEM_AMOUNT_INR`, can be overridden by the env var of the same name; the server enforces it, the app just shows what the server sends).
+- **Withdraw today** = your option 1: the existing redeem flow. The whole spendable balance moves to "pending payout" (reserved), and you pay it by hand through the admin endpoints (`GET /api/admin/wallet/redeem/pending`, then `.../{id}/mark-paid` or `.../{id}/reject`, which refunds). The payout keeps the UPI ID it was requested with, so changing the UPI ID later only affects the next withdrawal. Razorpay payouts will replace the manual step later.
+- Money promised to open 1:1 requests is not withdrawable (existing rule): the sheet then says how much is held, and the minimum is checked against the rest.
+- hi/kn/mr texts for the sheet are mine: native-speaker check please. App: 516 tests pass (29 new), backend 279 pass (17 new in `tests/test_wallet_upi.py`); only the old template test fails.
+
+- [ ] **Step L1: Database: add the UPI column. Do this BEFORE deploying the backend** (the API creates missing tables by itself but never adds columns, so without this every request that reads a user fails). Back up first, then from `convoy_prod/`:
+  ```bash
+  pg_dump "$DATABASE_URL" -Fc -f ~/convoy_backup_$(date +%Y%m%d_%H%M).dump
+  psql "$DATABASE_URL" -v ON_ERROR_STOP=1 --single-transaction -f migrations/029_user_upi_id.sql
+  ```
+  (One nullable column, additive, safe to re-run. Already applied to your local `convoy_dev` and the scratch test DB.)
+- [ ] **Step L2: Check `MIN_REDEEM_AMOUNT_INR` in the production environment.** If it is set there (say to 500) it overrides the new default of 250. Remove it or set it to `250`.
+- [ ] **Step L3: Look at it on a phone** (hot restart is enough, restart the backend first): open Profile: the card with your name, KYC and the underlined amount; tap it. With no UPI ID: add one (try a wrong one like `abc` first), then Withdraw. To test the whole thing with test money your local backend needs `DEV_WALLET_CREDIT_ENABLED=true` and the wallet screen's test-credit button (the Wallet tab is off, so credit through Swagger: `POST /api/wallet/{id}/dev-credit`). Then see the request: `GET /api/admin/wallet/redeem/pending`.
+
 ### Stage 6 (the phone rings like a phone call: CallKit on iPhone, full-screen call on Android)
 
 Built, not yet tried on real phones (it can't be tried on the simulator): when the driver starts a call, the requester's phone shows the

@@ -1,19 +1,21 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from config import logger
+from config import MIN_REDEEM_AMOUNT_INR, logger
 from database import get_session
 from db.base import RedeemRequest, User, WalletTransaction
 from db.serializers import parse_uuid
 from middleware.auth import get_current_user, require_path_user
-from models import ConfirmRechargeRequest, CreateRechargeRequest, DevCreditRequest, InitiateRedeemRequest
+from models import ConfirmRechargeRequest, CreateRechargeRequest, DevCreditRequest, InitiateRedeemRequest, SetUpiIdRequest
 from services import recharge as recharge_service
 from services.wallet import (
     call_commitments,
     dev_credit_wallet,
     get_or_create_wallet,
+    get_upi_id,
     initiate_redeem,
     list_wallet_transactions,
+    set_upi_id,
 )
 
 router = APIRouter(prefix="/wallet", tags=["wallet"])
@@ -114,6 +116,10 @@ async def get_wallet(
                 **_wallet_to_dict(wallet),
                 "callCommitments": str(commitments),
                 "spendableBalance": str(max(wallet.available_balance - commitments, 0)),
+                # Where a withdrawal would be paid (null until the user adds it), and the
+                # smallest spendable balance that can be withdrawn.
+                "upiId": await get_upi_id(session, wallet.user_id),
+                "minRedeemAmount": str(MIN_REDEEM_AMOUNT_INR),
             },
         }
     except HTTPException:
@@ -140,6 +146,18 @@ async def get_wallet_transactions(
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@router.put("/{user_id}/upi")
+async def put_upi_id(
+    user_id: str,
+    data: SetUpiIdRequest,
+    session: AsyncSession = Depends(get_session),
+    _: User = Depends(require_path_user),
+):
+    """Add or change the UPI ID that withdrawals are paid to."""
+    upi_id = await set_upi_id(session, parse_uuid(user_id), data.upiId)
+    return {"success": True, "upiId": upi_id}
+
+
 @router.post("/{user_id}/redeem")
 async def redeem_wallet(
     user_id: str,
@@ -147,7 +165,8 @@ async def redeem_wallet(
     session: AsyncSession = Depends(get_session),
     _: User = Depends(require_path_user),
 ):
-    """Redeem the full available balance to a UPI ID. Reserves the balance
+    """Withdraw the full spendable balance to the account's saved UPI ID (400 if none is saved,
+    or if the balance is under the minimum). Reserves the balance
     immediately; an admin confirms or rejects the actual payout separately."""
     try:
         redeem_req = await initiate_redeem(

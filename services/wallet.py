@@ -4,7 +4,7 @@ from decimal import Decimal
 from uuid import UUID
 
 from fastapi import HTTPException
-from sqlalchemy import func, select
+from sqlalchemy import func, select, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -14,6 +14,30 @@ from db.serializers import parse_uuid
 
 # Loose but real UPI VPA shape: handle@bank, e.g. "9876543210@ybl"
 UPI_ID_PATTERN = re.compile(r"^[\w.\-]{2,64}@[a-zA-Z]{2,64}$")
+
+
+def clean_upi_id(upi_id: str | None) -> str:
+    """Trimmed UPI ID, or a 400 if it is empty or not shaped like handle@bank."""
+    cleaned = (upi_id or "").strip()
+    if not UPI_ID_PATTERN.match(cleaned):
+        raise HTTPException(status_code=400, detail="Invalid UPI ID format")
+    return cleaned
+
+
+async def get_upi_id(session: AsyncSession, user_id: UUID) -> str | None:
+    return await session.scalar(select(User.upi_id).where(User.id == user_id))
+
+
+async def set_upi_id(session: AsyncSession, user_id: UUID, upi_id: str) -> str:
+    """Save (or change) where this user's withdrawals are paid. Takes effect for the
+    NEXT withdrawal: a pending payout keeps the UPI ID it was requested with."""
+    cleaned = clean_upi_id(upi_id)
+    user = await session.get(User, user_id)
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    user.upi_id = cleaned
+    await session.commit()
+    return cleaned
 
 
 async def _assert_kyc_approved(session: AsyncSession, user_id: UUID) -> None:
@@ -136,13 +160,16 @@ async def credit_wallet(
 
 
 async def initiate_redeem(
-    session: AsyncSession, user_id: UUID, upi_id: str, idempotency_key: str
+    session: AsyncSession, user_id: UUID, upi_id: str | None, idempotency_key: str
 ) -> RedeemRequest:
     """Reserve the full available balance for payout. Money moves available ->
     reserved immediately; it only leaves reserved once an admin confirms the
-    payout (mark_redeem_paid) or it's rejected back to available (reject_redeem)."""
-    if not UPI_ID_PATTERN.match(upi_id):
-        raise HTTPException(status_code=400, detail="Invalid UPI ID format")
+    payout (mark_redeem_paid) or it's rejected back to available (reject_redeem).
+
+    Pays to the UPI ID saved on the account; with none saved the withdrawal is refused.
+    A `upi_id` passed in is checked and saved first (older app versions send it)."""
+    if upi_id is not None:
+        upi_id = clean_upi_id(upi_id)
 
     existing = await _existing_transaction(session, idempotency_key)
     if existing and existing.reference_id:
@@ -154,6 +181,10 @@ async def initiate_redeem(
             return redeem_req
 
     await _assert_kyc_approved(session, user_id)
+    if upi_id is None:
+        upi_id = await get_upi_id(session, user_id)
+        if not upi_id:
+            raise HTTPException(status_code=400, detail="Add your UPI ID before withdrawing")
     wallet = await _locked_wallet(session, user_id)
     if wallet.status == "frozen":
         raise HTTPException(status_code=403, detail="Wallet is frozen, contact support")
@@ -172,6 +203,7 @@ async def initiate_redeem(
 
     redeem_req = RedeemRequest(user_id=user_id, amount=amount, upi_id=upi_id, status="pending")
     session.add(redeem_req)
+    await session.execute(update(User).where(User.id == user_id).values(upi_id=upi_id))
     await session.flush()  # need redeem_req.id for the ledger row's reference_id
 
     session.add(

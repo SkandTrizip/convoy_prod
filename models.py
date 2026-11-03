@@ -297,17 +297,27 @@ class AdminUpdateUserRequest(BaseModel):
 class InitiateRedeemRequest(BaseModel):
     model_config = ConfigDict(
         json_schema_extra={
-            "example": {"upiId": "9876543210@ybl", "idempotencyKey": "a1b2c3d4-..."}
+            "example": {"idempotencyKey": "a1b2c3d4-..."}
         }
     )
 
-    upiId: str = Field(..., description="UPI VPA to pay out to, e.g. 9876543210@ybl")
+    upiId: Optional[str] = Field(
+        None,
+        description="Optional. The UPI ID saved on the account is used. If one is sent here it is "
+        "checked and saved as the account's UPI ID first (older app versions do this).",
+    )
     idempotencyKey: str = Field(
         ...,
         description="Client-generated key, unique per redeem attempt. Retrying the "
         "same request with the same key returns the original result instead of "
         "reserving the balance twice.",
     )
+
+
+class SetUpiIdRequest(BaseModel):
+    model_config = ConfigDict(json_schema_extra={"example": {"upiId": "9876543210@ybl"}})
+
+    upiId: str = Field(..., description="UPI VPA withdrawals are paid to, e.g. 9876543210@ybl")
 
 
 class ScratchCardRevealRequest(BaseModel):

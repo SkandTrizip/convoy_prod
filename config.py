@@ -77,7 +77,7 @@ AZURE_CONTAINER_NAME = os.environ.get("AZURE_CONTAINER_NAME", "trizip")
 PROFILE_PHOTO_MAX_SIZE_MB = int(os.environ.get("PROFILE_PHOTO_MAX_SIZE_MB", "5"))
 
 # Wallet (reward/scratch-card payouts)
-MIN_REDEEM_AMOUNT_INR = Decimal(os.environ.get("MIN_REDEEM_AMOUNT_INR", "500"))
+MIN_REDEEM_AMOUNT_INR = Decimal(os.environ.get("MIN_REDEEM_AMOUNT_INR", "250"))
 
 # Paid 1:1 calls (request -> provider accepts -> wallet hold -> call -> settle).
 # See services/call_requests.py for how each of these is used.

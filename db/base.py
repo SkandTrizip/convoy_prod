@@ -55,6 +55,8 @@ class User(Base):
     account_status: Mapped[str] = mapped_column(String(32), default="active", nullable=False)
     created_date: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.utcnow)
     push_token: Mapped[str | None] = mapped_column(Text, nullable=True)
+    # Where wallet withdrawals are paid out (a UPI VPA such as name@bank).
+    upi_id: Mapped[str | None] = mapped_column(String(255), nullable=True)
     verification_status: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
     contacts_last_updated: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=False), nullable=True
