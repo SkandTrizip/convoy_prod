@@ -687,6 +687,48 @@ Built (backend + `convoynew`), tested with fakes, **not yet looked at on a phone
 - [ ] **Step L2: Check `MIN_REDEEM_AMOUNT_INR` in the production environment.** If it is set there (say to 500) it overrides the new default of 250. Remove it or set it to `250`.
 - [ ] **Step L3: Look at it on a phone** (hot restart is enough, restart the backend first): open Profile: the card with your name, KYC and the underlined amount; tap it. With no UPI ID: add one (try a wrong one like `abc` first), then Withdraw. To test the whole thing with test money your local backend needs `DEV_WALLET_CREDIT_ENABLED=true` and the wallet screen's test-credit button (the Wallet tab is off, so credit through Swagger: `POST /api/wallet/{id}/dev-credit`). Then see the request: `GET /api/admin/wallet/redeem/pending`.
 
+### Part M: The NEW on-demand call flow, side by side with the classic one (3 Nov)
+
+Branch `feat/new-demand-call-flow` in BOTH repos (`convoy_prod` and `convoynew`), started from the classic code. **Classic = the wallet-hold flow** (branches `main` / `feat/new-changes`). **New = no wallet**: after the call the requester pays the driver's UPI ID directly. Built and tested with fakes, **not yet tried on real phones**. Full API: `docs/ONE_TO_ONE_DIRECT_PAYMENT_API.md`.
+
+Your rules, as built:
+1. The request is the same except there is no wallet and nothing is reserved. A driver **must have a UPI ID** (Profile page) or they can't be requested (`PROVIDER_UPI_MISSING`).
+2. Both sides keep the full behaviour log (joined, mic, camera, who cut the call, 30 s reached, ...). New: every heartbeat (about every 5 s) now says whether that phone's mic and camera are on, and the requester says whether they can see the driver's video. Stored as counts per call.
+3. When the call ends the requester gets a **bottom sheet that can't be swiped away**: Pay full / Pay minimum / "I don't want to pay" / "Pay later" (the same prompt comes back until it is decided; 24 h after the call, no answer counts as not paying).
+4. A call of 30 s or more and the requester says no: they are first told they must pay at least the minimum (the larger of 25 % of the offer and Rs 25) and that not paying means a flag and a possible ban. Saying no anyway is a **refusal** (recorded, driver told, optional reason).
+5. Paying opens **a UPI app** (GPay, PhonePe, ...) with the driver's UPI ID and the amount filled in (**not Razorpay**: Razorpay can't pay an arbitrary UPI ID). Coming back, the app asks "Did the payment go through?"; their yes is recorded.
+6. A call under 30 s: paying is optional; saying no needs a reason, and the driver is told it. Not flagged, never a strike.
+7. Everything either person did is stored (events plus per-call counts) for the later "who is lying" work.
+8. **Three strikes block new requests.** A strike = a refusal (or never answering) after a call of 30 s or more where the driver's mic **and** camera were on for at least half of it. Refusals when the driver's mic or camera was off are flagged but don't count. An admin can forgive strikes (`POST /api/admin/call-payments/{user_id}/reset`); `GET /api/admin/call-payments/flagged` lists everyone.
+
+Two things I added that you didn't ask for, because the server can't see a UPI payment: the driver gets a push "<name> says they paid Rs X, did you get it?" and answers Yes / No (only recorded, nothing changes because of it), and the driver is told when someone refuses or declines. A call that **never connected at all (0 s)** has nothing to pay.
+
+**The database (your question):** the new flow needs migration 030 (additive: new columns on `call_requests`, one wider status check, one new table). I checked the classic backend's own 279 tests against a database that has it: all pass. But a request left **open** (pending / accepted / ringing / live) by one flow breaks the other backend's background sweep (the classic one tries to give back a hold that was never taken), so I made the new flow use a **separate database**. One command makes it from your current one; the classic backend keeps using the original, untouched.
+
+- [ ] **Step M1: Make the new-flow database.** From `convoy_prod/` (copies the database you name, adds migration 030 to the copy, changes nothing in the original; works on a local database, for Azure use its admin URL):
+  ```bash
+  scripts/new_flow_db.sh postgresql://postgres:postgres@127.0.0.1:5433/convoy_dev
+  ```
+  It prints the `DATABASE_URL` to use (`.../convoy_newflow`). Re-run it later (after `DROP DATABASE convoy_newflow;`) for a fresh copy of your newest data.
+- [ ] **Step M2: Run each flow's backend.** Switch branch, then start with the matching database (stop the other one first, they both use port 8000):
+  ```bash
+  # classic (wallet hold):
+  git checkout feat/new-changes   # or main
+  FIREBASE_CREDENTIALS_PATH=credentials/firebase-admin.json DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:5433/convoy_dev DEV_WALLET_CREDIT_ENABLED=true .venv/bin/uvicorn server:app --host 0.0.0.0 --port 8000 --reload
+  # new (direct UPI payment):
+  git checkout feat/new-demand-call-flow
+  FIREBASE_CREDENTIALS_PATH=credentials/firebase-admin.json DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:5433/convoy_newflow .venv/bin/uvicorn server:app --host 0.0.0.0 --port 8000 --reload
+  ```
+- [ ] **Step M3: Build the two apps** (`convoynew`): classic from `feat/new-changes`, new from `feat/new-demand-call-flow`; each APK on its own phones. Both talk to the backend on that branch, so show one flow at a time on the matching backend:
+  ```bash
+  flutter build apk --release   # run it on each branch, rename the two files so you can tell them apart
+  ```
+- [ ] **Step M4: Both people need a UPI ID** (new flow only): the driver adds it on Profile > tap the wallet amount > UPI ID (the same field the withdraw sheet uses). Without it the requester gets "This driver hasn't set up payments yet".
+- [ ] **Step M5: Try it on two phones.** (a) Driver accepts, calls, talk past 30 s (driver's mic and camera on), hang up: the requester gets the sheet; pay: a UPI app opens with the driver's UPI ID; come back, say Yes: the driver gets a confirm prompt. (b) Same but "I don't want to pay": see the warning, refuse: the driver is told. (c) A call under 30 s: decline needs a reason, the driver sees it. (d) Check the record: `select id, status, threshold_met, provider_media_on, provider_beats, provider_mic_beats, provider_camera_beats, payment_outcome, counts_as_strike from call_requests order by created_at desc limit 5;` on `convoy_newflow`. (e) Refuse three counted calls with the driver's camera on: the fourth request is refused (`CALL_PAYMENTS_BLOCKED`).
+- [ ] **Step M6 (only if the stakeholders pick the new flow):** apply migration 030 to production after a backup (as in Step L1), make sure every driver can add a UPI ID, and decide what to do with the Razorpay wallet top-up (no longer needed for calls; still used if you keep the wallet for scratch-card rewards).
+
+Known limits (say them to the stakeholders): the server can't verify a UPI payment, so "I paid" is the requester's word until the driver answers; the UPI app is only opened, no result comes back (you can't be sure which app or whether it was paid); the driver's mic/camera "on" is what that phone reports; the driver only sees the "did you get it?" question from the push (there is no list of unanswered ones yet); hi/kn/mr texts are mine, native-speaker check please. Tests: backend 299 pass, app 550 pass (only the old template test fails).
+
 ### Stage 6 (the phone rings like a phone call: CallKit on iPhone, full-screen call on Android)
 
 Built, not yet tried on real phones (it can't be tried on the simulator): when the driver starts a call, the requester's phone shows the
