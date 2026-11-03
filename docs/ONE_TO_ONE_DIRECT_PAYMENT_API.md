@@ -38,6 +38,16 @@ The app opens a UPI app (`upi://pay?pa=<upiId>&pn=<name>&am=<amount>&cu=INR&tn=<
 - Not answering within `CALL_FEEDBACK_TTL_HOURS` (24): the sweep closes it as `expired`, the same as a refusal for a call that counted.
 - The driver's UPI ID is copied onto the request when the call ends (`payee_upi_id`), so changing it later cannot redirect a payment.
 
+## Payments ledger (Profile > Transactions History)
+
+`GET /api/call-requests/payments?direction=received|sent&limit=20&offset=0` (limit 1 to 100): the caller's calls that ended `paid`, newest payment first. `received` = the caller was the driver, `sent` = the caller was the requester. Calls that were refused, declined, expired or are still waiting for payment are not listed.
+
+Response: `{success, direction, payments: [...], count, total, hasMore}`. `count` and `total` (rupees, "225.00") cover every row of that direction, not only the page.
+
+Each payment: `id` (the call request id), `direction`, `counterparty {id, name, photo}` (the other person), `amount` (what was paid), `offerAmount`, `amountType` (`full` | `minimum`), `topic`, `durationMinutes`, `connectedSeconds`, `paidAt` (when the requester said they paid), `callEndedAt`, `upiId` (the UPI ID that was to be paid), `upiReference`, `providerConfirmed` (`null` not answered, `true`, `false`; only the driver's own side carries it, it is always `null` for the requester).
+
+"I did not receive this": the driver sends `POST /api/call-requests/{id}/payment/confirm {"received": false}` (above). The payment stays in the driver's list with `providerConfirmed: false` but no longer counts towards `received` `total`/`count`. It is only a record: nothing is refunded or flagged, the requester is not told and their list is unchanged.
+
 ## Flagged, strikes, block
 
 * **flagged**: a call of 30 s or more that ended `refused` or `expired`.

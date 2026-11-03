@@ -5,6 +5,7 @@ Rule violations raise services.call_requests.CallRequestError, turned into
 app.py. See docs/ONE_TO_ONE_CALL_API.md for the flow and the codes.
 """
 
+from decimal import Decimal
 from typing import Annotated
 from uuid import UUID
 
@@ -14,7 +15,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from database import get_session
 from db.base import CallRequest, User
-from db.serializers import call_request_to_dict
+from db.serializers import call_request_to_dict, payment_ledger_entry_to_dict
 from middleware.auth import get_current_user
 from models import (
     CallBehaviourEventsRequest,
@@ -110,6 +111,38 @@ async def outgoing_requests(
     ones still going (open, or `awaiting_payment`: the call is over and not paid yet)."""
     requests = await svc.list_outgoing(session, current_user.id, active_only=active_only)
     return {"success": True, "requests": await _respond(session, requests, current_user, device_id)}
+
+
+@router.get("/payments")
+async def payments_ledger(
+    direction: Annotated[str, Query(description="received (you were the driver) or sent (you were the requester)")],
+    limit: Annotated[int, Query(ge=1, le=svc.LEDGER_MAX_LIMIT)] = 20,
+    offset: Annotated[int, Query(ge=0)] = 0,
+    session: AsyncSession = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+):
+    """The caller's money history from 1:1 calls: payments the requester says they made, newest first.
+    `total` / `count` cover every row, not only this page; `hasMore` says whether `offset + limit`
+    reaches further. A driver can mark a received payment "not received" with
+    `POST /{id}/payment/confirm {"received": false}`; it then stays listed (`providerConfirmed: false`)
+    but leaves `total`."""
+    page = await svc.list_payments(session, current_user.id, direction, limit=limit, offset=offset)
+    requests = page["requests"]
+    ids = {r.requester_id for r in requests} | {r.provider_id for r in requests}
+    users = {}
+    if ids:
+        users = {u.id: u for u in (await session.execute(select(User).where(User.id.in_(ids)))).scalars()}
+    return {
+        "success": True,
+        "direction": direction,
+        "payments": [
+            payment_ledger_entry_to_dict(r, users.get(r.requester_id), users.get(r.provider_id), current_user.id)
+            for r in requests
+        ],
+        "count": page["count"],
+        "total": str(page["total"].quantize(Decimal("0.01"))),
+        "hasMore": page["hasMore"],
+    }
 
 
 @router.get("/{request_id}")

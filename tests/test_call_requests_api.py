@@ -424,3 +424,108 @@ async def test_the_device_header_keeps_a_live_call_on_one_phone(api):
     # while the phone that holds it carries on
     r = await api.post(f"/api/call-requests/{req.id}/heartbeat", json={"peerPresent": True}, headers=phone(requester, "phone-a"))
     assert r.status_code == 200 and r.json()["status"] == "live"
+
+
+async def _paid_call(api, requester, provider, post, amount_type, amount="200"):
+    from tests.test_call_requests import pay, request_call
+
+    req = await request_call(api.factory, requester, provider, post, amount=amount)
+    assert (await api.post(f"/api/call-requests/{req.id}/accept", headers=auth(provider))).status_code == 200
+    await connect_call(api.factory, req, seconds=120)
+    r = await api.post(
+        f"/api/call-requests/{req.id}/payment/paid",
+        json={"amountType": amount_type, "upiReference": "REF-" + amount},
+        headers=auth(requester),
+    )
+    assert r.status_code == 200, r.text
+    return req
+
+
+async def test_the_payments_ledger_lists_money_received_and_sent(api, clock):  # noqa: F811
+    requester = await make_user(api.factory, "Asha")
+    vikram = await make_user(api.factory, "Vikram")
+    ravi = await make_user(api.factory, "Ravi")
+    first = await _paid_call(api, requester, vikram, await make_post(api.factory, vikram), "full", "200")
+    clock.advance(300)
+    second = await _paid_call(api, requester, vikram, await make_post(api.factory, vikram), "minimum", "100")
+    clock.advance(300)
+    third = await _paid_call(api, requester, ravi, await make_post(api.factory, ravi), "full", "500")
+
+    # the driver's side: newest first, each line names who paid and what was paid
+    r = await api.get("/api/call-requests/payments?direction=received", headers=auth(vikram))
+    assert r.status_code == 200, r.text
+    body = r.json()
+    assert [p["id"] for p in body["payments"]] == [str(second.id), str(first.id)]
+    assert (body["count"], body["total"], body["hasMore"]) == (2, "225.00", False)
+    line = body["payments"][1]
+    assert line["direction"] == "received" and line["counterparty"]["name"] == "Asha"
+    assert (line["amount"], line["offerAmount"], line["amountType"]) == ("200.00", "200.00", "full")
+    assert line["paidAt"] and line["callEndedAt"] and line["upiReference"] == "REF-200"
+    assert line["connectedSeconds"] == 120 and line["topic"] == "Route status"
+    assert line["providerConfirmed"] is None
+    assert (body["payments"][0]["amount"], body["payments"][0]["amountType"]) == ("25.00", "minimum")
+
+    # the requester's side: everything they paid, to whom; nothing about the driver's answer
+    r = await api.get("/api/call-requests/payments?direction=sent", headers=auth(requester))
+    body = r.json()
+    assert [p["id"] for p in body["payments"]] == [str(third.id), str(second.id), str(first.id)]
+    assert (body["count"], body["total"]) == (3, "725.00")
+    assert [p["counterparty"]["name"] for p in body["payments"]] == ["Ravi", "Vikram", "Vikram"]
+    assert all(p["direction"] == "sent" and p["providerConfirmed"] is None for p in body["payments"])
+
+    # a person only ever sees their own side
+    assert (await api.get("/api/call-requests/payments?direction=sent", headers=auth(vikram))).json()["payments"] == []
+    assert (await api.get("/api/call-requests/payments?direction=received", headers=auth(requester))).json()["payments"] == []
+
+
+async def test_a_driver_marking_a_payment_not_received_keeps_it_listed_but_off_the_total(api, clock):  # noqa: F811
+    requester = await make_user(api.factory, "Asha")
+    vikram = await make_user(api.factory, "Vikram")
+    first = await _paid_call(api, requester, vikram, await make_post(api.factory, vikram), "full", "200")
+    clock.advance(300)
+    second = await _paid_call(api, requester, vikram, await make_post(api.factory, vikram), "full", "300")
+
+    r = await api.post(
+        f"/api/call-requests/{first.id}/payment/confirm", json={"received": False}, headers=auth(vikram)
+    )
+    assert r.status_code == 200 and r.json()["request"]["providerConfirmed"] is False
+
+    body = (await api.get("/api/call-requests/payments?direction=received", headers=auth(vikram))).json()
+    assert [(p["id"], p["providerConfirmed"]) for p in body["payments"]] == [(str(second.id), None), (str(first.id), False)]
+    assert (body["count"], body["total"]) == (1, "300.00")
+
+    # the requester's own record is unchanged: it is the driver's claim, recorded only
+    body = (await api.get("/api/call-requests/payments?direction=sent", headers=auth(requester))).json()
+    assert body["total"] == "500.00" and all(p["providerConfirmed"] is None for p in body["payments"])
+
+
+async def test_the_ledger_only_lists_calls_that_were_paid_and_pages(api, clock):  # noqa: F811
+    from tests.test_call_requests import decline, request_call
+
+    requester = await make_user(api.factory, "Asha")
+    vikram = await make_user(api.factory, "Vikram")
+    for i in range(3):
+        await _paid_call(api, requester, vikram, await make_post(api.factory, vikram), "full", str(100 + i))
+        clock.advance(60)
+    refused = await request_call(api.factory, requester, vikram, await make_post(api.factory, vikram))
+    assert (await api.post(f"/api/call-requests/{refused.id}/accept", headers=auth(vikram))).status_code == 200
+    await connect_call(api.factory, refused, seconds=120)
+    await decline(api.factory, refused, requester)
+    owing = await request_call(api.factory, requester, vikram, await make_post(api.factory, vikram))
+    assert (await api.post(f"/api/call-requests/{owing.id}/accept", headers=auth(vikram))).status_code == 200
+    await connect_call(api.factory, owing, seconds=120)  # still waiting to be paid
+
+    first = (await api.get("/api/call-requests/payments?direction=received&limit=2", headers=auth(vikram))).json()
+    assert [p["amount"] for p in first["payments"]] == ["102.00", "101.00"]
+    assert (first["hasMore"], first["count"], first["total"]) == (True, 3, "303.00")
+    rest = (await api.get("/api/call-requests/payments?direction=received&limit=2&offset=2", headers=auth(vikram))).json()
+    assert [p["amount"] for p in rest["payments"]] == ["100.00"] and rest["hasMore"] is False
+
+
+async def test_the_ledger_needs_a_login_and_a_known_direction(api):
+    user = await make_user(api.factory, "Asha")
+    assert (await api.get("/api/call-requests/payments?direction=sent")).status_code == 401
+    r = await api.get("/api/call-requests/payments?direction=both", headers=auth(user))
+    assert r.status_code == 400 and r.json()["code"] == "INVALID_DIRECTION"
+    assert (await api.get("/api/call-requests/payments", headers=auth(user))).status_code == 422
+    assert (await api.get("/api/call-requests/payments?direction=sent&limit=0", headers=auth(user))).status_code == 422

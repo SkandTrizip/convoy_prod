@@ -347,6 +347,31 @@ def payment_details(request: CallRequest, provider: User | None, viewer_id: uuid
     }
 
 
+def payment_ledger_entry_to_dict(
+    request: CallRequest, requester: User | None, provider: User | None, viewer_id: uuid.UUID
+) -> dict:
+    """One line of the payments ledger. `counterparty` is the other person. Only the driver sees
+    `providerConfirmed` (their own "did you receive it?" answer); the requester's line never changes
+    because of it."""
+    received = viewer_id == request.provider_id
+    return {
+        "id": str(request.id),
+        "direction": "received" if received else "sent",
+        "counterparty": call_request_party_to_dict(requester if received else provider),
+        "amount": str(request.paid_amount),
+        "offerAmount": str(request.amount),
+        "amountType": "full" if request.paid_amount == request.amount else "minimum",
+        "topic": request.topic,
+        "durationMinutes": request.duration_minutes,
+        "connectedSeconds": request.connected_seconds,
+        "paidAt": request.payment_decided_at.isoformat() if request.payment_decided_at else None,
+        "callEndedAt": request.call_ended_at.isoformat() if request.call_ended_at else None,
+        "upiId": request.payee_upi_id,
+        "upiReference": request.upi_reference,
+        "providerConfirmed": request.provider_confirmed if received else None,
+    }
+
+
 def call_request_to_dict(
     request: CallRequest,
     requester: User | None,

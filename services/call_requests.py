@@ -1078,6 +1078,46 @@ async def confirm_received(session: AsyncSession, request_id: UUID, provider_id:
     return request
 
 
+# --- the payments ledger -----------------------------------------------------------------
+
+LEDGER_DIRECTIONS = ("received", "sent")
+LEDGER_MAX_LIMIT = 100
+
+
+async def list_payments(
+    session: AsyncSession, user_id: UUID, direction: str, *, limit: int = 20, offset: int = 0
+) -> dict:
+    """Calls the requester says they paid for, newest payment first: `received` = the caller was the
+    driver, `sent` = the caller was the requester. Returns the rows (one extra is fetched to know whether
+    there are more), the count and the total over ALL of them. Received money the driver marked "not
+    received" stays listed but no longer counts towards the total."""
+    if direction not in LEDGER_DIRECTIONS:
+        raise CallRequestError(400, "INVALID_DIRECTION", "direction must be received or sent")
+    limit = max(1, min(limit, LEDGER_MAX_LIMIT))
+    offset = max(0, offset)
+    mine = CallRequest.provider_id if direction == "received" else CallRequest.requester_id
+    where = [mine == user_id, CallRequest.status == "completed", CallRequest.payment_outcome == "paid"]
+
+    rows = await session.execute(
+        select(CallRequest)
+        .where(*where)
+        .order_by(CallRequest.payment_decided_at.desc(), CallRequest.id.desc())
+        .limit(limit + 1)
+        .offset(offset)
+    )
+    requests = list(rows.scalars().all())
+    has_more = len(requests) > limit
+
+    counted = list(where)
+    if direction == "received":
+        counted.append(CallRequest.provider_confirmed.is_not(False))
+    totals = await session.execute(
+        select(func.count(), func.coalesce(func.sum(CallRequest.paid_amount), 0)).where(*counted)
+    )
+    count, total = totals.one()
+    return {"requests": requests[:limit], "hasMore": has_more, "count": count, "total": Decimal(total)}
+
+
 # --- behaviour events ------------------------------------------------------------------
 
 
