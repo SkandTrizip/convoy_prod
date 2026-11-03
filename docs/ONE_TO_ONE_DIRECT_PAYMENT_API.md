@@ -20,6 +20,12 @@ Side exits: `rejected` (driver), `cancelled` (requester), `expired` (30 min wind
 | Wallet | `callCommitments` is always `"0.00"` and `spendableBalance` equals `availableBalance`; the whole balance can be withdrawn. Money never moves because of a call. |
 | Removed | `POST /{id}/feedback`, `satisfied`, `settledAmount`. |
 
+## The driver's UPI ID
+
+* `PUT /api/user/upi/{user_id}` `{"upiId": "name@bank"}` adds or changes it (`400` if badly shaped; only your own id). Returns `{success, upiId}`.
+* `GET /api/user/profile/{user_id}` (and the login response) now carry `upiId` (null until added). It is sent to the person themselves and to admins only; a requester sees a driver's UPI ID only inside `payment`, while a payment is due.
+* The profile page has no wallet in this flow; the old `/api/wallet/...` endpoints are untouched (scratch-card rewards still use them).
+
 ## Paying
 
 The app opens a UPI app (`upi://pay?pa=<upiId>&pn=<name>&am=<amount>&cu=INR&tn=<note>`). The server cannot see that payment, so the app asks "Did you pay?" when the person comes back, then:

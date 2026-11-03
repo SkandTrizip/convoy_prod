@@ -47,6 +47,9 @@ def user_to_dict(user: User) -> dict:
         "profilePhoto": profile_photo_url(user),
         "kycStatus": user.kyc_status,
         "kycStep": user.kyc_step,
+        # Where callers pay this person after a call (null until they add it). Only ever sent to the
+        # person themselves (login / profile) and to admins.
+        "upiId": user.upi_id,
         "accountStatus": user.account_status,
         "createdDate": user.created_date,
         "verificationStatus": user.verification_status or {},
