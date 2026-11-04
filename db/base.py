@@ -829,14 +829,19 @@ CALL_STATUSES = (
     "live",
     "awaiting_feedback",
     "awaiting_payment",
+    "payment_claimed",
+    "ready",
+    "payment_disputed",
     "completed",
     "rejected",
     "cancelled",
     "expired",
     "failed",
 )
-# At most one of these per requester/provider pair (partial unique index below).
-CALL_OPEN_STATUSES = ("pending", "accepted", "ringing", "live")
+# At most one of these per requester/provider pair (partial unique index below). New flow: `accepted` =
+# waiting for the requester's advance payment, `payment_claimed` = the requester says they paid and the
+# driver has not answered, `ready` = the driver confirmed and may start the call.
+CALL_OPEN_STATUSES = ("pending", "accepted", "payment_claimed", "ready", "ringing", "live")
 
 
 def _sql_in(values: tuple[str, ...]) -> str:
@@ -967,6 +972,15 @@ class CallRequest(Base):
     requester_mic_beats: Mapped[int] = mapped_column(Integer, default=0, server_default=text("0"), nullable=False)
     requester_camera_beats: Mapped[int] = mapped_column(Integer, default=0, server_default=text("0"), nullable=False)
     requester_saw_video_beats: Mapped[int] = mapped_column(Integer, default=0, server_default=text("0"), nullable=False)
+
+    # Advance payment (new flow). `payment_outcome` is claimed (the requester says they paid) | paid (the
+    # driver confirmed) | disputed (the driver said it never arrived, or never answered).
+    payment_claimed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=False), nullable=True)
+    disputed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=False), nullable=True)
+    # Why the request ended without a call, for the apps and for admin: requester_cancelled | driver_withdrew
+    # | no_response | payment_window_lapsed | start_window_lapsed | provider_denied | provider_silent |
+    # call_not_connected ...
+    closed_reason: Mapped[str | None] = mapped_column(String(32), nullable=True)
 
     # Settlement (classic flow; unused by the new one except `feedback_deadline`, the payment deadline).
     feedback_deadline: Mapped[datetime | None] = mapped_column(DateTime(timezone=False), nullable=True)

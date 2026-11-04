@@ -20,7 +20,6 @@ from middleware.auth import get_current_user
 from models import (
     CallBehaviourEventsRequest,
     CallConfirmPaymentRequest,
-    CallDeclineRequest,
     CallHeartbeatRequest,
     CallPayRequest,
     CreateCallRequestRequest,
@@ -108,7 +107,7 @@ async def outgoing_requests(
     device_id: DeviceId = None,
 ):
     """The caller's own requests, newest first. `activeOnly=true` keeps only the
-    ones still going (open, or `awaiting_payment`: the call is over and not paid yet)."""
+    ones still going (pending, accepted and waiting for payment, payment claimed, ready, ringing, live)."""
     requests = await svc.list_outgoing(session, current_user.id, active_only=active_only)
     return {"success": True, "requests": await _respond(session, requests, current_user, device_id)}
 
@@ -123,9 +122,7 @@ async def payments_ledger(
 ):
     """The caller's money history from 1:1 calls: payments the requester says they made, newest first.
     `total` / `count` cover every row, not only this page; `hasMore` says whether `offset + limit`
-    reaches further. A driver can mark a received payment "not received" with
-    `POST /{id}/payment/confirm {"received": false}`; it then stays listed (`providerConfirmed: false`)
-    but leaves `total`."""
+    reaches further."""
     page = await svc.list_payments(session, current_user.id, direction, limit=limit, offset=offset)
     requests = page["requests"]
     ids = {r.requester_id for r in requests} | {r.provider_id for r in requests}
@@ -234,7 +231,7 @@ async def call_heartbeat(
     """Both apps call this every ~5 s on the call screen. Returns the live state:
     `status`, `connectedSeconds`, `remainingSeconds`, `peerOnline`. When `status` is no
     longer `live` the call is over: leave the channel and, for the requester,
-    show the payment sheet if it is `awaiting_payment`. `micOn`, `cameraOn` and
+    close the call screen. `micOn`, `cameraOn` and
     `peerVideoOn` are optional and counted for the call's behaviour record."""
     state = await svc.heartbeat(
         session,
@@ -256,10 +253,9 @@ async def end_call(
     current_user: User = Depends(get_current_user),
     device_id: DeviceId = None,
 ):
-    """Hang up. Ringing: the driver cancels the ring (can start again), the requester
-    declines it (request cancelled). Live: the call ends and the requester is asked to pay
-    (`awaiting_payment`) unless it never connected at all (`failed`). Already over:
-    returned unchanged."""
+    """Hang up. Ringing: the driver cancels the ring (can start again, status back to `ready`), the
+    requester declines it (request cancelled). Live: the call ends (`completed`, or `failed` if it never
+    connected at all). Already over: returned unchanged."""
     request = await svc.end_call(session, _uuid(request_id, "request id"), current_user.id, device_id)
     return await _one(session, request, current_user, device_id)
 
@@ -271,26 +267,12 @@ async def call_request_paid(
     session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user),
 ):
-    """Requester: "I paid the driver's UPI ID" (after the app opened a UPI app and they
-    came back). `amountType` is `full` or `minimum`. The server can't see the money: it
-    records the claim and asks the driver to confirm. Safe to retry with the same answer."""
-    request = await svc.pay(
-        session, _uuid(request_id, "request id"), current_user.id, body.amountType, body.upiReference
-    )
-    return await _one(session, request, current_user)
-
-
-@router.post("/{request_id}/payment/decline")
-async def call_request_decline_payment(
-    request_id: str,
-    body: CallDeclineRequest,
-    session: AsyncSession = Depends(get_session),
-    current_user: User = Depends(get_current_user),
-):
-    """Requester will not pay. After a call that reached the threshold this is a refusal
-    (flagged, and a strike when the driver's mic and camera were on); a shorter call needs a
-    `reason` (`400 REASON_REQUIRED`), which the driver is told."""
-    request = await svc.decline(session, _uuid(request_id, "request id"), current_user.id, body.reason)
+    """Requester, from `accepted`: "I paid the driver's UPI ID" (after the app opened a UPI app and they
+    came back). The whole offer is paid up front. The server can't see the money: it records the claim
+    (`payment_claimed`), asks the driver to confirm, and the requester can no longer cancel. Safe to retry."""
+    if body.amountType not in (None, "full"):
+        raise CallRequestError(400, "INVALID_AMOUNT_TYPE", "The whole offer is paid up front")
+    request = await svc.pay(session, _uuid(request_id, "request id"), current_user.id, body.upiReference)
     return await _one(session, request, current_user)
 
 
@@ -301,9 +283,25 @@ async def call_request_confirm_payment(
     session: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user),
 ):
-    """Driver: "yes, I received it" / "no, I did not" for a payment the requester says they
-    made. Only recorded."""
-    request = await svc.confirm_received(session, _uuid(request_id, "request id"), current_user.id, body.received)
+    """Driver, from `payment_claimed`: "yes, I received it" (the call may now start: `ready`) or "no, I did
+    not". A no has to carry `sure: true` (the app asks "are you sure?" first): without it the answer is
+    `409 CONFIRM_REQUIRED` and nothing changes; with it the request is closed as `payment_disputed` and the
+    call never starts. Answered once."""
+    request = await svc.confirm_received(
+        session, _uuid(request_id, "request id"), current_user.id, body.received, body.sure
+    )
+    return await _one(session, request, current_user)
+
+
+@router.post("/{request_id}/withdraw")
+async def call_request_withdraw(
+    request_id: str,
+    session: AsyncSession = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+):
+    """Driver backs out of an accepted request, as long as the requester has not said they paid. The
+    requester is told; the request ends as `rejected` with `closedReason: driver_withdrew`."""
+    request = await svc.withdraw(session, _uuid(request_id, "request id"), current_user.id)
     return await _one(session, request, current_user)
 
 

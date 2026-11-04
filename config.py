@@ -94,8 +94,14 @@ CALL_DURATION_OPTIONS_MINUTES = (10, 15, 30)
 CALL_REQUEST_TTL_MINUTES = int(os.environ.get("CALL_REQUEST_TTL_MINUTES", "30"))
 CALL_RING_SECONDS = int(os.environ.get("CALL_RING_SECONDS", "45"))
 # After a call that connected, the requester gets this long to pay (or decline). Not answering
-# counts as not paying.
+# counts as not paying. (Classic flow only: the advance-payment flow doesn't use it.)
 CALL_FEEDBACK_TTL_HOURS = int(os.environ.get("CALL_FEEDBACK_TTL_HOURS", "24"))
+# Advance payment (new flow): once the driver accepts, the requester has this long to pay; once the driver
+# confirms they were paid, the driver has this long to start the call; a payment the driver never answers
+# about is sent to admin review after this many hours.
+CALL_PAY_WINDOW_MINUTES = int(os.environ.get("CALL_PAY_WINDOW_MINUTES", "60"))
+CALL_START_WINDOW_MINUTES = int(os.environ.get("CALL_START_WINDOW_MINUTES", "30"))
+CALL_CLAIM_CONFIRM_TTL_HOURS = int(os.environ.get("CALL_CLAIM_CONFIRM_TTL_HOURS", "24"))
 # A requester whose calls of >= CALL_CONNECT_THRESHOLD_SECONDS (with the provider's mic and camera on for
 # at least CALL_MEDIA_ON_MIN_FRACTION of it) went unpaid this many times can't request calls any more.
 CALL_PAYMENT_STRIKE_LIMIT = int(os.environ.get("CALL_PAYMENT_STRIKE_LIMIT", "3"))

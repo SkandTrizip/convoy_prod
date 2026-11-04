@@ -28,9 +28,11 @@ from tests.test_call_flow import clock  # noqa: F401
 # Reuse the fixtures/helpers of the service tests.
 from tests.test_call_requests import (  # noqa: F401  (fixtures are used by name)
     _asyncpg_url,
+    accept_request,
     anyio_backend,
     connect_call,
     make_post,
+    make_ready,
     make_user,
     needs_db,
     schema,
@@ -69,6 +71,15 @@ async def api(schema, monkeypatch):  # noqa: F811
 
 def auth(user):
     return {"Authorization": f"Bearer {create_access_token(str(user.id), user.mobile)}"}
+
+
+async def ready_over_http(api, rid, requester, provider):
+    """Accept, pay and confirm through the API: the call may be started."""
+    base = f"/api/call-requests/{rid}"
+    assert (await api.post(f"{base}/accept", headers=auth(provider))).status_code == 200
+    assert (await api.post(f"{base}/payment/paid", json={}, headers=auth(requester))).status_code == 200
+    r = await api.post(f"{base}/payment/confirm", json={"received": True}, headers=auth(provider))
+    assert r.status_code == 200 and r.json()["request"]["status"] == "ready", r.text
 
 
 async def test_full_flow_over_http(api):
@@ -125,22 +136,25 @@ async def test_full_flow_over_http(api):
     )
     assert r.status_code == 400 and r.json()["code"] == "UNKNOWN_EVENT"
 
-    # the call happens (stand in for it): the requester is asked to pay and is shown whom to pay
-    await connect_call(api.factory, type("R", (), {"id": uuid.UUID(req["id"])}), seconds=240)
+    # accepted: the requester is shown whom to pay and how much, and by when
     r = await api.get(f"/api/call-requests/{req['id']}", headers=auth(requester))
     shown = r.json()["request"]
-    assert shown["status"] == "awaiting_payment" and shown["thresholdMet"] is True
+    assert shown["status"] == "accepted"
     assert shown["payment"]["upiId"] == provider.upi_id and shown["payment"]["payeeName"] == "Vikram"
-    assert (shown["payment"]["fullAmount"], shown["payment"]["minimumAmount"]) == ("150.00", "37.50")
-    assert shown["payment"]["thresholdMet"] is True and shown["payment"]["deadline"]
-    # the driver never sees the "pay" block, and an outsider sees nothing at all
-    assert (await api.get(f"/api/call-requests/{req['id']}", headers=auth(provider))).json()["request"]["payment"] is None
+    assert shown["payment"]["amount"] == "150.00" and shown["payment"]["deadline"] == shown["expiresAt"]
+    # the driver never sees the "pay" block; the driver's queue shows it as waiting for payment
+    mine = (await api.get("/api/call-requests/incoming", headers=auth(provider))).json()["requests"][0]
+    assert mine["status"] == "accepted" and mine["payment"] is None
     assert (await api.get("/api/call-requests/outgoing?activeOnly=true", headers=auth(requester))).json()["requests"][0]["id"] == req["id"]
 
-    # bad amount types are refused, the driver cannot pay for the requester
-    r = await api.post(f"/api/call-requests/{req['id']}/payment/paid", json={"amountType": "half"}, headers=auth(requester))
+    # the driver can't start before they have been paid and confirmed
+    r = await api.post(f"/api/call-requests/{req['id']}/start", headers=auth(provider))
+    assert r.status_code == 409 and r.json()["code"] == "PAYMENT_NOT_CONFIRMED"
+
+    # a part payment is refused, the driver cannot pay for the requester
+    r = await api.post(f"/api/call-requests/{req['id']}/payment/paid", json={"amountType": "minimum"}, headers=auth(requester))
     assert r.status_code == 400 and r.json()["code"] == "INVALID_AMOUNT_TYPE"
-    r = await api.post(f"/api/call-requests/{req['id']}/payment/paid", json={"amountType": "full"}, headers=auth(provider))
+    r = await api.post(f"/api/call-requests/{req['id']}/payment/paid", json={}, headers=auth(provider))
     assert r.status_code == 403 and r.json()["code"] == "NOT_REQUESTER"
 
     r = await api.post(
@@ -149,15 +163,28 @@ async def test_full_flow_over_http(api):
         headers=auth(requester),
     )
     assert r.status_code == 200, r.text
-    done = r.json()["request"]
-    assert done["status"] == "completed" and done["paymentOutcome"] == "paid" and done["paidAmount"] == "150.00"
-    assert done["payment"] is None and done["providerConfirmed"] is None
+    claimed = r.json()["request"]
+    assert claimed["status"] == "payment_claimed" and claimed["paymentOutcome"] == "claimed"
+    assert claimed["paidAmount"] == "150.00" and claimed["paymentClaimedAt"] and claimed["payment"] is None
+    # ... and can't cancel any more
+    r = await api.post(f"/api/call-requests/{req['id']}/cancel", headers=auth(requester))
+    assert r.status_code == 409 and r.json()["code"] == "INVALID_STATE"
 
-    # the driver confirms they got it
-    r = await api.post(f"/api/call-requests/{req['id']}/payment/confirm", json={"received": True}, headers=auth(provider))
-    assert r.json()["request"]["providerConfirmed"] is True
+    # the driver answers: a no needs the "are you sure"
     r = await api.post(f"/api/call-requests/{req['id']}/payment/confirm", json={"received": True}, headers=auth(requester))
     assert r.status_code == 403 and r.json()["code"] == "NOT_PROVIDER"
+    r = await api.post(f"/api/call-requests/{req['id']}/payment/confirm", json={"received": False}, headers=auth(provider))
+    assert r.status_code == 409 and r.json()["code"] == "CONFIRM_REQUIRED"
+    r = await api.post(f"/api/call-requests/{req['id']}/payment/confirm", json={"received": True}, headers=auth(provider))
+    ready = r.json()["request"]
+    assert ready["status"] == "ready" and ready["providerConfirmed"] is True and ready["paymentOutcome"] == "paid"
+
+    # now the call can be started and happens (stand in for it)
+    r = await api.post(f"/api/call-requests/{req['id']}/start", headers=auth(provider))
+    assert r.status_code == 200 and r.json()["request"]["status"] == "ringing"
+    await connect_call(api.factory, type("R", (), {"id": uuid.UUID(req["id"])}), seconds=240)
+    done = (await api.get(f"/api/call-requests/{req['id']}", headers=auth(requester))).json()["request"]
+    assert done["status"] == "completed" and done["thresholdMet"] is True and done["paidAmount"] == "150.00"
 
     # no wallet money moved for anyone
     for user in (requester, provider):
@@ -169,48 +196,63 @@ async def test_full_flow_over_http(api):
     assert r.status_code == 201
 
 
-async def test_declining_over_http_and_the_three_strike_block(api):
-    requester = await make_user(api.factory, "Asha")
-
-    async def counted_call(media="both"):
-        provider = await make_user(api.factory, "Driver")
-        post = await make_post(api.factory, provider)
-        r = await api.post(
-            "/api/call-requests",
-            json={"providerId": str(provider.id), "truckRouteId": str(post.id), "topic": "Load", "durationMinutes": 10, "amount": "100"},
-            headers=auth(requester),
-        )
-        assert r.status_code == 201, r.text
-        rid = r.json()["request"]["id"]
-        await connect_call(api.factory, type("R", (), {"id": uuid.UUID(rid)}), seconds=60, provider_media=media)
-        return provider, post, rid
-
-    # a short call needs a reason
-    provider, post, rid = await counted_call()
-    async with api.factory() as s:
-        row = await s.get(CallRequest, uuid.UUID(rid))
-        row.connected_seconds, row.threshold_met = 10, False
-        await s.commit()
-    r = await api.post(f"/api/call-requests/{rid}/payment/decline", json={}, headers=auth(requester))
-    assert r.status_code == 400 and r.json()["code"] == "REASON_REQUIRED"
-    r = await api.post(f"/api/call-requests/{rid}/payment/decline", json={"reason": "The driver left early"}, headers=auth(requester))
-    assert r.status_code == 200
-    got = r.json()["request"]
-    assert got["paymentOutcome"] == "declined" and got["paymentReason"] == "The driver left early"
-
-    # three counted refusals, then the block
-    for _ in range(3):
-        provider, post, rid = await counted_call()
-        r = await api.post(f"/api/call-requests/{rid}/payment/decline", json={}, headers=auth(requester))
-        assert r.status_code == 200 and r.json()["request"]["paymentOutcome"] == "refused"
-    mine = (await api.get("/api/call-requests/payment-standing/me", headers=auth(requester))).json()["standing"]
-    assert (mine["strikes"], mine["blocked"], mine["strikeLimit"]) == (3, True, 3)
+async def _request_over_http(api, requester, provider, post, amount="100"):
     r = await api.post(
         "/api/call-requests",
-        json={"providerId": str(provider.id), "truckRouteId": str(post.id), "topic": "Load", "durationMinutes": 10, "amount": "100"},
+        json={"providerId": str(provider.id), "truckRouteId": str(post.id), "topic": "Load", "durationMinutes": 10, "amount": amount},
         headers=auth(requester),
     )
-    assert r.status_code == 403 and r.json()["code"] == "CALL_PAYMENTS_BLOCKED" and isinstance(r.json()["detail"], str)
+    assert r.status_code == 201, r.text
+    return r.json()["request"]["id"]
+
+
+async def test_a_denied_payment_closes_the_request_as_a_dispute_over_http(api):
+    requester = await make_user(api.factory, "Asha")
+    provider = await make_user(api.factory, "Vikram")
+    post = await make_post(api.factory, provider)
+    rid = await _request_over_http(api, requester, provider, post)
+    base = f"/api/call-requests/{rid}"
+    await api.post(f"{base}/accept", headers=auth(provider))
+    await api.post(f"{base}/payment/paid", json={}, headers=auth(requester))
+
+    r = await api.post(f"{base}/payment/confirm", json={"received": False}, headers=auth(provider))
+    assert r.status_code == 409 and r.json()["code"] == "CONFIRM_REQUIRED" and isinstance(r.json()["detail"], str)
+    r = await api.post(f"{base}/payment/confirm", json={"received": False, "sure": True}, headers=auth(provider))
+    assert r.status_code == 200, r.text
+    closed = r.json()["request"]
+    assert closed["status"] == "payment_disputed" and closed["paymentOutcome"] == "disputed"
+    assert closed["providerConfirmed"] is False and closed["closedReason"] == "provider_denied"
+
+    # the call never starts, the requester sees why, and the pair may ask again
+    r = await api.post(f"{base}/start", headers=auth(provider))
+    assert r.status_code == 409 and r.json()["code"] == "INVALID_STATE"
+    seen = (await api.get(base, headers=auth(requester))).json()["request"]
+    assert seen["status"] == "payment_disputed" and seen["closedReason"] == "provider_denied"
+    assert (await api.get("/api/call-requests/outgoing?activeOnly=true", headers=auth(requester))).json()["requests"] == []
+    assert await _request_over_http(api, requester, provider, post)
+
+
+async def test_the_driver_can_withdraw_until_the_requester_pays_over_http(api):
+    requester = await make_user(api.factory, "Asha")
+    provider = await make_user(api.factory, "Vikram")
+    post = await make_post(api.factory, provider)
+    rid = await _request_over_http(api, requester, provider, post)
+    base = f"/api/call-requests/{rid}"
+
+    r = await api.post(f"{base}/withdraw", headers=auth(provider))
+    assert r.status_code == 409 and r.json()["code"] == "INVALID_STATE"  # not accepted yet
+    await api.post(f"{base}/accept", headers=auth(provider))
+    assert (await api.post(f"{base}/withdraw", headers=auth(requester))).json()["code"] == "NOT_PROVIDER"
+    r = await api.post(f"{base}/withdraw", headers=auth(provider))
+    assert r.status_code == 200
+    assert r.json()["request"]["status"] == "rejected" and r.json()["request"]["closedReason"] == "driver_withdrew"
+    assert r.json()["request"]["payment"] is None
+
+    rid = await _request_over_http(api, requester, provider, post)
+    base = f"/api/call-requests/{rid}"
+    await api.post(f"{base}/accept", headers=auth(provider))
+    await api.post(f"{base}/payment/paid", json={}, headers=auth(requester))
+    assert (await api.post(f"{base}/withdraw", headers=auth(provider))).status_code == 409  # paid: no backing out
 
 
 async def test_a_driver_without_a_upi_id_gets_a_clear_409(api):
@@ -288,7 +330,7 @@ async def test_the_call_itself_over_http(api, clock):  # noqa: F811
     # can't start before the driver accepted
     r = await api.post(f"{base}/start", headers=auth(provider))
     assert r.status_code == 409 and r.json()["code"] == "INVALID_STATE"
-    await api.post(f"{base}/accept", headers=auth(provider))
+    await ready_over_http(api, rid, requester, provider)
 
     # the requester can't start the driver's call; the driver can
     assert (await api.post(f"{base}/start", headers=auth(requester))).json()["code"] == "NOT_PROVIDER"
@@ -320,10 +362,10 @@ async def test_the_call_itself_over_http(api, clock):  # noqa: F811
     assert state["status"] == "live" and state["connectedSeconds"] >= 30 and state["remainingSeconds"] > 0
     assert (await api.post(f"{base}/heartbeat", json={}, headers=auth(provider))).status_code == 422  # peerPresent is required
 
-    # hang up -> the requester is asked to pay
+    # hang up -> the call is completed (it was paid in advance)
     r = await api.post(f"{base}/end", headers=auth(provider))
-    assert r.json()["request"]["status"] == "awaiting_payment"
-    assert (await api.post(f"{base}/end", headers=auth(requester))).json()["request"]["status"] == "awaiting_payment"
+    assert r.json()["request"]["status"] == "completed"
+    assert (await api.post(f"{base}/end", headers=auth(requester))).json()["request"]["status"] == "completed"
     async with api.factory() as s:
         row = await s.get(CallRequest, uuid.UUID(rid))
     assert row.provider_media_on is True and row.threshold_met is True and row.requester_saw_video_beats >= 7
@@ -340,7 +382,7 @@ async def test_a_missed_ring_is_a_409_the_app_can_act_on(api, clock):  # noqa: F
             headers=auth(requester),
         )
     ).json()["request"]["id"]
-    await api.post(f"/api/call-requests/{rid}/accept", headers=auth(provider))
+    await ready_over_http(api, rid, requester, provider)
     await api.post(f"/api/call-requests/{rid}/start", headers=auth(provider))
     clock.advance(46)
     r = await api.post(f"/api/call-requests/{rid}/join", headers=auth(requester))
@@ -407,7 +449,7 @@ async def test_the_device_header_keeps_a_live_call_on_one_phone(api):
 
     req = await request_call(api.factory, requester, provider, post)
     phone = lambda user, device: {**auth(user), "X-Device-Id": device}  # noqa: E731
-    assert (await api.post(f"/api/call-requests/{req.id}/accept", headers=auth(provider))).status_code == 200
+    await make_ready(api.factory, req, requester, provider)
     r = await api.post(f"/api/call-requests/{req.id}/start", headers=phone(provider, "driver-phone"))
     assert r.status_code == 200 and r.json()["request"]["onAnotherDevice"] is False
     assert (await api.post(f"/api/call-requests/{req.id}/join", headers=phone(requester, "phone-a"))).status_code == 200
@@ -426,18 +468,14 @@ async def test_the_device_header_keeps_a_live_call_on_one_phone(api):
     assert r.status_code == 200 and r.json()["status"] == "live"
 
 
-async def _paid_call(api, requester, provider, post, amount_type, amount="200"):
-    from tests.test_call_requests import pay, request_call
+async def _paid_call(api, requester, provider, post, amount="200", *, call=True):
+    """A request that was accepted, paid and confirmed (and, by default, whose call then happened)."""
+    from tests.test_call_requests import request_call
 
     req = await request_call(api.factory, requester, provider, post, amount=amount)
-    assert (await api.post(f"/api/call-requests/{req.id}/accept", headers=auth(provider))).status_code == 200
-    await connect_call(api.factory, req, seconds=120)
-    r = await api.post(
-        f"/api/call-requests/{req.id}/payment/paid",
-        json={"amountType": amount_type, "upiReference": "REF-" + amount},
-        headers=auth(requester),
-    )
-    assert r.status_code == 200, r.text
+    await make_ready(api.factory, req, requester, provider, reference="REF-" + amount)
+    if call:
+        await connect_call(api.factory, req, seconds=120)
     return req
 
 
@@ -445,31 +483,30 @@ async def test_the_payments_ledger_lists_money_received_and_sent(api, clock):  #
     requester = await make_user(api.factory, "Asha")
     vikram = await make_user(api.factory, "Vikram")
     ravi = await make_user(api.factory, "Ravi")
-    first = await _paid_call(api, requester, vikram, await make_post(api.factory, vikram), "full", "200")
+    first = await _paid_call(api, requester, vikram, await make_post(api.factory, vikram), "200")
     clock.advance(300)
-    second = await _paid_call(api, requester, vikram, await make_post(api.factory, vikram), "minimum", "100")
+    second = await _paid_call(api, requester, vikram, await make_post(api.factory, vikram), "100")
     clock.advance(300)
-    third = await _paid_call(api, requester, ravi, await make_post(api.factory, ravi), "full", "500")
+    third = await _paid_call(api, requester, ravi, await make_post(api.factory, ravi), "500")
 
     # the driver's side: newest first, each line names who paid and what was paid
     r = await api.get("/api/call-requests/payments?direction=received", headers=auth(vikram))
     assert r.status_code == 200, r.text
     body = r.json()
     assert [p["id"] for p in body["payments"]] == [str(second.id), str(first.id)]
-    assert (body["count"], body["total"], body["hasMore"]) == (2, "225.00", False)
+    assert (body["count"], body["total"], body["hasMore"]) == (2, "300.00", False)
     line = body["payments"][1]
     assert line["direction"] == "received" and line["counterparty"]["name"] == "Asha"
     assert (line["amount"], line["offerAmount"], line["amountType"]) == ("200.00", "200.00", "full")
     assert line["paidAt"] and line["callEndedAt"] and line["upiReference"] == "REF-200"
     assert line["connectedSeconds"] == 120 and line["topic"] == "Route status"
-    assert line["providerConfirmed"] is None
-    assert (body["payments"][0]["amount"], body["payments"][0]["amountType"]) == ("25.00", "minimum")
+    assert line["providerConfirmed"] is True  # the driver confirmed it before the call
 
     # the requester's side: everything they paid, to whom; nothing about the driver's answer
     r = await api.get("/api/call-requests/payments?direction=sent", headers=auth(requester))
     body = r.json()
     assert [p["id"] for p in body["payments"]] == [str(third.id), str(second.id), str(first.id)]
-    assert (body["count"], body["total"]) == (3, "725.00")
+    assert (body["count"], body["total"]) == (3, "800.00")
     assert [p["counterparty"]["name"] for p in body["payments"]] == ["Ravi", "Vikram", "Vikram"]
     assert all(p["direction"] == "sent" and p["providerConfirmed"] is None for p in body["payments"])
 
@@ -478,42 +515,40 @@ async def test_the_payments_ledger_lists_money_received_and_sent(api, clock):  #
     assert (await api.get("/api/call-requests/payments?direction=received", headers=auth(requester))).json()["payments"] == []
 
 
-async def test_a_driver_marking_a_payment_not_received_keeps_it_listed_but_off_the_total(api, clock):  # noqa: F811
+async def test_the_ledger_lists_only_payments_the_driver_confirmed(api, clock):  # noqa: F811
     requester = await make_user(api.factory, "Asha")
     vikram = await make_user(api.factory, "Vikram")
-    first = await _paid_call(api, requester, vikram, await make_post(api.factory, vikram), "full", "200")
-    clock.advance(300)
-    second = await _paid_call(api, requester, vikram, await make_post(api.factory, vikram), "full", "300")
+    from tests.test_call_requests import confirm, pay, request_call
 
-    r = await api.post(
-        f"/api/call-requests/{first.id}/payment/confirm", json={"received": False}, headers=auth(vikram)
-    )
-    assert r.status_code == 200 and r.json()["request"]["providerConfirmed"] is False
+    # waiting for the requester to pay, a claim waiting for the driver, and a denied claim: none is listed
+    waiting = await accept_request(api.factory, await request_call(api.factory, requester, vikram, await make_post(api.factory, vikram), amount="100"), vikram)
+    other_requester = await make_user(api.factory, "Ravi")
+    claimed = await accept_request(api.factory, await request_call(api.factory, other_requester, vikram, await make_post(api.factory, vikram), amount="150"), vikram)
+    await pay(api.factory, claimed, other_requester)
+    third_requester = await make_user(api.factory, "Meena")
+    denied = await accept_request(api.factory, await request_call(api.factory, third_requester, vikram, await make_post(api.factory, vikram), amount="250"), vikram)
+    await pay(api.factory, denied, third_requester)
+    await confirm(api.factory, denied, vikram, False, sure=True)
+    assert waiting and claimed and denied
 
+    for who, direction in ((vikram, "received"), (requester, "sent"), (other_requester, "sent"), (third_requester, "sent")):
+        body = (await api.get(f"/api/call-requests/payments?direction={direction}", headers=auth(who))).json()
+        assert (body["payments"], body["count"], body["total"]) == ([], 0, "0.00")
+
+    # once the driver confirms, it is listed, even if the call never happened (the money was paid)
+    await confirm(api.factory, claimed, vikram, True)
     body = (await api.get("/api/call-requests/payments?direction=received", headers=auth(vikram))).json()
-    assert [(p["id"], p["providerConfirmed"]) for p in body["payments"]] == [(str(second.id), None), (str(first.id), False)]
-    assert (body["count"], body["total"]) == (1, "300.00")
-
-    # the requester's own record is unchanged: it is the driver's claim, recorded only
-    body = (await api.get("/api/call-requests/payments?direction=sent", headers=auth(requester))).json()
-    assert body["total"] == "500.00" and all(p["providerConfirmed"] is None for p in body["payments"])
+    assert [p["id"] for p in body["payments"]] == [str(claimed.id)] and body["total"] == "150.00"
+    body = (await api.get("/api/call-requests/payments?direction=sent", headers=auth(other_requester))).json()
+    assert body["total"] == "150.00"
 
 
-async def test_the_ledger_only_lists_calls_that_were_paid_and_pages(api, clock):  # noqa: F811
-    from tests.test_call_requests import decline, request_call
-
+async def test_the_ledger_pages(api, clock):  # noqa: F811
     requester = await make_user(api.factory, "Asha")
     vikram = await make_user(api.factory, "Vikram")
     for i in range(3):
-        await _paid_call(api, requester, vikram, await make_post(api.factory, vikram), "full", str(100 + i))
+        await _paid_call(api, requester, vikram, await make_post(api.factory, vikram), str(100 + i))
         clock.advance(60)
-    refused = await request_call(api.factory, requester, vikram, await make_post(api.factory, vikram))
-    assert (await api.post(f"/api/call-requests/{refused.id}/accept", headers=auth(vikram))).status_code == 200
-    await connect_call(api.factory, refused, seconds=120)
-    await decline(api.factory, refused, requester)
-    owing = await request_call(api.factory, requester, vikram, await make_post(api.factory, vikram))
-    assert (await api.post(f"/api/call-requests/{owing.id}/accept", headers=auth(vikram))).status_code == 200
-    await connect_call(api.factory, owing, seconds=120)  # still waiting to be paid
 
     first = (await api.get("/api/call-requests/payments?direction=received&limit=2", headers=auth(vikram))).json()
     assert [p["amount"] for p in first["payments"]] == ["102.00", "101.00"]

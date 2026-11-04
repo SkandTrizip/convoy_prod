@@ -463,25 +463,21 @@ class CreateCallRequestRequest(BaseModel):
 
 
 class CallPayRequest(BaseModel):
-    amountType: str = Field(
-        ..., description='"full" (the whole offer) or "minimum" (max(25% of the offer, Rs25)): what the requester paid'
+    amountType: Optional[str] = Field(
+        None, description='Optional, and only "full" is accepted: the whole offer is paid up front'
     )
     upiReference: Optional[str] = Field(
         None, max_length=100, description="The UPI transaction id, if the UPI app handed it back"
     )
 
 
-class CallDeclineRequest(BaseModel):
-    reason: Optional[str] = Field(
-        None,
-        max_length=500,
-        description="Why the requester isn't paying. Required (3+ characters) when the call was shorter than the "
-        "threshold; optional after a longer call, where declining is a refusal.",
-    )
-
-
 class CallConfirmPaymentRequest(BaseModel):
     received: bool = Field(..., description="Did the provider receive the money the requester says they paid?")
+    sure: bool = Field(
+        False,
+        description='Required (true) for received=false: the app asks "are you sure?" first. Without it the server '
+        "answers 409 CONFIRM_REQUIRED and changes nothing",
+    )
 
 
 class CallHeartbeatRequest(BaseModel):

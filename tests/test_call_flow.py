@@ -13,6 +13,8 @@ from decimal import Decimal
 import pytest
 
 from config import (
+    CALL_PAY_WINDOW_MINUTES,
+    CALL_START_WINDOW_MINUTES,
     CALL_END_GRACE_SECONDS,
     CALL_HEARTBEAT_GRACE_SECONDS,
     CALL_RECONNECT_WINDOW_SECONDS,
@@ -25,10 +27,12 @@ from services import call_requests as svc
 from sqlalchemy import select
 
 from tests.test_call_requests import (  # noqa: F401  (fixtures are used by name)
+    accept_request,
     anyio_backend,
     expect_error,
     fund,
     make_post,
+    make_ready,
     make_user,
     needs_db,
     request_call,
@@ -65,10 +69,11 @@ def clock(monkeypatch):
 
 
 async def accepted(sessions, amount="200", duration=15, balance="1000"):
+    """A request the driver accepted, the requester paid and the driver confirmed: ready for the call
+    (the name is from before the advance payment). `balance` is ignored."""
     requester, provider, post = await setup_pair(sessions, balance)
     req = await request_call(sessions, requester, provider, post, amount, duration)
-    async with sessions() as s:
-        await svc.accept(s, req.id, provider.id)
+    await make_ready(sessions, req, requester, provider)
     return requester, provider, req
 
 
@@ -130,7 +135,7 @@ async def drain(sessions):
 # --- ringing -------------------------------------------------------------------------------------
 
 
-async def test_the_driver_cannot_start_a_call_that_is_not_accepted(sessions):
+async def test_the_driver_cannot_start_a_call_that_is_not_ready(sessions):
     requester, provider, post = await setup_pair(sessions)
     req = await request_call(sessions, requester, provider, post)
     async with sessions() as s:
@@ -188,7 +193,7 @@ async def test_a_ring_that_is_not_answered_in_time_is_missed_and_the_driver_can_
     async with sessions() as s:
         await expect_error("RING_OVER", svc.join_call(s, req.id, requester.id), 409)
     await sweep(sessions)  # global: other tests' leftovers may be swept too, so check only our request
-    assert (await reload(sessions, req)).status == "accepted"
+    assert (await reload(sessions, req)).status == "ready"
     assert (provider.id, "call_missed") in sessions.pushes
 
     r, _ = await ring(sessions, req, provider)  # second attempt, same channel
@@ -223,7 +228,7 @@ async def test_the_requester_declining_sends_no_cancel_push_to_themselves(sessio
 async def test_the_driver_cancelling_the_ring_can_start_again(sessions):
     requester, provider, req = await accepted(sessions)
     await ring(sessions, req, provider)
-    assert (await end(sessions, req, provider)).status == "accepted"
+    assert (await end(sessions, req, provider)).status == "ready"
     r, _ = await ring(sessions, req, provider)
     assert r.status == "ringing" and r.ring_attempts == 2
 
@@ -238,30 +243,36 @@ async def test_the_whole_request_window_still_ends_a_ringing_request(sessions, c
     assert (await wallet_of(sessions, requester)).reserved_balance == D("0.00")
 
 
-async def test_an_accepted_request_gets_a_fresh_window_from_the_acceptance(sessions, clock):
-    """A driver who accepts late (or takes several requests and calls them one by one) still gets the
-    full 30 minutes to start the call; the clock runs from the acceptance, not from the request."""
+async def test_each_stage_gets_its_own_window_from_the_moment_it_starts(sessions, clock):
+    """Pay window from the acceptance, a fresh start window from the driver's confirmation: a driver who is
+    slow to confirm still gets the full time to start the call."""
     requester, provider, post = await setup_pair(sessions, "1000")
     req = await request_call(sessions, requester, provider, post, "200", 15)
-    created = (await reload(sessions, req)).expires_at
-    clock.advance(28 * 60)  # accepted 2 minutes before the original window ends
-    async with sessions() as s:
-        accepted_request = await svc.accept(s, req.id, provider.id)
-    assert accepted_request.expires_at == clock.now() + timedelta(minutes=30)
-    assert accepted_request.expires_at > created + timedelta(minutes=25)
+    clock.advance(28 * 60)  # accepted 2 minutes before the request's own 30 minutes were up
+    accepted_request = await accept_request(sessions, req, provider)
+    assert accepted_request.expires_at == clock.now() + timedelta(minutes=CALL_PAY_WINDOW_MINUTES)
 
-    clock.advance(25 * 60)  # 53 minutes after it was sent: past the old window, inside the new one
+    clock.advance(50 * 60)  # paid late in the payment window
+    await sweep(sessions)
+    from tests.test_call_requests import confirm, pay
+
+    await pay(sessions, req, requester)
+    clock.advance(20 * 60)  # the driver answers 20 minutes later
+    ready = await confirm(sessions, req, provider, True)
+    assert ready.expires_at == clock.now() + timedelta(minutes=CALL_START_WINDOW_MINUTES)
+
+    clock.advance(25 * 60)  # more than 95 minutes after accepting: still inside the new window
     await sweep(sessions)
     r, _ = await ring(sessions, req, provider)
     assert r.status == "ringing"
 
 
-async def test_an_accepted_request_still_ends_30_minutes_after_the_acceptance(sessions, clock):
+async def test_a_ready_request_still_ends_30_minutes_after_the_confirmation(sessions, clock):
+    await drain(sessions)
     requester, provider, post = await setup_pair(sessions, "1000")
     req = await request_call(sessions, requester, provider, post, "200", 15)
     clock.advance(10 * 60)
-    async with sessions() as s:
-        await svc.accept(s, req.id, provider.id)
+    await make_ready(sessions, req, requester, provider)
     clock.advance(31 * 60)
     await expect_error("REQUEST_EXPIRED", ring(sessions, req, provider), status=410)
     assert (await reload(sessions, req)).status == "expired"
@@ -297,11 +308,11 @@ async def test_a_driver_who_stops_reporting_stops_the_clock_after_the_grace_peri
     assert r.connected_ms // 1000 == 15 + CALL_HEARTBEAT_GRACE_SECONDS
 
 
-async def test_hanging_up_before_30_seconds_leaves_a_short_call_to_pay_or_decline(sessions, clock):
+async def test_hanging_up_before_30_seconds_completes_a_short_call(sessions, clock):
     requester, provider, req = await live(sessions, amount="200")
     await both_beat(sessions, clock, req, requester, provider, 20)  # 15 s
     r = await end(sessions, req, provider)
-    assert r.status == "awaiting_payment" and r.end_reason == "ended_by_provider"
+    assert r.status == "completed" and r.end_reason == "ended_by_provider"
     assert r.connected_seconds == 15 and r.threshold_met is False
 
 
@@ -311,16 +322,13 @@ async def test_hanging_up_when_nobody_ever_connected_is_a_failed_call(sessions, 
     assert r.status == "failed" and r.connected_seconds == 0
 
 
-async def test_a_call_past_30_seconds_asks_the_requester_to_pay(sessions, clock):
+async def test_a_call_past_30_seconds_is_completed_and_already_paid(sessions, clock):
     requester, provider, req = await live(sessions, amount="200")
     await both_beat(sessions, clock, req, requester, provider, 40)
     r = await end(sessions, req, requester)
-    assert r.status == "awaiting_payment" and r.connected_seconds == 35 and r.threshold_met is True
-    assert (requester.id, "call_payment_due") in sessions.pushes
-
-    async with sessions() as s:
-        done = await svc.pay(s, req.id, requester.id, "full")
-    assert done.paid_amount == D("200.00") and done.payment_outcome == "paid"
+    assert r.status == "completed" and r.connected_seconds == 35 and r.threshold_met is True
+    assert r.paid_amount == D("200.00") and r.payment_outcome == "paid"  # paid in advance, nothing more to ask
+    assert (requester.id, "call_payment_due") not in sessions.pushes
 
 
 async def test_either_side_can_end_and_a_second_tap_is_harmless(sessions, clock):
@@ -328,9 +336,9 @@ async def test_either_side_can_end_and_a_second_tap_is_harmless(sessions, clock)
     await both_beat(sessions, clock, req, requester, provider, 40)
     first = await end(sessions, req, provider)
     again = await end(sessions, req, requester)
-    assert first.status == again.status == "awaiting_payment"
+    assert first.status == again.status == "completed"
     state = await beat(sessions, req, provider)  # the other app learns it is over
-    assert state["status"] == "awaiting_payment"
+    assert state["status"] == "completed"
 
 
 async def test_ending_a_request_nobody_started_is_refused(sessions):
@@ -371,7 +379,7 @@ async def test_a_call_whose_other_side_never_comes_back_is_ended_from_the_time_s
     clock.advance(CALL_RECONNECT_WINDOW_SECONDS + 1)  # both silent past the window
     await sweep(sessions)
     r = await reload(sessions, req)
-    assert r.status == "awaiting_payment" and r.end_reason == "disconnected" and r.connected_seconds == 35
+    assert r.status == "completed" and r.end_reason == "disconnected" and r.connected_seconds == 35
 
 
 async def test_a_drop_before_30_seconds_that_never_reconnects_is_a_short_call(sessions, clock):
@@ -381,7 +389,7 @@ async def test_a_drop_before_30_seconds_that_never_reconnects_is_a_short_call(se
     clock.advance(CALL_RECONNECT_WINDOW_SECONDS + 1)
     await sweep(sessions)
     r = await reload(sessions, req)
-    assert r.status == "awaiting_payment" and r.threshold_met is False
+    assert r.status == "completed" and r.threshold_met is False
 
 
 async def test_a_short_drop_inside_the_reconnect_window_keeps_the_call_alive(sessions, clock):
@@ -401,7 +409,7 @@ async def test_the_call_is_ended_at_the_chosen_duration(sessions, clock):
     await both_beat(sessions, clock, req, requester, provider, 100)
     clock.advance(10 * 60)  # well past duration + grace, with beats still arriving
     state = await beat(sessions, req, requester)
-    assert state["status"] == "awaiting_payment"
+    assert state["status"] == "completed"
     r = await reload(sessions, req)
     assert r.end_reason == "time_limit" and r.connected_seconds >= 30
 
@@ -434,20 +442,20 @@ async def test_the_whole_call_leaves_a_readable_trail_for_both_sides(sessions, c
     requester, provider, req = await live(sessions, amount="200")
     await both_beat(sessions, clock, req, requester, provider, 40)
     await end(sessions, req, provider)
-    async with sessions() as s:
-        await svc.decline(s, req.id, requester.id, None)
     trail = await events_of(sessions, req)
     for expected in (
         "request_created",
         "request_accepted",
+        "payment_claimed",
+        "provider_confirmed_payment",
         "call_started_by_provider",
         "call_answered",
         "call_ended",
-        "payment_due",
-        "payment_refused",
-        "requester_flagged",
+        "call_completed",
     ):
         assert expected in trail, expected
+    assert trail.index("request_accepted") < trail.index("payment_claimed") < trail.index("provider_confirmed_payment")
+    assert trail.index("provider_confirmed_payment") < trail.index("call_started_by_provider")
     assert trail.index("call_started_by_provider") < trail.index("call_answered") < trail.index("call_ended")
 
 

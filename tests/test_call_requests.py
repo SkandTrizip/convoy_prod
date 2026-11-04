@@ -23,6 +23,7 @@ from geoalchemy2 import WKTElement
 from sqlalchemy import select, text
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
+from config import CALL_CLAIM_CONFIRM_TTL_HOURS, CALL_PAY_WINDOW_MINUTES, CALL_START_WINDOW_MINUTES
 from db.base import (
     CallBehaviourEvent,
     CallRequest,
@@ -197,14 +198,35 @@ async def connect_call(factory, request, seconds=120, provider_media="both"):
         return await svc.finalize_call(s, request.id, seconds, "ended_by_provider")
 
 
-async def pay(factory, request, requester, amount_type="full", reference=None):
+async def accept_request(factory, request, provider):
     async with factory() as s:
-        return await svc.pay(s, request.id, requester.id, amount_type, reference)
+        return await svc.accept(s, request.id, provider.id)
 
 
-async def decline(factory, request, requester, reason=None):
+async def pay(factory, request, requester, reference=None):
     async with factory() as s:
-        return await svc.decline(s, request.id, requester.id, reason)
+        return await svc.pay(s, request.id, requester.id, reference)
+
+
+async def confirm(factory, request, user, received=True, sure=False):
+    async with factory() as s:
+        return await svc.confirm_received(s, request.id, user.id, received, sure)
+
+
+async def make_ready(factory, request, requester, provider, reference=None):
+    """Accepted, paid, and the driver said they got it: the call may start."""
+    await accept_request(factory, request, provider)
+    await pay(factory, request, requester, reference)
+    return await confirm(factory, request, provider, True)
+
+
+async def age(factory, request, **fields):
+    """Move one of a request's timestamps into the past (or set any column)."""
+    async with factory() as s:
+        r = await s.get(CallRequest, request.id)
+        for name, value in fields.items():
+            setattr(r, name, value)
+        await s.commit()
 
 
 pytestmark = [needs_db, pytest.mark.anyio]
@@ -384,79 +406,148 @@ async def test_provider_queue_is_oldest_first_and_hides_stale_requests(sessions)
     assert [q.id for q in queue] == [made[1].id, made[2].id]
 
 
-# --- after the call: what is owed -----------------------------------------------------------
+# --- accepting: now the requester has to pay -----------------------------------------------------
 
 
-async def test_a_call_that_never_connected_at_all_is_not_payable(sessions):
+async def test_accepting_asks_the_requester_to_pay_within_the_payment_window(sessions):
     requester, provider, post = await setup_pair(sessions)
-    req = await connect_call(sessions, await request_call(sessions, requester, provider, post, "200"), seconds=0)
-    assert req.status == "failed" and req.threshold_met is None and req.feedback_deadline is None
-    async with sessions() as s:
-        await expect_error("INVALID_STATE", svc.pay(s, req.id, requester.id, "full"), 409)
+    req = await accept_request(sessions, await request_call(sessions, requester, provider, post, "200"), provider)
+    assert req.status == "accepted" and req.payee_upi_id == provider.upi_id
+    assert abs((req.expires_at - datetime.utcnow()) - timedelta(minutes=CALL_PAY_WINDOW_MINUTES)) < timedelta(seconds=10)
+    assert (requester.id, "call_request_accepted") in sessions.pushes
 
 
-async def test_a_short_call_still_asks_for_payment_but_is_not_a_counted_call(sessions):
+async def test_the_upi_id_to_pay_is_fixed_when_the_driver_accepts(sessions):
     requester, provider, post = await setup_pair(sessions)
-    req = await connect_call(sessions, await request_call(sessions, requester, provider, post, "200"), seconds=29)
-    assert req.status == "awaiting_payment" and req.threshold_met is False
-    assert req.feedback_deadline is not None
-
-
-async def test_a_call_of_30_seconds_is_a_counted_call_and_remembers_whom_to_pay(sessions):
-    requester, provider, post = await setup_pair(sessions)
-    req = await connect_call(sessions, await request_call(sessions, requester, provider, post, "200"), seconds=30)
-    assert req.status == "awaiting_payment" and req.threshold_met is True and req.provider_media_on is True
-    assert req.payee_upi_id == provider.upi_id
-
-
-
-async def test_a_change_of_the_drivers_upi_id_after_the_call_does_not_redirect_the_payment(sessions):
-    requester, provider, post = await setup_pair(sessions)
-    req = await connect_call(sessions, await request_call(sessions, requester, provider, post, "200"))
+    req = await accept_request(sessions, await request_call(sessions, requester, provider, post, "200"), provider)
     async with sessions() as s:
         (await s.get(User, provider.id)).upi_id = "someone.else@ybl"
         await s.commit()
     assert (await reload(sessions, req)).payee_upi_id == provider.upi_id
 
 
-# --- paying ----------------------------------------------------------------------------------
-
-
-@pytest.mark.parametrize("kind,expected", [("full", "200.00"), ("minimum", "50.00")])
-async def test_paying_the_full_offer_or_the_minimum(sessions, kind, expected):
+async def test_a_driver_who_lost_their_upi_id_cannot_accept(sessions):
     requester, provider, post = await setup_pair(sessions)
-    req = await connect_call(sessions, await request_call(sessions, requester, provider, post, "200"))
-    req = await pay(sessions, req, requester, kind, reference="UPI123")
+    req = await request_call(sessions, requester, provider, post, "200")
+    async with sessions() as s:
+        (await s.get(User, provider.id)).upi_id = None
+        await s.commit()
+    await expect_error("PROVIDER_UPI_MISSING", accept_request(sessions, req, provider), 409)
+    assert (await reload(sessions, req)).status == "pending"
 
-    assert req.status == "completed" and req.payment_outcome == "paid"
-    assert req.paid_amount == D(expected) and req.upi_reference == "UPI123"
-    assert req.counts_as_strike is False and req.provider_confirmed is None
-    assert (provider.id, "call_payment") in sessions.pushes  # the driver is asked to confirm
-    async with sessions() as s:  # still no wallet movement for either
+
+async def test_the_driver_cannot_start_the_call_before_the_payment_is_confirmed(sessions):
+    requester, provider, post = await setup_pair(sessions)
+    req = await accept_request(sessions, await request_call(sessions, requester, provider, post, "200"), provider)
+    async with sessions() as s:
+        await expect_error("PAYMENT_NOT_CONFIRMED", svc.start_call(s, req.id, provider.id), 409)
+    await pay(sessions, req, requester)
+    async with sessions() as s:
+        await expect_error("PAYMENT_NOT_CONFIRMED", svc.start_call(s, req.id, provider.id), 409)
+
+
+@pytest.mark.parametrize("stage", ["accepted", "payment_claimed", "ready"])
+async def test_every_open_stage_blocks_a_second_request_from_the_same_pair(sessions, stage):
+    requester, provider, post = await setup_pair(sessions)
+    req = await request_call(sessions, requester, provider, post, "200")
+    await accept_request(sessions, req, provider)
+    if stage != "accepted":
+        await pay(sessions, req, requester)
+    if stage == "ready":
+        await confirm(sessions, req, provider, True)
+    existing = await expect_error("ALREADY_OPEN", request_call(sessions, requester, provider, post, "200"), 409)
+    assert existing.extra["requestId"] == str(req.id)
+
+
+async def test_the_drivers_queue_holds_every_stage_that_needs_them_oldest_first(sessions):
+    provider = await make_user(sessions, "Provider")
+    post = await make_post(sessions, provider)
+    made = {}
+    for stage in ("pending", "accepted", "payment_claimed", "ready"):
+        requester = await make_user(sessions, stage)
+        req = await request_call(sessions, requester, provider, post, "100")
+        if stage != "pending":
+            await accept_request(sessions, req, provider)
+        if stage in ("payment_claimed", "ready"):
+            await pay(sessions, req, requester)
+        if stage == "ready":
+            await confirm(sessions, req, provider, True)
+        made[stage] = req
+    async with sessions() as s:
+        queue = await svc.list_incoming(s, provider.id)
+    assert [(q.id, q.status) for q in queue] == [(made[k].id, k) for k in ("pending", "accepted", "payment_claimed", "ready")]
+
+
+# --- the driver backing out ---------------------------------------------------------------------------
+
+
+async def test_the_driver_can_back_out_of_an_accepted_request_until_it_is_paid(sessions):
+    requester, provider, post = await setup_pair(sessions)
+    req = await accept_request(sessions, await request_call(sessions, requester, provider, post, "200"), provider)
+    async with sessions() as s:
+        req = await svc.withdraw(s, req.id, provider.id)
+    assert req.status == "rejected" and req.closed_reason == "driver_withdrew"
+    assert (requester.id, "call_request_rejected") in sessions.pushes
+    # the pair is free to ask again
+    assert (await request_call(sessions, requester, provider, post, "200")).status == "pending"
+
+
+async def test_the_driver_cannot_back_out_once_the_requester_says_they_paid(sessions):
+    requester, provider, post = await setup_pair(sessions)
+    req = await accept_request(sessions, await request_call(sessions, requester, provider, post, "200"), provider)
+    await pay(sessions, req, requester)
+    async with sessions() as s:
+        await expect_error("INVALID_STATE", svc.withdraw(s, req.id, provider.id), 409)
+
+
+async def test_only_the_driver_can_withdraw_and_a_pending_request_is_rejected_not_withdrawn(sessions):
+    requester, provider, post = await setup_pair(sessions)
+    req = await request_call(sessions, requester, provider, post, "200")
+    async with sessions() as s:
+        await expect_error("INVALID_STATE", svc.withdraw(s, req.id, provider.id), 409)
+    req = await accept_request(sessions, req, provider)
+    async with sessions() as s:
+        await expect_error("NOT_PROVIDER", svc.withdraw(s, req.id, requester.id), 403)
+
+
+# --- the requester pays in advance -----------------------------------------------------------------
+
+
+async def test_paying_records_a_claim_and_asks_the_driver_to_confirm(sessions):
+    requester, provider, post = await setup_pair(sessions)
+    req = await accept_request(sessions, await request_call(sessions, requester, provider, post, "200"), provider)
+    req = await pay(sessions, req, requester, reference="UPI123")
+
+    assert req.status == "payment_claimed" and req.payment_outcome == "claimed"
+    assert req.paid_amount == D("200.00") and req.upi_reference == "UPI123"
+    assert req.payment_claimed_at is not None and req.provider_confirmed is None
+    # the driver now has up to 24 hours to answer
+    assert abs((req.expires_at - datetime.utcnow()) - timedelta(hours=CALL_CLAIM_CONFIRM_TTL_HOURS)) < timedelta(seconds=10)
+    assert (provider.id, "call_payment") in sessions.pushes
+    async with sessions() as s:  # no wallet movement for anyone
         assert await s.scalar(select(WalletTransaction.id).where(WalletTransaction.reference_id == str(req.id))) is None
 
 
-async def test_a_short_call_can_be_paid_too(sessions):
+async def test_the_whole_offer_is_paid_whatever_it_is(sessions):
     requester, provider, post = await setup_pair(sessions)
-    req = await connect_call(sessions, await request_call(sessions, requester, provider, post, "200"), seconds=10)
-    assert (await pay(sessions, req, requester, "minimum")).payment_outcome == "paid"
+    req = await accept_request(sessions, await request_call(sessions, requester, provider, post, "1234"), provider)
+    assert (await pay(sessions, req, requester)).paid_amount == D("1234.00")
 
 
-async def test_retrying_the_same_payment_is_safe_but_changing_it_is_refused(sessions):
+async def test_retrying_the_same_payment_claim_is_safe(sessions):
     requester, provider, post = await setup_pair(sessions)
-    req = await connect_call(sessions, await request_call(sessions, requester, provider, post, "200"))
-    await pay(sessions, req, requester, "full")
-    assert (await pay(sessions, req, requester, "full")).status == "completed"
-    await expect_error("ALREADY_SETTLED", pay(sessions, req, requester, "minimum"), 409)
-    await expect_error("ALREADY_SETTLED", decline(sessions, req, requester, "changed my mind"), 409)
+    req = await accept_request(sessions, await request_call(sessions, requester, provider, post, "200"), provider)
+    await pay(sessions, req, requester)
+    assert (await pay(sessions, req, requester)).status == "payment_claimed"
+    await confirm(sessions, req, provider, True)
+    assert (await pay(sessions, req, requester)).status == "ready"  # even after it moved on
+    assert sum(1 for who, kind in sessions.pushes if who == provider.id and kind == "call_payment") == 1
 
 
-async def test_two_simultaneous_payment_taps_settle_once(sessions):
+async def test_two_simultaneous_payment_taps_claim_once(sessions):
     requester, provider, post = await setup_pair(sessions)
-    req = await connect_call(sessions, await request_call(sessions, requester, provider, post, "200"))
-    results = await asyncio.gather(
-        pay(sessions, req, requester, "full"), pay(sessions, req, requester, "full"), return_exceptions=True
-    )
+    req = await accept_request(sessions, await request_call(sessions, requester, provider, post, "200"), provider)
+    results = await asyncio.gather(pay(sessions, req, requester), pay(sessions, req, requester), return_exceptions=True)
     assert all(isinstance(r, CallRequest) for r in results)
     assert sum(1 for who, kind in sessions.pushes if who == provider.id and kind == "call_payment") == 1
 
@@ -464,169 +555,127 @@ async def test_two_simultaneous_payment_taps_settle_once(sessions):
 async def test_payment_rules_about_who_and_when(sessions):
     requester, provider, post = await setup_pair(sessions)
     req = await request_call(sessions, requester, provider, post, "200")
-    await expect_error("INVALID_STATE", pay(sessions, req, requester, "full"), 409)  # not called yet
-    req = await connect_call(sessions, req)
-    await expect_error("INVALID_AMOUNT_TYPE", pay(sessions, req, requester, "half"), 400)
-    await expect_error("NOT_REQUESTER", pay(sessions, req, provider, "full"), 403)
+    await expect_error("INVALID_STATE", pay(sessions, req, requester), 409)  # not accepted yet
+    await accept_request(sessions, req, provider)
+    await expect_error("NOT_REQUESTER", pay(sessions, req, provider), 403)
     outsider = await make_user(sessions)
-    await expect_error("REQUEST_NOT_FOUND", pay(sessions, req, outsider, "full"), 404)
-    await expect_error("NOT_REQUESTER", decline(sessions, req, provider, "x" * 5), 403)
+    await expect_error("REQUEST_NOT_FOUND", pay(sessions, req, outsider), 404)
 
 
-# --- refusing --------------------------------------------------------------------------------
-
-
-async def test_refusing_after_a_counted_call_flags_the_requester_and_is_a_strike_when_media_was_on(sessions):
+async def test_the_time_to_pay_runs_out(sessions):
     requester, provider, post = await setup_pair(sessions)
-    req = await connect_call(sessions, await request_call(sessions, requester, provider, post, "200"))
-    req = await decline(sessions, req, requester)  # no reason needed after a counted call
-
-    assert req.status == "completed" and req.payment_outcome == "refused"
-    assert req.counts_as_strike is True and req.paid_amount is None
-    assert (provider.id, "call_not_paid") in sessions.pushes
-    async with sessions() as s:
-        assert await call_payment_standing.standing(s, requester.id) == {
-            "flaggedCalls": 1, "strikes": 1, "strikeLimit": 3, "blocked": False, "resetAt": None,
-        }
+    req = await accept_request(sessions, await request_call(sessions, requester, provider, post, "200"), provider)
+    await age(sessions, req, expires_at=datetime.utcnow() - timedelta(seconds=1))
+    await expect_error("REQUEST_EXPIRED", pay(sessions, req, requester), 410)
+    assert (await reload(sessions, req)).status == "expired"
 
 
-@pytest.mark.parametrize("media", ["mic_only", "camera_only", "none"])
-async def test_a_refusal_is_flagged_but_not_a_strike_when_the_drivers_mic_or_camera_was_off(sessions, media):
+async def test_the_requester_can_cancel_until_they_say_they_paid(sessions):
     requester, provider, post = await setup_pair(sessions)
-    req = await connect_call(sessions, await request_call(sessions, requester, provider, post, "200"), provider_media=media)
-    assert req.provider_media_on is False
-    req = await decline(sessions, req, requester, "could not see him")
-    assert req.payment_outcome == "refused" and req.counts_as_strike is False
+    req = await accept_request(sessions, await request_call(sessions, requester, provider, post, "200"), provider)
     async with sessions() as s:
-        standing = await call_payment_standing.standing(s, requester.id)
-    assert (standing["flaggedCalls"], standing["strikes"]) == (1, 0)
+        cancelled = await svc.cancel(s, req.id, requester.id)
+    assert cancelled.status == "cancelled" and cancelled.closed_reason == "requester_cancelled"
+
+    again = await accept_request(sessions, await request_call(sessions, requester, provider, post, "200"), provider)
+    await pay(sessions, again, requester)
+    async with sessions() as s:
+        await expect_error("INVALID_STATE", svc.cancel(s, again.id, requester.id), 409)
 
 
-async def test_a_short_call_can_only_be_declined_with_a_reason_which_the_driver_is_told(sessions):
+# --- the driver confirms (or not) ------------------------------------------------------------------
+
+
+async def test_the_driver_confirming_opens_the_call_with_a_fresh_start_window(sessions):
     requester, provider, post = await setup_pair(sessions)
-    req = await connect_call(sessions, await request_call(sessions, requester, provider, post, "200"), seconds=12)
-    await expect_error("REASON_REQUIRED", decline(sessions, req, requester), 400)
-    await expect_error("REASON_REQUIRED", decline(sessions, req, requester, "  ok "), 400)  # too short once trimmed
-    assert (await reload(sessions, req)).status == "awaiting_payment"  # nothing changed
+    req = await accept_request(sessions, await request_call(sessions, requester, provider, post, "200"), provider)
+    await pay(sessions, req, requester)
+    req = await confirm(sessions, req, provider, True)
 
-    req = await decline(sessions, req, requester, "The call dropped after a few seconds")
-    assert req.payment_outcome == "declined" and req.payment_reason == "The call dropped after a few seconds"
-    assert req.counts_as_strike is False
-    assert (provider.id, "call_not_paid") in sessions.pushes
-    async with sessions() as s:  # not flagged, not a strike
-        standing = await call_payment_standing.standing(s, requester.id)
-    assert (standing["flaggedCalls"], standing["strikes"]) == (0, 0)
+    assert req.status == "ready" and req.payment_outcome == "paid" and req.provider_confirmed is True
+    assert req.provider_confirmed_at is not None
+    assert abs((req.expires_at - datetime.utcnow()) - timedelta(minutes=CALL_START_WINDOW_MINUTES)) < timedelta(seconds=10)
+    assert (requester.id, "call_payment_confirmed") in sessions.pushes
+    assert (await confirm(sessions, req, provider, True)).status == "ready"  # a second tap is harmless
+    assert sum(1 for who, kind in sessions.pushes if who == requester.id and kind == "call_payment_confirmed") == 1
 
 
-async def test_declining_twice_is_harmless(sessions):
+async def test_a_driver_who_says_no_must_be_asked_to_be_sure(sessions):
     requester, provider, post = await setup_pair(sessions)
-    req = await connect_call(sessions, await request_call(sessions, requester, provider, post, "200"))
-    await decline(sessions, req, requester)
-    assert (await decline(sessions, req, requester)).payment_outcome == "refused"
+    req = await accept_request(sessions, await request_call(sessions, requester, provider, post, "200"), provider)
+    await pay(sessions, req, requester)
+
+    await expect_error("CONFIRM_REQUIRED", confirm(sessions, req, provider, False), 409)
+    still = await reload(sessions, req)
+    assert still.status == "payment_claimed" and still.provider_confirmed is None  # nothing changed
     async with sessions() as s:
-        assert (await call_payment_standing.standing(s, requester.id))["strikes"] == 1
+        types = [e.event_type for e in (await s.execute(select(CallBehaviourEvent).where(CallBehaviourEvent.call_request_id == req.id))).scalars()]
+    assert "provider_denied_payment_unsure" in types  # but the first no is on record
+
+    # and the driver can still change their mind
+    assert (await confirm(sessions, req, provider, True)).status == "ready"
 
 
-# --- three strikes ------------------------------------------------------------------------------
-
-
-async def refuse_a_counted_call(sessions, requester, media="both"):
-    provider = await make_user(sessions, "Provider")
-    post = await make_post(sessions, provider)
-    req = await connect_call(sessions, await request_call(sessions, requester, provider, post, "100"), provider_media=media)
-    return await decline(sessions, req, requester, "no")
-
-
-async def test_three_strikes_block_new_requests_and_an_admin_can_forgive_them(sessions):
-    requester = await make_user(sessions, "Refuser")
-    provider = await make_user(sessions, "Driver")
-    post = await make_post(sessions, provider)
-    for _ in range(2):
-        await refuse_a_counted_call(sessions, requester)
-    await request_call(sessions, requester, provider, post, "100")  # two strikes: still allowed
-
-    await refuse_a_counted_call(sessions, requester)
-    async with sessions() as s:
-        assert (await call_payment_standing.standing(s, requester.id))["blocked"] is True
-    other_post = await make_post(sessions, await make_user(sessions))
-    err = await expect_error("CALL_PAYMENTS_BLOCKED", request_call(sessions, requester, provider, post, "100"), 403)
-    assert "can't request calls" in err.message
-
-    async with sessions() as s:
-        after = await call_payment_standing.reset_standing(s, requester.id, "admin-1")
-    assert after["blocked"] is False and after["strikes"] == 0 and after["flaggedCalls"] == 3  # flags stay on record
-    other_provider = await make_user(sessions)
-    assert (await request_call(sessions, requester, other_provider, await make_post(sessions, other_provider), "100")).status == "pending"
-    await refuse_a_counted_call(sessions, requester)  # new strikes count from the reset
-    async with sessions() as s:
-        assert (await call_payment_standing.standing(s, requester.id))["strikes"] == 1
-
-
-async def test_refusals_without_the_drivers_media_never_block(sessions):
-    requester = await make_user(sessions, "Refuser")
-    for _ in range(4):
-        await refuse_a_counted_call(sessions, requester, media="none")
-    async with sessions() as s:
-        standing = await call_payment_standing.standing(s, requester.id)
-    assert (standing["flaggedCalls"], standing["strikes"], standing["blocked"]) == (4, 0, False)
-
-
-async def test_paid_and_short_calls_never_count_against_anyone(sessions):
-    requester = await make_user(sessions, "Good")
-    for _ in range(3):
-        provider = await make_user(sessions)
-        post = await make_post(sessions, provider)
-        req = await connect_call(sessions, await request_call(sessions, requester, provider, post, "100"))
-        await pay(sessions, req, requester, "minimum")
-        provider = await make_user(sessions)
-        post = await make_post(sessions, provider)
-        short = await connect_call(sessions, await request_call(sessions, requester, provider, post, "100"), seconds=5)
-        await decline(sessions, short, requester, "too short to be useful")
-    async with sessions() as s:
-        standing = await call_payment_standing.standing(s, requester.id)
-    assert (standing["flaggedCalls"], standing["strikes"], standing["blocked"]) == (0, 0, False)
-
-
-async def test_the_flagged_list_is_worst_first(sessions):
-    one, two = await make_user(sessions, "One"), await make_user(sessions, "Two")
-    await refuse_a_counted_call(sessions, one, media="none")
-    await refuse_a_counted_call(sessions, two)
-    await refuse_a_counted_call(sessions, two)
-    async with sessions() as s:
-        listed = [row for row in await call_payment_standing.list_flagged(s) if row["userId"] in (str(one.id), str(two.id))]
-    assert [row["name"] for row in listed] == ["Two", "One"]
-    assert listed[0]["strikes"] == 2 and listed[1]["strikes"] == 0
-
-
-# --- the driver confirms ------------------------------------------------------------------------
-
-
-async def confirm(factory, request, user, received):
-    async with factory() as s:
-        return await svc.confirm_received(s, request.id, user.id, received)
-
-
-async def test_the_driver_can_confirm_or_deny_a_payment_and_it_is_only_recorded(sessions):
+async def test_saying_no_twice_closes_the_request_as_a_dispute_and_the_call_never_starts(sessions):
     requester, provider, post = await setup_pair(sessions)
-    req = await connect_call(sessions, await request_call(sessions, requester, provider, post, "200"))
+    req = await accept_request(sessions, await request_call(sessions, requester, provider, post, "200"), provider)
+    await pay(sessions, req, requester)
+    await expect_error("CONFIRM_REQUIRED", confirm(sessions, req, provider, False), 409)
+    req = await confirm(sessions, req, provider, False, sure=True)
+
+    assert req.status == "payment_disputed" and req.payment_outcome == "disputed"
+    assert req.provider_confirmed is False and req.disputed_at is not None and req.closed_reason == "provider_denied"
+    assert (requester.id, "call_payment_disputed") in sessions.pushes
+    assert (provider.id, "call_payment_disputed") in sessions.pushes
+    async with sessions() as s:
+        await expect_error("INVALID_STATE", svc.start_call(s, req.id, provider.id), 409)
+    assert (await confirm(sessions, req, provider, False, sure=True)).status == "payment_disputed"  # harmless
+    await expect_error("NO_PAYMENT_TO_CONFIRM", confirm(sessions, req, provider, True), 409)  # no reversing it
+    # the pair may ask again
+    assert (await request_call(sessions, requester, provider, post, "200")).status == "pending"
+
+
+async def test_confirming_rules_about_who_and_when(sessions):
+    requester, provider, post = await setup_pair(sessions)
+    req = await accept_request(sessions, await request_call(sessions, requester, provider, post, "200"), provider)
     await expect_error("NO_PAYMENT_TO_CONFIRM", confirm(sessions, req, provider, True), 409)  # nothing paid yet
-    await pay(sessions, req, requester, "full")
+    await pay(sessions, req, requester)
     await expect_error("NOT_PROVIDER", confirm(sessions, req, requester, True), 403)
-
-    req = await confirm(sessions, req, provider, False)
-    assert req.provider_confirmed is False and req.provider_confirmed_at is not None
-    req = await confirm(sessions, req, provider, True)  # people mis-tap: the last answer stands
-    assert req.provider_confirmed is True and req.status == "completed" and req.payment_outcome == "paid"
-    async with sessions() as s:
-        types = [e.event_type for e in (await s.execute(select(CallBehaviourEvent).where(CallBehaviourEvent.call_request_id == req.id).order_by(CallBehaviourEvent.created_at))).scalars()]
-    assert types.count("provider_denied_payment") == 1 and types.count("provider_confirmed_payment") == 1
+    outsider = await make_user(sessions)
+    await expect_error("REQUEST_NOT_FOUND", confirm(sessions, req, outsider, True), 404)
 
 
-async def test_nothing_to_confirm_after_a_refusal(sessions):
+async def test_confirming_after_the_claim_window_lapsed_still_works_until_the_sweep_runs(sessions):
     requester, provider, post = await setup_pair(sessions)
-    req = await connect_call(sessions, await request_call(sessions, requester, provider, post, "200"))
-    await decline(sessions, req, requester)
-    await expect_error("NO_PAYMENT_TO_CONFIRM", confirm(sessions, req, provider, True), 409)
+    req = await accept_request(sessions, await request_call(sessions, requester, provider, post, "200"), provider)
+    await pay(sessions, req, requester)
+    await age(sessions, req, expires_at=datetime.utcnow() - timedelta(minutes=1))
+    assert (await confirm(sessions, req, provider, True)).status == "ready"  # the money was paid: don't punish a late yes
+
+
+# --- what a call that ends looks like ----------------------------------------------------------------
+
+
+async def test_a_call_that_never_connected_at_all_fails(sessions):
+    requester, provider, post = await setup_pair(sessions)
+    req = await make_ready(sessions, await request_call(sessions, requester, provider, post, "200"), requester, provider)
+    req = await connect_call(sessions, req, seconds=0)
+    assert req.status == "failed" and req.closed_reason == "call_not_connected" and req.threshold_met is None
+
+
+async def test_a_short_call_is_completed_but_not_a_counted_call(sessions):
+    requester, provider, post = await setup_pair(sessions)
+    req = await make_ready(sessions, await request_call(sessions, requester, provider, post, "200"), requester, provider)
+    req = await connect_call(sessions, req, seconds=29)
+    assert req.status == "completed" and req.threshold_met is False and req.payment_outcome == "paid"
+
+
+async def test_a_call_of_30_seconds_is_a_counted_call(sessions):
+    requester, provider, post = await setup_pair(sessions)
+    req = await make_ready(sessions, await request_call(sessions, requester, provider, post, "200"), requester, provider)
+    req = await connect_call(sessions, req, seconds=30)
+    assert req.status == "completed" and req.threshold_met is True and req.provider_media_on is True
+    assert req.payee_upi_id == provider.upi_id
 
 
 # --- the redeem rule that used to depend on calls -------------------------------------------------
@@ -659,47 +708,59 @@ async def drain_sweep(factory):
         await svc.sweep(s)
 
 
-async def test_sweep_expires_old_requests_and_closes_unanswered_payments_once(sessions):
+async def test_sweep_expires_each_stage_when_its_own_window_runs_out(sessions):
     await drain_sweep(sessions)
-    requester, provider, post = await setup_pair(sessions)
-    stale = await request_call(sessions, requester, provider, post, "100")
-    other_provider = await make_user(sessions)
-    other_post = await make_post(sessions, other_provider)
-    awaiting = await connect_call(sessions, await request_call(sessions, requester, other_provider, other_post, "200"))
-
-    async with sessions() as s:
-        a = await s.get(CallRequest, stale.id)
-        a.expires_at = datetime.utcnow() - timedelta(minutes=1)
-        b = await s.get(CallRequest, awaiting.id)
-        b.feedback_deadline = datetime.utcnow() - timedelta(minutes=1)
-        await s.commit()
+    requester = await make_user(sessions, "Requester")
+    stages = {}
+    for name in ("pending", "accepted", "ready"):
+        provider = await make_user(sessions, name)
+        post = await make_post(sessions, provider)
+        req = await request_call(sessions, requester, provider, post, "100")
+        if name == "accepted":
+            req = await accept_request(sessions, req, provider)
+        if name == "ready":
+            req = await make_ready(sessions, req, requester, provider)
+        await age(sessions, req, expires_at=datetime.utcnow() - timedelta(minutes=1))
+        stages[name] = (req, provider)
 
     async with sessions() as s:
         counts = await svc.sweep(s)
-    assert (counts["expired"], counts["settled"]) == (1, 1)
+    assert counts["expired"] == 3
     async with sessions() as s:
         assert not any((await svc.sweep(s)).values())  # nothing left, nothing repeated
 
-    assert (await reload(sessions, stale)).status == "expired"
-    closed = await reload(sessions, awaiting)
-    assert closed.status == "completed" and closed.payment_outcome == "expired" and closed.paid_amount is None
-    assert closed.counts_as_strike is True  # a counted call nobody answered is the same as refusing
-    assert (other_provider.id, "call_not_paid") in sessions.pushes
+    reasons = {name: (await reload(sessions, req)) for name, (req, _) in stages.items()}
+    assert {n: (r.status, r.closed_reason) for n, r in reasons.items()} == {
+        "pending": ("expired", "no_response"),
+        "accepted": ("expired", "payment_window_lapsed"),
+        "ready": ("expired", "start_window_lapsed"),
+    }
+    # the requester and driver are told what fits: unpaid -> both; paid but never called -> the requester
+    accepted_provider = stages["accepted"][1]
+    assert (accepted_provider.id, "call_request_expired") in sessions.pushes
+    assert (requester.id, "call_request_expired") in sessions.pushes
 
 
-async def test_a_short_call_nobody_answered_is_not_a_strike(sessions):
+async def test_a_payment_claim_the_driver_never_answers_goes_to_admin_review_after_24_hours(sessions):
     await drain_sweep(sessions)
     requester, provider, post = await setup_pair(sessions)
-    req = await connect_call(sessions, await request_call(sessions, requester, provider, post, "200"), seconds=8)
+    req = await accept_request(sessions, await request_call(sessions, requester, provider, post, "200"), provider)
+    await pay(sessions, req, requester)
+
     async with sessions() as s:
-        (await s.get(CallRequest, req.id)).feedback_deadline = datetime.utcnow() - timedelta(minutes=1)
-        await s.commit()
+        assert (await svc.sweep(s))["settled"] == 0  # still inside the 24 hours: keep waiting
+    assert (await reload(sessions, req)).status == "payment_claimed"
+
+    await age(sessions, req, expires_at=datetime.utcnow() - timedelta(minutes=1))
     async with sessions() as s:
-        await svc.sweep(s)
+        assert (await svc.sweep(s))["settled"] == 1
     closed = await reload(sessions, req)
-    assert closed.payment_outcome == "expired" and closed.counts_as_strike is False
+    assert closed.status == "payment_disputed" and closed.closed_reason == "provider_silent"
+    assert closed.payment_outcome == "disputed" and closed.disputed_at is not None
+    assert (requester.id, "call_payment_disputed") in sessions.pushes
+    assert (provider.id, "call_payment_disputed") in sessions.pushes
     async with sessions() as s:
-        assert (await call_payment_standing.standing(s, requester.id))["flaggedCalls"] == 0
+        assert not any((await svc.sweep(s)).values())
 
 
 async def test_a_sweep_running_in_two_places_at_once_closes_a_request_once(sessions):
@@ -724,19 +785,20 @@ async def test_a_sweep_running_in_two_places_at_once_closes_a_request_once(sessi
 
 async def test_behaviour_events_record_both_sides_and_the_payment(sessions):
     requester, provider, post = await setup_pair(sessions)
-    req = await request_call(sessions, requester, provider, post, "200")
-    async with sessions() as s:
-        await svc.accept(s, req.id, provider.id)
+    req = await accept_request(sessions, await request_call(sessions, requester, provider, post, "200"), provider)
     async with sessions() as s:
         n = await svc.record_client_events(
             s,
             req.id,
             requester.id,
-            [{"type": "mic_off"}, {"type": "chat_opened"}, {"type": "payment_sheet_opened"}, {"type": "refusal_warning_shown"}],
+            [{"type": "mic_off"}, {"type": "chat_opened"}, {"type": "payment_sheet_opened"}, {"type": "upi_app_opened"}],
         )
     assert n == 4
+    await pay(sessions, req, requester)
+    async with sessions() as s:
+        assert await svc.record_client_events(s, req.id, provider.id, [{"type": "payment_confirm_sheet_opened"}]) == 1
+    await confirm(sessions, req, provider, True)
     req = await connect_call(sessions, req)
-    await decline(sessions, req, requester, "no")
 
     async with sessions() as s:
         events = (
@@ -749,9 +811,10 @@ async def test_behaviour_events_record_both_sides_and_the_payment(sessions):
     assert by_type["request_accepted"].role == "provider"
     assert by_type["mic_off"].source == "client" and by_type["mic_off"].role == "requester"
     assert by_type["payment_sheet_opened"].source == "client"
-    assert by_type["payment_due"].role == "system" and by_type["payment_due"].details["thresholdMet"] is True
-    assert by_type["payment_refused"].role == "requester" and by_type["payment_refused"].details["strike"] is True
-    assert by_type["requester_flagged"].role == "system"
+    assert by_type["payment_confirm_sheet_opened"].role == "provider"
+    assert by_type["payment_claimed"].role == "requester" and by_type["payment_claimed"].details["amount"] == "200.00"
+    assert by_type["provider_confirmed_payment"].role == "provider"
+    assert by_type["call_completed"].role == "system" and by_type["call_completed"].details["thresholdMet"] is True
 
 
 async def test_behaviour_events_reject_unknown_types_and_outsiders(sessions):
@@ -785,7 +848,10 @@ async def test_deleting_a_user_with_calls_works_and_takes_their_calls_with_them(
     from services.user_deletion import delete_user_cascade
 
     requester, provider, post = await setup_pair(sessions)
-    req = await connect_call(sessions, await request_call(sessions, requester, provider, post, "200"))
+    req = await connect_call(
+        sessions,
+        await make_ready(sessions, await request_call(sessions, requester, provider, post, "200"), requester, provider),
+    )
     async with sessions() as s:
         user = await s.get(User, requester.id)
         await delete_user_cascade(s, user)

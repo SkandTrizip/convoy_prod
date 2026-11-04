@@ -691,6 +691,8 @@ Built (backend + `convoynew`), tested with fakes, **not yet looked at on a phone
 
 Branch `feat/new-demand-call-flow` in BOTH repos (`convoy_prod` and `convoynew`), started from the classic code. **Classic = the wallet-hold flow** (branches `main` / `feat/new-changes`). **New = no wallet**: after the call the requester pays the driver's UPI ID directly. Built and tested with fakes, **not yet tried on real phones**. Full API: `docs/ONE_TO_ONE_DIRECT_PAYMENT_API.md`.
 
+> **Rules 3, 4, 5 (amounts), 6 and 8 below describe the earlier "pay after the call" version. They are being replaced by the advance-payment flow in Part N: read that first.**
+
 Your rules, as built:
 1. The request is the same except there is no wallet and nothing is reserved. A driver **must have a UPI ID** (Profile page) or they can't be requested (`PROVIDER_UPI_MISSING`).
 2. Both sides keep the full behaviour log (joined, mic, camera, who cut the call, 30 s reached, ...). New: every heartbeat (about every 5 s) now says whether that phone's mic and camera are on, and the requester says whether they can see the driver's video. Stored as counts per call.
@@ -853,6 +855,18 @@ It is off until you switch it on (`rechargeEnabled = false`).
 > **Coming next (not built):** nothing in the plan. Open items: Step I6 (Agora chat via RTM, not needed any more), optional "requester can't publish video" hardening in the Agora token, admin tooling for `review` recharges.
 
 ---
+
+### Part N: ADVANCE payment (replaces "pay after the call"), built in stages (4 Nov)
+
+The flow now: driver accepts -> the requester pays the full offer by UPI -> the driver confirms "I received it" (a no must be confirmed twice) -> only then the driver can start the call. Decisions and rules: API doc `docs/ONE_TO_ONE_DIRECT_PAYMENT_API.md`. Stages: **1 backend states, endpoints, windows, sweep (done)**; 2 backend money rules (refund-due, strikes and blocks, admin disputes list); 3 app requester side; 4 app driver side; 5 app clean-up; 6 docs and final steps.
+
+- [ ] **Step N1 (stage 1): apply migration 031 to the new-flow database, then restart that backend.** Do NOT use `scripts/new_flow_db.sh` again (it refuses to overwrite). From `convoy_prod/`:
+  ```bash
+  psql postgresql://postgres:postgres@127.0.0.1:5433/convoy_newflow -v ON_ERROR_STOP=1 --single-transaction -q -f migrations/031_advance_payment.sql
+  ```
+  It adds 3 statuses and 3 columns, widens the "one open request per pair" index, and closes any request an older build left in `awaiting_payment`. Safe to run twice. (The scratch test database already has it.) Then restart the backend as in Step M2.
+- [ ] **Step N2: Don't demo the new flow yet.** Until stages 3 to 5 are built, the `convoynew` app on `feat/new-demand-call-flow` still expects the old pay-after-the-call screens, so it cannot complete a call against this backend. Backend behaviour can be tried in Swagger (`/docs`): request, accept, `payment/paid`, `payment/confirm` (try `received: false` twice: the second needs `"sure": true`), then `start`.
+- [ ] **Step N3 (production, only if the stakeholders pick this flow):** back up, then apply 030 and 031 as in Step M6.
 
 ## Housekeeping
 

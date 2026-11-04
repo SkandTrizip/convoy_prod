@@ -1,20 +1,24 @@
-"""Paid 1:1 call requests, NEW FLOW: request -> provider accepts -> call -> the requester pays the
-provider's UPI ID directly. There is no wallet and no hold.
+"""Paid 1:1 call requests, NEW FLOW with ADVANCE payment: request -> provider accepts -> the requester pays the
+provider's UPI ID -> the provider confirms they received it -> the provider starts the call. There is no
+wallet and no hold.
 
-    pending -> accepted -> ringing -> live -> awaiting_payment -> completed
-    exits:  rejected (provider) | cancelled (requester) | expired (30 min window)
-            | failed (the call never connected at all)
+    pending -> accepted -> payment_claimed -> ready -> ringing -> live -> completed
+               (waiting    (requester says    (driver
+                for pay)    they paid)         confirmed)
+    exits:  rejected (provider, or the provider withdrew before being paid) | cancelled (requester, before
+            paying) | expired (a window ran out) | failed (the call never connected at all)
+            | payment_disputed (the provider said twice that the payment never arrived, or never answered)
 
 Money rules (all amounts in INR; the app opens a UPI app, the server cannot see the payment):
-  * `amount` is the offer, `hold_amount` the MINIMUM payable: max(25% of the offer, Rs25), capped at the
-    offer. Nothing is frozen anywhere.
-  * After a call that connected at all the requester is asked to pay, in a sheet: the full offer or the
-    minimum. If the call reached CALL_CONNECT_THRESHOLD_SECONDS, saying no is a "refusal" (flagged; a strike
-    too when the provider's mic and camera were on); a shorter call can be declined with a reason the
-    provider is told. Not answering within CALL_FEEDBACK_TTL_HOURS counts as not paying.
-  * CALL_PAYMENT_STRIKE_LIMIT strikes block new requests (services/call_payment_standing.py).
-  * The provider is asked to confirm they received a payment the requester says they made; the answer is
-    only recorded (for the later "who is lying" analysis).
+  * `amount` is the offer and is paid IN FULL, up front. Nothing is frozen anywhere. (`hold_amount`, the old
+    "minimum", is still stored but not used by this flow.)
+  * Windows: pending lives CALL_REQUEST_TTL_MINUTES; accepting gives the requester CALL_PAY_WINDOW_MINUTES to
+    pay; the provider's confirmation gives the provider CALL_START_WINDOW_MINUTES to start the call; a
+    payment the provider never answers about goes to admin review (`payment_disputed`) after
+    CALL_CLAIM_CONFIRM_TTL_HOURS. `expires_at` always holds the deadline of the stage the request is in.
+  * The requester can cancel until they say they paid; the provider can withdraw until then too.
+  * The provider answers "did you receive it?" once: yes opens the call; no needs a second, explicit "I'm
+    sure" (`sure=True`) and then closes the request as `payment_disputed`.
 
 Every function here that changes state takes a row lock on the request, then
 re-checks its status, so two taps / a tap racing the sweeper can't both act.
@@ -36,16 +40,18 @@ from config import (
     CALL_DURATION_OPTIONS_MINUTES,
     CALL_DEVICE_TAKEOVER_SECONDS,
     CALL_END_GRACE_SECONDS,
-    CALL_FEEDBACK_TTL_HOURS,
+    CALL_CLAIM_CONFIRM_TTL_HOURS,
     CALL_HEARTBEAT_GRACE_SECONDS,
     CALL_HOLD_FRACTION,
     CALL_HOLD_MIN_INR,
     CALL_MAX_AMOUNT_INR,
     CALL_MEDIA_ON_MIN_FRACTION,
     CALL_MIN_AMOUNT_INR,
+    CALL_PAY_WINDOW_MINUTES,
     CALL_RECONNECT_WINDOW_SECONDS,
     CALL_REQUEST_TTL_MINUTES,
     CALL_RING_SECONDS,
+    CALL_START_WINDOW_MINUTES,
     CALL_SWEEP_INTERVAL_SECONDS,
     logger,
 )
@@ -92,12 +98,14 @@ CLIENT_EVENT_TYPES = frozenset(
         "app_foregrounded",
         # Where the phone's audio/video setup got to (step names and SDK error codes, never content).
         "media_diagnostic",
-        # The payment sheet after the call (what the requester did with it).
+        # The advance-payment sheet (what the requester did with it) and the driver's "did you receive it?".
         "payment_sheet_opened",
         "upi_app_opened",
         "upi_app_returned",
         "refusal_warning_shown",
         "refusal_warning_dismissed",
+        "payment_confirm_sheet_opened",
+        "payment_confirm_sure_shown",
     }
 )
 MAX_EVENTS_PER_BATCH = 50
@@ -293,12 +301,18 @@ def _wrong_state(request: CallRequest, action: str) -> CallRequestError:
 
 
 async def _end_without_charge(
-    session: AsyncSession, request: CallRequest, new_status: str, event_type: str, actor_id: UUID | None
+    session: AsyncSession,
+    request: CallRequest,
+    new_status: str,
+    event_type: str,
+    actor_id: UUID | None,
+    closed_reason: str | None = None,
 ) -> None:
-    """Move to a terminal no-payment status. The caller holds the request lock and has
+    """Move to a terminal status without a call. The caller holds the request lock and has
     checked the current status, and commits afterwards."""
     now = _now()
     request.status = new_status
+    request.closed_reason = closed_reason or request.closed_reason
     request.responded_at = request.responded_at or now
     request.updated_at = now
     if actor_id is None:
@@ -308,7 +322,7 @@ async def _end_without_charge(
 
 
 async def _expire_now(session: AsyncSession, request: CallRequest) -> None:
-    await _end_without_charge(session, request, "expired", "request_expired", None)
+    await _end_without_charge(session, request, "expired", "request_expired", None, "no_response")
     await session.commit()
 
 
@@ -423,9 +437,9 @@ async def get_request(session: AsyncSession, request_id: UUID, user_id: UUID) ->
 
 
 async def list_incoming(session: AsyncSession, provider_id: UUID) -> list[CallRequest]:
-    """The provider's queue, oldest first: new requests to review, plus accepted
-    ones still waiting for the provider to start the call. Requests past their
-    window are left out even if the sweeper hasn't flipped them yet."""
+    """The provider's queue, oldest first: requests to review, accepted ones waiting for the requester's
+    payment, payments to confirm, and paid ones waiting for the provider to start the call. Requests past
+    their window are left out even if the sweeper hasn't flipped them yet."""
     result = await session.execute(
         select(CallRequest)
         .where(
@@ -441,7 +455,7 @@ async def list_incoming(session: AsyncSession, provider_id: UUID) -> list[CallRe
 async def list_outgoing(session: AsyncSession, requester_id: UUID, *, active_only: bool, limit: int = 50) -> list[CallRequest]:
     query = select(CallRequest).where(CallRequest.requester_id == requester_id)
     if active_only:
-        query = query.where(CallRequest.status.in_(CALL_OPEN_STATUSES + ("awaiting_payment",)))
+        query = query.where(CallRequest.status.in_(CALL_OPEN_STATUSES))
     result = await session.execute(query.order_by(CallRequest.created_at.desc()).limit(limit))
     return list(result.scalars().all())
 
@@ -450,6 +464,9 @@ async def list_outgoing(session: AsyncSession, requester_id: UUID, *, active_onl
 
 
 async def accept(session: AsyncSession, request_id: UUID, provider_id: UUID) -> CallRequest:
+    """The driver says yes. The requester must now pay the full offer to the driver's UPI ID: they get
+    CALL_PAY_WINDOW_MINUTES for it. The UPI ID to pay is fixed here, so changing it later can't redirect
+    the payment."""
     request = await _lock_request(session, request_id)
     if _require_party(request, provider_id) != "provider":
         raise CallRequestError(403, "NOT_PROVIDER", "Only the driver can accept this request")
@@ -458,22 +475,28 @@ async def accept(session: AsyncSession, request_id: UUID, provider_id: UUID) -> 
     if request.expires_at <= _now():
         await _expire_now(session, request)
         raise CallRequestError(410, "REQUEST_EXPIRED", "This request has expired")
+    provider = await session.get(User, provider_id)
+    upi_id = ((provider.upi_id if provider else None) or "").strip()
+    if not upi_id:
+        raise CallRequestError(
+            409, "PROVIDER_UPI_MISSING", "Add your UPI ID on your profile first, so the requester can pay you"
+        )
 
+    now = _now()
     request.status = "accepted"
-    request.responded_at = _now()
-    # The driver may take several requests and call them one by one: the time to start the call runs
-    # from the acceptance, not from when the request was sent.
-    request.expires_at = request.responded_at + timedelta(minutes=CALL_REQUEST_TTL_MINUTES)
+    request.responded_at = now
+    request.payee_upi_id = upi_id
+    request.expires_at = now + timedelta(minutes=CALL_PAY_WINDOW_MINUTES)
+    request.updated_at = now
     add_event(session, request, provider_id, "request_accepted")
     await session.commit()
     await session.refresh(request)
 
-    provider_name = await session.scalar(select(User.name).where(User.id == provider_id))
     await _notify(
         session,
         request.requester_id,
-        "Request accepted",
-        f"{provider_name or 'The driver'} accepted. They will call you shortly",
+        "Request accepted: pay now",
+        f"{provider.name or 'The driver'} accepted. Pay ₹{money(request.amount)} to start your call",
         {"type": "call_request_accepted", "requestId": request.id},
     )
     return request
@@ -486,7 +509,7 @@ async def reject(session: AsyncSession, request_id: UUID, provider_id: UUID) -> 
     if request.status != "pending":
         raise _wrong_state(request, "rejected")
 
-    await _end_without_charge(session, request, "rejected", "request_rejected", provider_id)
+    await _end_without_charge(session, request, "rejected", "request_rejected", provider_id, "driver_rejected")
     await session.commit()
     await session.refresh(request)
 
@@ -500,6 +523,29 @@ async def reject(session: AsyncSession, request_id: UUID, provider_id: UUID) -> 
     return request
 
 
+async def withdraw(session: AsyncSession, request_id: UUID, provider_id: UUID) -> CallRequest:
+    """The driver backs out of a request they accepted, as long as the requester has not paid yet. The
+    requester is told as for a rejection (status `rejected`, `closedReason: driver_withdrew`)."""
+    request = await _lock_request(session, request_id)
+    if _require_party(request, provider_id) != "provider":
+        raise CallRequestError(403, "NOT_PROVIDER", "Only the driver can withdraw from this request")
+    if request.status != "accepted":
+        raise _wrong_state(request, "withdrawn")
+
+    await _end_without_charge(session, request, "rejected", "request_withdrawn", provider_id, "driver_withdrew")
+    await session.commit()
+    await session.refresh(request)
+
+    await _notify(
+        session,
+        request.requester_id,
+        "Request withdrawn",
+        "The driver can't take your call right now. You haven't paid anything",
+        {"type": "call_request_rejected", "requestId": request.id},
+    )
+    return request
+
+
 async def cancel(session: AsyncSession, request_id: UUID, requester_id: UUID) -> CallRequest:
     request = await _lock_request(session, request_id)
     if _require_party(request, requester_id) != "requester":
@@ -507,7 +553,9 @@ async def cancel(session: AsyncSession, request_id: UUID, requester_id: UUID) ->
     if request.status not in ("pending", "accepted"):
         raise _wrong_state(request, "cancelled")
 
-    await _end_without_charge(session, request, "cancelled", "request_cancelled", requester_id)
+    await _end_without_charge(
+        session, request, "cancelled", "request_cancelled", requester_id, "requester_cancelled"
+    )
     await session.commit()
     await session.refresh(request)
     return request
@@ -529,9 +577,9 @@ def provider_media_was_on(request: CallRequest) -> bool:
 
 
 async def _finalize_locked(session: AsyncSession, request: CallRequest, connected_seconds: int, end_reason: str) -> None:
-    """Shared by every way a live call ends. A call that never connected at all is `failed`
-    (nothing to pay for). Anything else asks the requester to pay: `threshold_met` says whether it
-    counted (>= CALL_CONNECT_THRESHOLD_SECONDS), which decides whether declining is a refusal.
+    """Shared by every way a live call ends. The payment was made in advance, so a call that connected is
+    simply `completed`; one that never connected at all is `failed`. What the call looked like (long enough,
+    were the driver's mic and camera on) is recorded for the money rules to look at afterwards.
     Caller holds the request lock and commits."""
     now = _now()
     request.call_ended_at = now
@@ -546,21 +594,18 @@ async def _finalize_locked(session: AsyncSession, request: CallRequest, connecte
         details={"reason": end_reason, "connectedSeconds": request.connected_seconds},
     )
     if request.connected_seconds < 1:
-        await _end_without_charge(session, request, "failed", "call_not_connected", None)
+        await _end_without_charge(session, request, "failed", "call_not_connected", None, "call_not_connected")
         return
 
     request.threshold_met = request.connected_seconds >= CALL_CONNECT_THRESHOLD_SECONDS
     request.provider_media_on = provider_media_was_on(request)
-    # Fixed now, so a later change of the provider's UPI ID can't redirect this payment.
-    request.payee_upi_id = (await session.scalar(select(User.upi_id).where(User.id == request.provider_id))) or None
-    request.status = "awaiting_payment"
-    request.feedback_deadline = now + timedelta(hours=CALL_FEEDBACK_TTL_HOURS)
+    request.status = "completed"
     request.updated_at = now
     add_event(
         session,
         request,
         request.requester_id,
-        "payment_due",
+        "call_completed",
         role="system",
         details={
             "connectedSeconds": request.connected_seconds,
@@ -570,17 +615,6 @@ async def _finalize_locked(session: AsyncSession, request: CallRequest, connecte
             "providerCameraBeats": f"{request.provider_camera_beats}/{request.provider_beats}",
         },
     )
-
-
-async def _after_finalize(session: AsyncSession, request: CallRequest) -> None:
-    if request.status == "awaiting_payment":
-        await _notify(
-            session,
-            request.requester_id,
-            "Time to pay for your call",
-            "Open the app to pay the driver for your call",
-            {"type": "call_payment_due", "requestId": request.id},
-        )
 
 
 async def finalize_call(
@@ -594,7 +628,6 @@ async def finalize_call(
     await _finalize_locked(session, request, connected_seconds, end_reason)
     await session.commit()
     await session.refresh(request)
-    await _after_finalize(session, request)
     return request
 
 
@@ -696,8 +729,8 @@ async def start_call(
     session: AsyncSession, request_id: UUID, provider_id: UUID, device_id: str | None = None
 ) -> tuple[CallRequest, dict]:
     """Driver starts the call: the requester's phone rings for CALL_RING_SECONDS.
-    A missed ring can be retried until the request's window ends (30 minutes after the
-    driver accepted it). Asking
+    Only once the driver has confirmed the payment (`ready`). A missed ring can be retried until
+    the start window ends (CALL_START_WINDOW_MINUTES after the confirmation). Asking
     again while it is still ringing just returns the same credentials."""
     agora_client.require_configured()  # before any state change: never ring someone for a call that can't start
     request = await _lock_request(session, request_id)
@@ -709,7 +742,14 @@ async def start_call(
         if device_conflict(request, "provider", device_id, now):
             raise _other_device_error()
         return request, call_credentials(request, provider_id)  # same ring, e.g. the app restarted
-    if request.status not in ("accepted", "ringing"):  # ringing past its deadline = a missed ring: retry
+    if request.status not in ("ready", "ringing"):  # ringing past its deadline = a missed ring: retry
+        if request.status in ("accepted", "payment_claimed"):
+            raise CallRequestError(
+                409,
+                "PAYMENT_NOT_CONFIRMED",
+                "You can start the call once you have confirmed the payment",
+                status=request.status,
+            )
         raise _wrong_state(request, "started")
     if request.expires_at <= now:
         await _expire_now(session, request)
@@ -839,7 +879,6 @@ async def heartbeat(
         await _finalize_locked(session, request, request.connected_ms // 1000, "time_limit")
         await session.commit()
         await session.refresh(request)
-        await _after_finalize(session, request)
         return _call_state(request, now)
 
     if device_conflict(request, role, device_id, now):
@@ -880,7 +919,7 @@ async def end_call(
 ) -> CallRequest:
     """Hang up. While ringing: the driver cancels the ring (they can start again), the
     requester declines it (the request is cancelled). While live: the
-    call ends and the requester is asked to pay for what connected. Anything already over is
+    call ends (`completed`, or `failed` if it never connected). Anything already over is
     returned unchanged, so a double tap is harmless."""
     request = await _lock_request(session, request_id)
     role = _require_party(request, user_id)
@@ -890,11 +929,11 @@ async def end_call(
 
     if request.status == "ringing":
         if role == "provider":
-            request.status = "accepted"
+            request.status = "ready"
             request.updated_at = _now()
             add_event(session, request, user_id, "ring_cancelled")
         else:
-            await _end_without_charge(session, request, "cancelled", "ring_declined", user_id)
+            await _end_without_charge(session, request, "cancelled", "ring_declined", user_id, "ring_declined")
         await session.commit()
         await session.refresh(request)
         if role == "provider":
@@ -912,7 +951,6 @@ async def end_call(
         await _finalize_locked(session, request, request.connected_ms // 1000, f"ended_by_{role}")
         await session.commit()
         await session.refresh(request)
-        await _after_finalize(session, request)
         return request
 
     if request.status == "pending":
@@ -920,54 +958,45 @@ async def end_call(
     return request
 
 
-# --- paying for the call --------------------------------------------------------------
-
-
-AMOUNT_TYPES = ("full", "minimum")
-MAX_REASON_CHARS = 500
-MIN_SHORT_CALL_REASON_CHARS = 3
-
-
-def payable(request: CallRequest, amount_type: str) -> Decimal:
-    """What "full" / "minimum" mean for this request."""
-    return request.amount if amount_type == "full" else request.hold_amount
-
-
-def _payment_closed(request: CallRequest, now: datetime, outcome: str) -> None:
-    request.status = "completed"
-    request.payment_outcome = outcome
-    request.payment_decided_at = now
-    request.updated_at = now
+# --- paying in advance ----------------------------------------------------------------
 
 
 async def pay(
-    session: AsyncSession, request_id: UUID, requester_id: UUID, amount_type: str, upi_reference: str | None = None
+    session: AsyncSession, request_id: UUID, requester_id: UUID, upi_reference: str | None = None
 ) -> CallRequest:
-    """The requester says they paid the provider's UPI ID (the app opened a UPI app and they came back
-    saying yes). The server can't see the money: it records the claim and asks the provider to confirm.
-    Allowed for any call that connected, short ones too (paying there is a kindness, not a duty)."""
-    if amount_type not in AMOUNT_TYPES:
-        raise CallRequestError(400, "INVALID_AMOUNT_TYPE", "Pay either the full offer or the minimum")
+    """The requester says they paid the full offer to the driver's UPI ID (the app opened a UPI app and they
+    came back saying yes). The server can't see the money: it records the claim and asks the driver to
+    confirm. From here the requester can no longer cancel. The same answer sent twice is harmless."""
     request = await _lock_request(session, request_id)
     if _require_party(request, requester_id) != "requester":
         raise CallRequestError(403, "NOT_REQUESTER", "Only the requester can pay for this call")
-    if request.status == "completed":
-        if request.payment_outcome == "paid" and request.paid_amount == payable(request, amount_type):
-            return request  # a retried tap: same answer, same result
-        raise CallRequestError(409, "ALREADY_SETTLED", "This call has already been settled", status=request.status)
-    if request.status != "awaiting_payment":
+    if request.status in ("payment_claimed", "ready", "ringing", "live", "completed") and request.payment_outcome in (
+        "claimed",
+        "paid",
+    ):
+        return request  # a retried tap: same answer
+    if request.status != "accepted":
         raise _wrong_state(request, "paid")
+    if request.expires_at <= _now():
+        await _expire_now(session, request)
+        raise CallRequestError(410, "REQUEST_EXPIRED", "The time to pay has run out")
 
     now = _now()
-    request.paid_amount = payable(request, amount_type)
+    request.status = "payment_claimed"
+    request.payment_outcome = "claimed"
+    request.paid_amount = request.amount
+    request.payment_claimed_at = now
+    request.payment_decided_at = now
     request.upi_reference = (upi_reference or "").strip()[:100] or None
-    _payment_closed(request, now, "paid")
+    # The driver now has to answer; if they never do, it goes to admin review (see sweep).
+    request.expires_at = now + timedelta(hours=CALL_CLAIM_CONFIRM_TTL_HOURS)
+    request.updated_at = now
     add_event(
         session,
         request,
         requester_id,
         "payment_claimed",
-        details={"amount": money(request.paid_amount), "type": amount_type, "reference": request.upi_reference},
+        details={"amount": money(request.paid_amount), "reference": request.upi_reference},
     )
     await session.commit()
     await session.refresh(request)
@@ -983,103 +1012,89 @@ async def pay(
     return request
 
 
-def _strike_applies(request: CallRequest) -> bool:
-    return bool(request.threshold_met and request.provider_media_on)
-
-
-async def decline(
-    session: AsyncSession, request_id: UUID, requester_id: UUID, reason: str | None
+async def confirm_received(
+    session: AsyncSession, request_id: UUID, provider_id: UUID, received: bool, sure: bool = False
 ) -> CallRequest:
-    """The requester will not pay. After a call that reached the threshold that is a *refusal*: the call is
-    flagged, and it is a strike if the provider's mic and camera were on. A shorter call can be declined,
-    but only with a reason, which the provider is told."""
-    reason = (reason or "").strip()[:MAX_REASON_CHARS]
-    request = await _lock_request(session, request_id)
-    if _require_party(request, requester_id) != "requester":
-        raise CallRequestError(403, "NOT_REQUESTER", "Only the requester can answer this")
-    if request.status == "completed":
-        if request.payment_outcome in ("refused", "declined"):
-            return request
-        raise CallRequestError(409, "ALREADY_SETTLED", "This call has already been settled", status=request.status)
-    if request.status != "awaiting_payment":
-        raise _wrong_state(request, "declined")
-    if not request.threshold_met and len(reason) < MIN_SHORT_CALL_REASON_CHARS:
-        raise CallRequestError(400, "REASON_REQUIRED", "Tell us why you are not paying")
+    """The driver answers "did you receive it?" for a payment the requester says they made.
 
-    now = _now()
-    refused = bool(request.threshold_met)
-    request.payment_reason = reason or None
-    request.counts_as_strike = refused and _strike_applies(request)
-    _payment_closed(request, now, "refused" if refused else "declined")
-    add_event(
-        session,
-        request,
-        requester_id,
-        "payment_refused" if refused else "payment_declined",
-        details={"reason": reason or None, "strike": request.counts_as_strike},
-    )
-    if refused:
-        add_event(
-            session,
-            request,
-            requester_id,
-            "requester_flagged",
-            role="system",
-            details={"strike": request.counts_as_strike, "providerMediaOn": request.provider_media_on},
-        )
-    await session.commit()
-    await session.refresh(request)
-
-    requester_name = await session.scalar(select(User.name).where(User.id == requester_id))
-    who = requester_name or "The requester"
-    if refused:
-        body = f"{who} chose not to pay for your call" + (f': "{reason}"' if reason else "")
-    else:
-        body = f'{who} didn\'t pay because the call was short: "{reason}"'
-    await _notify(
-        session,
-        request.provider_id,
-        "Call not paid",
-        body,
-        {"type": "call_not_paid", "requestId": request.id},
-    )
-    return request
-
-
-async def expire_payment(session: AsyncSession, request: CallRequest) -> None:
-    """The requester never answered the payment sheet. For a call that counted it is the same as
-    refusing. Caller holds the request lock and commits."""
-    now = _now()
-    request.counts_as_strike = bool(request.threshold_met) and _strike_applies(request)
-    _payment_closed(request, now, "expired")
-    add_event(
-        session,
-        request,
-        request.requester_id,
-        "payment_expired",
-        role="system",
-        details={"thresholdMet": request.threshold_met, "strike": request.counts_as_strike},
-    )
-
-
-async def confirm_received(session: AsyncSession, request_id: UUID, provider_id: UUID, received: bool) -> CallRequest:
-    """The provider answers "did you receive it?" for a payment the requester says they made. Only
-    recorded: nothing else changes (it is raw material for finding who is lying later)."""
+    Yes: the call may start (`ready`), within CALL_START_WINDOW_MINUTES.
+    No: the app must ask "are you sure?" first; the server insists on it: a no without `sure` is refused
+    with `409 CONFIRM_REQUIRED` and nothing changes. A no with `sure` closes the request as
+    `payment_disputed` and the call never starts; it is left to admin review.
+    Answered once: the same answer again is harmless, a different one is refused."""
     request = await _lock_request(session, request_id)
     if _require_party(request, provider_id) != "provider":
         raise CallRequestError(403, "NOT_PROVIDER", "Only the driver can confirm a payment")
-    if request.status != "completed" or request.payment_outcome != "paid":
+
+    if request.status != "payment_claimed":
+        if received and request.provider_confirmed is True:
+            return request
+        if not received and request.status == "payment_disputed" and request.provider_confirmed is False:
+            return request
         raise CallRequestError(
-            409, "NO_PAYMENT_TO_CONFIRM", "There is no payment to confirm on this call", status=request.status
+            409, "NO_PAYMENT_TO_CONFIRM", "There is no payment waiting for your answer on this request", status=request.status
         )
+
     now = _now()
-    request.provider_confirmed = received
+    if received:
+        request.status = "ready"
+        request.payment_outcome = "paid"
+        request.provider_confirmed = True
+        request.provider_confirmed_at = now
+        request.payment_decided_at = now
+        # A fresh window to start the call, from now.
+        request.expires_at = now + timedelta(minutes=CALL_START_WINDOW_MINUTES)
+        request.updated_at = now
+        add_event(session, request, provider_id, "provider_confirmed_payment")
+        await session.commit()
+        await session.refresh(request)
+        provider_name = await session.scalar(select(User.name).where(User.id == provider_id))
+        await _notify(
+            session,
+            request.requester_id,
+            "Payment confirmed",
+            f"{provider_name or 'The driver'} confirmed your payment and will call you shortly",
+            {"type": "call_payment_confirmed", "requestId": request.id},
+        )
+        return request
+
+    if not sure:
+        add_event(session, request, provider_id, "provider_denied_payment_unsure")
+        await session.commit()  # the first "no" is part of the record even though nothing else changes
+        raise CallRequestError(
+            409, "CONFIRM_REQUIRED", "Are you sure you did not receive this payment?", status=request.status
+        )
+
+    request.status = "payment_disputed"
+    request.payment_outcome = "disputed"
+    request.provider_confirmed = False
     request.provider_confirmed_at = now
+    request.disputed_at = now
+    request.closed_reason = "provider_denied"
     request.updated_at = now
-    add_event(session, request, provider_id, "provider_confirmed_payment" if received else "provider_denied_payment")
+    add_event(session, request, provider_id, "provider_denied_payment")
     await session.commit()
     await session.refresh(request)
+    await _notify_dispute(session, request)
     return request
+
+
+async def _notify_dispute(session: AsyncSession, request: CallRequest) -> None:
+    """Both sides are told the request is closed and that support will look at it."""
+    await _notify(
+        session,
+        request.requester_id,
+        "Payment not confirmed",
+        "The driver says your payment didn't arrive, so the call won't start. Our team will look into it",
+        {"type": "call_payment_disputed", "requestId": request.id},
+    )
+    await _notify(
+        session,
+        request.provider_id,
+        "Request closed",
+        "The call won't start because you said the payment didn't arrive. Our team will look into it",
+        {"type": "call_payment_disputed", "requestId": request.id},
+    )
 
 
 # --- the payments ledger -----------------------------------------------------------------
@@ -1091,16 +1106,16 @@ LEDGER_MAX_LIMIT = 100
 async def list_payments(
     session: AsyncSession, user_id: UUID, direction: str, *, limit: int = 20, offset: int = 0
 ) -> dict:
-    """Calls the requester says they paid for, newest payment first: `received` = the caller was the
-    driver, `sent` = the caller was the requester. Returns the rows (one extra is fetched to know whether
-    there are more), the count and the total over ALL of them. Received money the driver marked "not
-    received" stays listed but no longer counts towards the total."""
+    """Payments the driver confirmed receiving (`payment_outcome == paid`), newest first: `received` = the
+    caller was the driver, `sent` = the caller was the requester. Returns the rows (one extra is fetched to
+    know whether there are more), the count and the total over ALL of them. Whatever became of the call
+    afterwards (completed, expired unstarted, ...) does not remove it from the list."""
     if direction not in LEDGER_DIRECTIONS:
         raise CallRequestError(400, "INVALID_DIRECTION", "direction must be received or sent")
     limit = max(1, min(limit, LEDGER_MAX_LIMIT))
     offset = max(0, offset)
     mine = CallRequest.provider_id if direction == "received" else CallRequest.requester_id
-    where = [mine == user_id, CallRequest.status == "completed", CallRequest.payment_outcome == "paid"]
+    where = [mine == user_id, CallRequest.payment_outcome == "paid"]
 
     rows = await session.execute(
         select(CallRequest)
@@ -1112,11 +1127,8 @@ async def list_payments(
     requests = list(rows.scalars().all())
     has_more = len(requests) > limit
 
-    counted = list(where)
-    if direction == "received":
-        counted.append(CallRequest.provider_confirmed.is_not(False))
     totals = await session.execute(
-        select(func.count(), func.coalesce(func.sum(CallRequest.paid_amount), 0)).where(*counted)
+        select(func.count(), func.coalesce(func.sum(CallRequest.paid_amount), 0)).where(*where)
     )
     count, total = totals.one()
     return {"requests": requests[:limit], "hasMore": has_more, "count": count, "total": Decimal(total)}
@@ -1185,12 +1197,11 @@ async def _claim(session: AsyncSession, request_id: UUID, *statuses: str) -> Cal
 
 async def sweep(session: AsyncSession) -> dict[str, int]:
     """One pass of the background job. It
-      * expires requests past their 30-minute window,
-      * returns a ring nobody answered to `accepted` so the driver can try again,
+      * expires requests whose stage window ran out (pending, waiting for payment, ready to start, ringing),
+      * returns a ring nobody answered to `ready` so the driver can try again,
       * ends live calls that ran past their time or whose other side has been silent
         longer than the reconnect window (settled from the connected time so far),
-      * closes calls whose requester never answered the payment sheet (as "expired";
-        for a call that counted that is a refusal).
+      * sends a payment the driver never answered about to admin review (`payment_disputed`).
     Safe to run in several processes at once: each request is claimed with SKIP
     LOCKED and re-checked under its lock."""
     now = _now()
@@ -1199,26 +1210,52 @@ async def sweep(session: AsyncSession) -> dict[str, int]:
     ids = (
         await session.execute(
             select(CallRequest.id).where(
-                CallRequest.status.in_(("pending", "accepted", "ringing")),
+                CallRequest.status.in_(("pending", "accepted", "ready", "ringing")),
                 CallRequest.expires_at <= now,
             )
         )
     ).scalars().all()
     for request_id in ids:
-        request = await _claim(session, request_id, "pending", "accepted", "ringing")
+        request = await _claim(session, request_id, "pending", "accepted", "ready", "ringing")
         if request is None or request.expires_at > now:
             await session.rollback()
             continue
-        await _end_without_charge(session, request, "expired", "request_expired", None)
+        was = request.status
+        reason = {"pending": "no_response", "accepted": "payment_window_lapsed"}.get(was, "start_window_lapsed")
+        await _end_without_charge(session, request, "expired", "request_expired", None, reason)
         await session.commit()
         counts["expired"] += 1
-        await _notify(
-            session,
-            request.requester_id,
-            "Request expired",
-            "The driver didn't respond in time",
-            {"type": "call_request_expired", "requestId": request.id},
-        )
+        if was == "pending":
+            await _notify(
+                session,
+                request.requester_id,
+                "Request expired",
+                "The driver didn't respond in time",
+                {"type": "call_request_expired", "requestId": request.id},
+            )
+        elif was == "accepted":
+            await _notify(
+                session,
+                request.requester_id,
+                "Request expired",
+                "The time to pay ran out, so the request was closed",
+                {"type": "call_request_expired", "requestId": request.id},
+            )
+            await _notify(
+                session,
+                request.provider_id,
+                "Request closed",
+                "The requester didn't pay in time, so the request was closed",
+                {"type": "call_request_expired", "requestId": request.id},
+            )
+        else:  # paid and confirmed, but the call was never started
+            await _notify(
+                session,
+                request.requester_id,
+                "Call didn't start",
+                "The driver didn't start the call in time. Our team will look into your payment",
+                {"type": "call_request_expired", "requestId": request.id},
+            )
 
     ids = (
         await session.execute(
@@ -1233,7 +1270,7 @@ async def sweep(session: AsyncSession) -> dict[str, int]:
         if request is None or ring_deadline(request) > now:
             await session.rollback()
             continue
-        request.status = "accepted"
+        request.status = "ready"
         request.updated_at = now
         add_event(session, request, request.requester_id, "ring_missed", role="system")
         await session.commit()
@@ -1266,30 +1303,28 @@ async def sweep(session: AsyncSession) -> dict[str, int]:
         await session.commit()
         await session.refresh(request)
         counts["ended_calls"] += 1
-        await _after_finalize(session, request)
 
+    # A payment the driver never answered about: it goes to admin review (the requester says they paid, so it
+    # is never closed quietly).
     ids = (
         await session.execute(
-            select(CallRequest.id).where(
-                CallRequest.status == "awaiting_payment", CallRequest.feedback_deadline <= now
-            )
+            select(CallRequest.id).where(CallRequest.status == "payment_claimed", CallRequest.expires_at <= now)
         )
     ).scalars().all()
     for request_id in ids:
-        request = await _claim(session, request_id, "awaiting_payment")
-        if request is None:
+        request = await _claim(session, request_id, "payment_claimed")
+        if request is None or request.expires_at > now:
             await session.rollback()
             continue
-        await expire_payment(session, request)
+        request.status = "payment_disputed"
+        request.payment_outcome = "disputed"
+        request.disputed_at = now
+        request.closed_reason = "provider_silent"
+        request.updated_at = now
+        add_event(session, request, request.provider_id, "payment_unanswered", role="system")
         await session.commit()
         counts["settled"] += 1
-        await _notify(
-            session,
-            request.provider_id,
-            "Call not paid",
-            "The requester never paid for your call",
-            {"type": "call_not_paid", "requestId": request.id},
-        )
+        await _notify_dispute(session, request)
     return counts
 
 

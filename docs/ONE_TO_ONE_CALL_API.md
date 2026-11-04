@@ -37,7 +37,7 @@ rejected / expired / cancelled
 ```
 
 - A ring nobody answers within **45 s** goes back to `accepted`; the driver can `start` again
-  (as often as they like) until the request's window ends (30 minutes after the driver accepted).
+  (as often as they like) until the request's window ends (30 minutes after the driver accepted; in the advance-payment flow see ONE_TO_ONE_DIRECT_PAYMENT_API.md).
 - The requester **declining** a ring (`end` while ringing) cancels the request and releases the money.
 
 - `pending`, `accepted`, `ringing`, `live` are **open**: at most one per requester/driver pair.

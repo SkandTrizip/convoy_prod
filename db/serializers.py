@@ -333,17 +333,16 @@ def call_request_party_to_dict(user: User | None) -> dict:
 
 
 def payment_details(request: CallRequest, provider: User | None, viewer_id: uuid.UUID) -> dict | None:
-    """What the requester needs to pay (the driver's UPI ID is shown to them only, and only while a payment
-    is due). None for everyone else / at any other time."""
-    if request.status != "awaiting_payment" or viewer_id != request.requester_id:
+    """What the requester needs to pay in advance (the driver's UPI ID is shown to them only, and only while
+    the request is `accepted`, waiting for payment). None for everyone else / at any other time. `deadline`
+    is when the time to pay runs out."""
+    if request.status != "accepted" or viewer_id != request.requester_id:
         return None
     return {
         "upiId": request.payee_upi_id or (provider.upi_id if provider else None),
         "payeeName": provider.name if provider else None,
-        "fullAmount": str(request.amount),
-        "minimumAmount": str(request.hold_amount),
-        "thresholdMet": bool(request.threshold_met),
-        "deadline": request.feedback_deadline.isoformat() if request.feedback_deadline else None,
+        "amount": str(request.amount),
+        "deadline": request.expires_at.isoformat(),
     }
 
 
@@ -412,6 +411,8 @@ def call_request_to_dict(
         "paidAmount": str(request.paid_amount) if request.paid_amount is not None else None,
         "paymentReason": request.payment_reason,
         "paymentDecidedAt": request.payment_decided_at.isoformat() if request.payment_decided_at else None,
+        "paymentClaimedAt": request.payment_claimed_at.isoformat() if request.payment_claimed_at else None,
+        "closedReason": request.closed_reason,
         "providerConfirmed": request.provider_confirmed,
         "payment": payment_details(request, provider, viewer_id),
         "onAnotherDevice": on_another_device,

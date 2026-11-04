@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Makes a SEPARATE database for the "new on-demand call flow" demo: a copy of the database you give it,
-# plus migrations/030_call_direct_payment.sql. The classic (wallet-hold) backend keeps using the original
+# plus migrations/030_call_direct_payment.sql and 031_advance_payment.sql. The classic (wallet-hold) backend keeps using the original
 # database untouched, so switching branches can never leave one flow's requests in the other's way.
 #
 #   scripts/new_flow_db.sh postgresql://postgres:postgres@127.0.0.1:5433/convoy_dev          # -> convoy_newflow
@@ -42,6 +42,8 @@ fi
 
 echo "Applying migrations/030_call_direct_payment.sql to the copy..."
 psql "$NEW" -v ON_ERROR_STOP=1 --single-transaction -q -f "$here/migrations/030_call_direct_payment.sql"
+echo "Applying migrations/031_advance_payment.sql to the copy..."
+psql "$NEW" -v ON_ERROR_STOP=1 --single-transaction -q -f "$here/migrations/031_advance_payment.sql"
 
 echo
 echo "Done. Start the new-flow backend (branch feat/new-demand-call-flow) with:"
