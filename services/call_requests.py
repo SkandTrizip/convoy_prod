@@ -461,6 +461,9 @@ async def accept(session: AsyncSession, request_id: UUID, provider_id: UUID) -> 
 
     request.status = "accepted"
     request.responded_at = _now()
+    # The driver may take several requests and call them one by one: the time to start the call runs
+    # from the acceptance, not from when the request was sent.
+    request.expires_at = request.responded_at + timedelta(minutes=CALL_REQUEST_TTL_MINUTES)
     add_event(session, request, provider_id, "request_accepted")
     await session.commit()
     await session.refresh(request)
@@ -693,7 +696,8 @@ async def start_call(
     session: AsyncSession, request_id: UUID, provider_id: UUID, device_id: str | None = None
 ) -> tuple[CallRequest, dict]:
     """Driver starts the call: the requester's phone rings for CALL_RING_SECONDS.
-    A missed ring can be retried until the request's 30-minute window ends. Asking
+    A missed ring can be retried until the request's window ends (30 minutes after the
+    driver accepted it). Asking
     again while it is still ringing just returns the same credentials."""
     agora_client.require_configured()  # before any state change: never ring someone for a call that can't start
     request = await _lock_request(session, request_id)

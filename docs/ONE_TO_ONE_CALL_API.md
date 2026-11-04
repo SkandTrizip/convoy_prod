@@ -37,11 +37,11 @@ rejected / expired / cancelled
 ```
 
 - A ring nobody answers within **45 s** goes back to `accepted`; the driver can `start` again
-  (as often as they like) until the request's 30-minute window ends.
+  (as often as they like) until the request's window ends (30 minutes after the driver accepted).
 - The requester **declining** a ring (`end` while ringing) cancels the request and releases the money.
 
 - `pending`, `accepted`, `ringing`, `live` are **open**: at most one per requester/driver pair.
-- A request lives **30 minutes** from creation (pending + accepted + ringing); then it's `expired`.
+- A request lives **30 minutes** from creation while it is `pending`. **Accepting restarts the clock: it then lives 30 minutes from the acceptance** (accepted + ringing), so a driver can take several requests and call them one by one; `expiresAt` moves accordingly. Then it's `expired`.
 - `awaiting_feedback` still holds money but doesn't block a new request to the same driver.
 
 ## Endpoints
@@ -89,7 +89,7 @@ All of these also return the usual `request` object. `start` and `join` add a `c
 Only from `accepted`. Rings the requester (push `data.type = "call_incoming"`) and returns the
 driver's credentials. Join the Agora channel and start the camera while it rings.
 Calling it again while it is still ringing returns the same credentials, so it is safe after an
-app restart. `410 REQUEST_EXPIRED` if the 30-minute window is over.
+app restart. `410 REQUEST_EXPIRED` if the window (30 minutes after acceptance) is over.
 
 #### `POST /call-requests/{id}/join` (requester answers; either side rejoins)
 Requester, while `ringing`: the call goes `live` and they get credentials with `audioOnly: true`.

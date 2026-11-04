@@ -238,6 +238,35 @@ async def test_the_whole_request_window_still_ends_a_ringing_request(sessions, c
     assert (await wallet_of(sessions, requester)).reserved_balance == D("0.00")
 
 
+async def test_an_accepted_request_gets_a_fresh_window_from_the_acceptance(sessions, clock):
+    """A driver who accepts late (or takes several requests and calls them one by one) still gets the
+    full 30 minutes to start the call; the clock runs from the acceptance, not from the request."""
+    requester, provider, post = await setup_pair(sessions, "1000")
+    req = await request_call(sessions, requester, provider, post, "200", 15)
+    created = (await reload(sessions, req)).expires_at
+    clock.advance(28 * 60)  # accepted 2 minutes before the original window ends
+    async with sessions() as s:
+        accepted_request = await svc.accept(s, req.id, provider.id)
+    assert accepted_request.expires_at == clock.now() + timedelta(minutes=30)
+    assert accepted_request.expires_at > created + timedelta(minutes=25)
+
+    clock.advance(25 * 60)  # 53 minutes after it was sent: past the old window, inside the new one
+    await sweep(sessions)
+    r, _ = await ring(sessions, req, provider)
+    assert r.status == "ringing"
+
+
+async def test_an_accepted_request_still_ends_30_minutes_after_the_acceptance(sessions, clock):
+    requester, provider, post = await setup_pair(sessions, "1000")
+    req = await request_call(sessions, requester, provider, post, "200", 15)
+    clock.advance(10 * 60)
+    async with sessions() as s:
+        await svc.accept(s, req.id, provider.id)
+    clock.advance(31 * 60)
+    await expect_error("REQUEST_EXPIRED", ring(sessions, req, provider), status=410)
+    assert (await reload(sessions, req)).status == "expired"
+
+
 # --- the live call: heartbeats and the 30 second rule ----------------------------------------------------
 
 
