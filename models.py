@@ -533,3 +533,8 @@ class LocationReportRequest(BaseModel):
     city: Optional[str] = Field(default=None, max_length=128)
     state: Optional[str] = Field(default=None, max_length=128)
     pincode: Optional[str] = Field(default=None, max_length=16)
+
+
+class AdminResolveCallPaymentRequest(BaseModel):
+    resolution: str = Field(..., description="requester_right | driver_right | no_fault")
+    note: Optional[str] = Field(None, max_length=1000, description="What the admin found, for the record")

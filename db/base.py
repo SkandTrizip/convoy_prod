@@ -981,6 +981,15 @@ class CallRequest(Base):
     # | no_response | payment_window_lapsed | start_window_lapsed | provider_denied | provider_silent |
     # call_not_connected ...
     closed_reason: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    # What became of the money once the request ended (set by services/call_requests.compute_settlement):
+    # kept (the driver keeps it) | refund_due (the driver must refund it) | review (an admin must look).
+    settlement: Mapped[str | None] = mapped_column(String(16), nullable=True)
+    settlement_reason: Mapped[str | None] = mapped_column(String(48), nullable=True)
+    # An admin's verdict on a disputed / refund-due / review request: requester_right | driver_right | no_fault.
+    resolution: Mapped[str | None] = mapped_column(String(16), nullable=True)
+    resolved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=False), nullable=True)
+    resolved_by: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    resolution_note: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     # Settlement (classic flow; unused by the new one except `feedback_deadline`, the payment deadline).
     feedback_deadline: Mapped[datetime | None] = mapped_column(DateTime(timezone=False), nullable=True)

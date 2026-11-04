@@ -300,6 +300,82 @@ def _wrong_state(request: CallRequest, action: str) -> CallRequestError:
 # --- ending a request without a charge --------------------------------------
 
 
+SETTLEMENT_KEPT = "kept"
+SETTLEMENT_REFUND_DUE = "refund_due"
+SETTLEMENT_REVIEW = "review"
+
+
+def compute_settlement(request: CallRequest) -> tuple[str, str] | None:
+    """What became of the advance payment once the request ended, as (settlement, reason); None when no money
+    was involved (nothing paid, or still going). Decided from the request's own record:
+
+      * the driver denied the payment (twice) or never answered           -> review
+      * the call counted (>= CALL_CONNECT_THRESHOLD_SECONDS)             -> kept
+      * a short call: the driver hung up first, or their mic / camera
+        were not on                                                      -> review; otherwise kept
+      * the call went live but never really connected                    -> review
+      * paid and confirmed but the call never started: the driver never
+        tried to ring                                                    -> refund_due (their fault)
+        the driver rang and the requester never answered                 -> kept (the requester's fault)
+      * the requester declined the ring                                  -> kept
+    """
+    outcome = request.payment_outcome
+    if outcome == "disputed":
+        return SETTLEMENT_REVIEW, request.closed_reason or "payment_disputed"
+    if outcome != "paid":
+        return None
+    status = request.status
+    if status == "completed":
+        if (request.connected_seconds or 0) >= CALL_CONNECT_THRESHOLD_SECONDS:
+            return SETTLEMENT_KEPT, "call_completed"
+        if request.end_reason == "ended_by_provider":
+            return SETTLEMENT_REVIEW, "short_call_ended_by_driver"
+        if not request.provider_media_on:
+            return SETTLEMENT_REVIEW, "short_call_driver_media_off"
+        return SETTLEMENT_KEPT, "short_call"
+    if status == "failed":
+        return SETTLEMENT_REVIEW, "call_not_connected"
+    if status == "expired":
+        if (request.ring_attempts or 0) > 0:
+            return SETTLEMENT_KEPT, "requester_no_answer"
+        return SETTLEMENT_REFUND_DUE, "driver_never_called"
+    if status == "cancelled" and request.closed_reason == "ring_declined":
+        return SETTLEMENT_KEPT, "requester_declined_ring"
+    return None
+
+
+def _apply_settlement(request: CallRequest) -> None:
+    result = compute_settlement(request)
+    if result is not None:
+        request.settlement, request.settlement_reason = result
+
+
+async def _notify_refund_due(session: AsyncSession, request: CallRequest) -> None:
+    """The driver took the money and never called: both are told a refund is due from the driver."""
+    amount = money(request.paid_amount or request.amount)
+    requester_name, provider_name = await _names(session, request)
+    await _notify(
+        session,
+        request.requester_id,
+        "Your call didn't happen",
+        f"{provider_name} didn't call you, so your ₹{amount} is due back. We've asked them to refund you and our team will follow up",
+        {"type": "call_request_expired", "requestId": request.id},
+    )
+    await _notify(
+        session,
+        request.provider_id,
+        "Please refund this payment",
+        f"You were paid ₹{amount} by {requester_name} but didn't start the call. Please refund them; our team will follow up",
+        {"type": "call_refund_due", "requestId": request.id},
+    )
+
+
+async def _names(session: AsyncSession, request: CallRequest) -> tuple[str, str]:
+    requester_name = await session.scalar(select(User.name).where(User.id == request.requester_id))
+    provider_name = await session.scalar(select(User.name).where(User.id == request.provider_id))
+    return requester_name or "The requester", provider_name or "The driver"
+
+
 async def _end_without_charge(
     session: AsyncSession,
     request: CallRequest,
@@ -309,10 +385,12 @@ async def _end_without_charge(
     closed_reason: str | None = None,
 ) -> None:
     """Move to a terminal status without a call. The caller holds the request lock and has
-    checked the current status, and commits afterwards."""
+    checked the current status, and commits afterwards. If a payment was made, `compute_settlement`
+    records what became of it."""
     now = _now()
     request.status = new_status
     request.closed_reason = closed_reason or request.closed_reason
+    _apply_settlement(request)
     request.responded_at = request.responded_at or now
     request.updated_at = now
     if actor_id is None:
@@ -365,12 +443,17 @@ async def create_request(
     if post is None or post.user_id != provider_id or post.expires_at <= _now():
         raise CallRequestError(404, "TRUCK_POST_UNAVAILABLE", "This truck post is no longer available")
 
-    # Someone who keeps refusing to pay for calls they had can't ask for more.
-    if await call_payment_standing.is_blocked(session, requester.id):
+    # A requester whose payments keep being denied, or who keeps leaving accepted requests unpaid, can't ask
+    # for more; a driver who keeps taking payment and not calling can't be asked.
+    if await call_payment_standing.is_requester_blocked(session, requester.id):
         raise CallRequestError(
             403,
             "CALL_PAYMENTS_BLOCKED",
-            "You can't request calls right now because of calls you didn't pay for. Contact support",
+            "You can't request calls right now because of payments that didn't go through. Contact support",
+        )
+    if await call_payment_standing.is_provider_blocked(session, provider_id):
+        raise CallRequestError(
+            409, "PROVIDER_BLOCKED", "This driver can't take paid calls right now"
         )
     # The money goes straight to the driver's UPI ID, so a driver without one can't be paid.
     if not (provider.upi_id or "").strip():
@@ -601,6 +684,7 @@ async def _finalize_locked(session: AsyncSession, request: CallRequest, connecte
     request.provider_media_on = provider_media_was_on(request)
     request.status = "completed"
     request.updated_at = now
+    _apply_settlement(request)
     add_event(
         session,
         request,
@@ -1072,6 +1156,7 @@ async def confirm_received(
     request.disputed_at = now
     request.closed_reason = "provider_denied"
     request.updated_at = now
+    _apply_settlement(request)
     add_event(session, request, provider_id, "provider_denied_payment")
     await session.commit()
     await session.refresh(request)
@@ -1248,12 +1333,14 @@ async def sweep(session: AsyncSession) -> dict[str, int]:
                 "The requester didn't pay in time, so the request was closed",
                 {"type": "call_request_expired", "requestId": request.id},
             )
-        else:  # paid and confirmed, but the call was never started
+        elif request.settlement == SETTLEMENT_REFUND_DUE:  # paid, confirmed, and the driver never tried to call
+            await _notify_refund_due(session, request)
+        else:  # paid and confirmed, the driver rang, the requester never answered
             await _notify(
                 session,
                 request.requester_id,
-                "Call didn't start",
-                "The driver didn't start the call in time. Our team will look into your payment",
+                "You missed the call",
+                "The driver called but you didn't answer in time, so the payment stays with the driver",
                 {"type": "call_request_expired", "requestId": request.id},
             )
 
@@ -1321,6 +1408,7 @@ async def sweep(session: AsyncSession) -> dict[str, int]:
         request.disputed_at = now
         request.closed_reason = "provider_silent"
         request.updated_at = now
+        _apply_settlement(request)
         add_event(session, request, request.provider_id, "payment_unanswered", role="system")
         await session.commit()
         counts["settled"] += 1

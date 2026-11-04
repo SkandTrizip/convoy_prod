@@ -413,7 +413,70 @@ def call_request_to_dict(
         "paymentDecidedAt": request.payment_decided_at.isoformat() if request.payment_decided_at else None,
         "paymentClaimedAt": request.payment_claimed_at.isoformat() if request.payment_claimed_at else None,
         "closedReason": request.closed_reason,
+        # The driver took the payment and never called: a refund is due from them (until an admin rules on it).
+        "refundDue": request.settlement == "refund_due" and request.resolved_at is None,
         "providerConfirmed": request.provider_confirmed,
         "payment": payment_details(request, provider, viewer_id),
         "onAnotherDevice": on_another_device,
     }
+
+
+def admin_dispute_to_dict(
+    request: CallRequest, requester: User | None, provider: User | None, events: list | None = None
+) -> dict:
+    """One line of the admin's disputes list: everything needed to rule on a payment without opening the
+    database. `events` (when given) is the request's behaviour log, oldest first."""
+
+    def party(user: User | None) -> dict:
+        return {"id": str(user.id) if user else None, "name": user.name if user else None, "mobile": user.mobile if user else None}
+
+    def ts(value) -> str | None:
+        return value.isoformat() if value else None
+
+    data = {
+        "id": str(request.id),
+        "status": request.status,
+        "closedReason": request.closed_reason,
+        "settlement": request.settlement,
+        "settlementReason": request.settlement_reason,
+        "requester": party(requester),
+        "provider": party(provider),
+        "amount": str(request.amount),
+        "paidAmount": str(request.paid_amount) if request.paid_amount is not None else None,
+        "payeeUpiId": request.payee_upi_id,
+        "upiReference": request.upi_reference,
+        "paymentOutcome": request.payment_outcome,
+        "providerConfirmed": request.provider_confirmed,
+        "ringAttempts": request.ring_attempts,
+        "connectedSeconds": request.connected_seconds,
+        "thresholdMet": request.threshold_met,
+        "endReason": request.end_reason,
+        "providerMediaOn": request.provider_media_on,
+        "providerBeats": {
+            "total": request.provider_beats,
+            "mic": request.provider_mic_beats,
+            "camera": request.provider_camera_beats,
+        },
+        "createdAt": ts(request.created_at),
+        "acceptedAt": ts(request.responded_at),
+        "paymentClaimedAt": ts(request.payment_claimed_at),
+        "providerAnsweredAt": ts(request.provider_confirmed_at),
+        "disputedAt": ts(request.disputed_at),
+        "callEndedAt": ts(request.call_ended_at),
+        "resolution": request.resolution,
+        "resolvedAt": ts(request.resolved_at),
+        "resolvedBy": request.resolved_by,
+        "resolutionNote": request.resolution_note,
+    }
+    if events is not None:
+        data["events"] = [
+            {
+                "type": e.event_type,
+                "role": e.role,
+                "source": e.source,
+                "at": ts(e.occurred_at),
+                "details": e.details,
+            }
+            for e in events
+        ]
+    return data

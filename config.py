@@ -106,6 +106,12 @@ CALL_CLAIM_CONFIRM_TTL_HOURS = int(os.environ.get("CALL_CLAIM_CONFIRM_TTL_HOURS"
 # at least CALL_MEDIA_ON_MIN_FRACTION of it) went unpaid this many times can't request calls any more.
 CALL_PAYMENT_STRIKE_LIMIT = int(os.environ.get("CALL_PAYMENT_STRIKE_LIMIT", "3"))
 CALL_MEDIA_ON_MIN_FRACTION = float(os.environ.get("CALL_MEDIA_ON_MIN_FRACTION", "0.5"))
+# Advance-payment flow: CALL_PAYMENT_STRIKE_LIMIT denied payment claims, or unpaid accepted requests, block a
+# requester; that many paid-but-never-called requests make a driver un-requestable. A driver who denied at
+# least CALL_DENIAL_FLAG_MIN payments, at least CALL_DENIAL_FLAG_RATE of the claims they answered, is flagged
+# for admin review (not blocked).
+CALL_DENIAL_FLAG_MIN = int(os.environ.get("CALL_DENIAL_FLAG_MIN", "3"))
+CALL_DENIAL_FLAG_RATE = float(os.environ.get("CALL_DENIAL_FLAG_RATE", "0.5"))
 CALL_SWEEP_INTERVAL_SECONDS = int(os.environ.get("CALL_SWEEP_INTERVAL_SECONDS", "30"))
 # A live call: each app reports in every few seconds. A side counts as "in the call"
 # if the server heard from it within HEARTBEAT_GRACE; time counts toward the 30 s

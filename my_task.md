@@ -858,13 +858,18 @@ It is off until you switch it on (`rechargeEnabled = false`).
 
 ### Part N: ADVANCE payment (replaces "pay after the call"), built in stages (4 Nov)
 
-The flow now: driver accepts -> the requester pays the full offer by UPI -> the driver confirms "I received it" (a no must be confirmed twice) -> only then the driver can start the call. Decisions and rules: API doc `docs/ONE_TO_ONE_DIRECT_PAYMENT_API.md`. Stages: **1 backend states, endpoints, windows, sweep (done)**; 2 backend money rules (refund-due, strikes and blocks, admin disputes list); 3 app requester side; 4 app driver side; 5 app clean-up; 6 docs and final steps.
+The flow now: driver accepts -> the requester pays the full offer by UPI -> the driver confirms "I received it" (a no must be confirmed twice) -> only then the driver can start the call. Decisions and rules: API doc `docs/ONE_TO_ONE_DIRECT_PAYMENT_API.md`. Stages: **1 backend states, endpoints, windows, sweep (done)**; **2 backend money rules: refund-due, strikes and blocks, admin disputes list (done)**; 3 app requester side; 4 app driver side; 5 app clean-up; 6 docs and final steps.
 
 - [ ] **Step N1 (stage 1): apply migration 031 to the new-flow database, then restart that backend.** Do NOT use `scripts/new_flow_db.sh` again (it refuses to overwrite). From `convoy_prod/`:
   ```bash
   psql postgresql://postgres:postgres@127.0.0.1:5433/convoy_newflow -v ON_ERROR_STOP=1 --single-transaction -q -f migrations/031_advance_payment.sql
   ```
   It adds 3 statuses and 3 columns, widens the "one open request per pair" index, and closes any request an older build left in `awaiting_payment`. Safe to run twice. (The scratch test database already has it.) Then restart the backend as in Step M2.
+- [ ] **Step N1b (stage 2): apply migration 032 as well** (six nullable columns and an index; safe to run twice), then restart the backend:
+  ```bash
+  psql postgresql://postgres:postgres@127.0.0.1:5433/convoy_newflow -v ON_ERROR_STOP=1 --single-transaction -q -f migrations/032_call_settlement.sql
+  ```
+- [ ] **Step N1c: what the admin can do now** (needs an admin token, as for the other `/api/admin/...` endpoints; try them in Swagger): `GET /api/admin/call-payments/disputes` (the denied or unanswered payments, refunds drivers owe, and calls to look at, each with both people, the amount, the UPI ID, the timeline and the full behaviour log), then `POST /api/admin/call-payments/{request_id}/resolve` with `requester_right`, `driver_right` or `no_fault` and a note. A verdict decides whose strike it is. `GET /api/admin/call-payments/flagged` lists blocked and flagged people; `POST /api/admin/call-payments/{user_id}/reset` forgives them. Refunds themselves are chased by you outside the app (UPI can't be reversed from here).
 - [ ] **Step N2: Don't demo the new flow yet.** Until stages 3 to 5 are built, the `convoynew` app on `feat/new-demand-call-flow` still expects the old pay-after-the-call screens, so it cannot complete a call against this backend. Backend behaviour can be tried in Swagger (`/docs`): request, accept, `payment/paid`, `payment/confirm` (try `received: false` twice: the second needs `"sure": true`), then `start`.
 - [ ] **Step N3 (production, only if the stakeholders pick this flow):** back up, then apply 030 and 031 as in Step M6.
 
