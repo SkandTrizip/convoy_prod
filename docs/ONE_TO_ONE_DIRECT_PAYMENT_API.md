@@ -66,7 +66,7 @@ The app opens a UPI app (`upi://pay?pa=<upiId>&pn=<name>&am=<amount>&cu=INR&tn=<
 
 Response: `{success, direction, payments: [...], count, total, hasMore}`. `count` and `total` (rupees, "225.00") cover every row of that direction, not only the page.
 
-Each payment: `id` (the call request id), `direction`, `counterparty {id, name, photo}` (the other person), `amount` (what was paid), `offerAmount`, `amountType` (always `full` now), `topic`, `durationMinutes`, `connectedSeconds`, `paidAt` (when the driver confirmed), `callEndedAt`, `upiId` (the UPI ID that was to be paid), `upiReference`, `providerConfirmed` (`true` on the driver's own side, always `null` for the requester).
+Each payment: `id` (the call request id), `direction`, `counterparty {id, name, photo}` (the other person), `amount` (what was paid), `offerAmount`, `amountType` (always `full` now), `topic`, `durationMinutes`, `connectedSeconds`, `paidAt` (when the driver confirmed), `callEndedAt`, `upiId` (the UPI ID that was to be paid), `upiReference`, `providerConfirmed` (`true` on the driver's own side, always `null` for the requester), `refundDue` (`true` while the driver owes the money back and the team hasn't resolved it; both sides see it). The app no longer reads `amountType`, `upiReference` or `providerConfirmed`.
 
 There is no "mark as not received" in the ledger: the driver answers once, in the flow (see Paying).
 

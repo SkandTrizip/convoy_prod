@@ -351,7 +351,7 @@ def payment_ledger_entry_to_dict(
 ) -> dict:
     """One line of the payments ledger. `counterparty` is the other person. Only the driver sees
     `providerConfirmed` (their own "did you receive it?" answer); the requester's line never changes
-    because of it."""
+    because of it. `refundDue`: the call did not happen by the driver's doing and the money is owed back."""
     received = viewer_id == request.provider_id
     return {
         "id": str(request.id),
@@ -368,6 +368,7 @@ def payment_ledger_entry_to_dict(
         "upiId": request.payee_upi_id,
         "upiReference": request.upi_reference,
         "providerConfirmed": request.provider_confirmed if received else None,
+        "refundDue": request.settlement == "refund_due" and request.resolved_at is None,
     }
 
 

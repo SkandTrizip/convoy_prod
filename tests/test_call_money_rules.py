@@ -20,7 +20,7 @@ import app as app_module
 from config import CALL_PAYMENT_STRIKE_LIMIT
 from database import get_session
 from db.base import CallRequest
-from db.serializers import call_request_to_dict
+from db.serializers import call_request_to_dict, payment_ledger_entry_to_dict
 from middleware.admin_auth import get_current_admin
 from services import call_disputes, call_payment_standing
 from services import call_requests as svc
@@ -142,6 +142,9 @@ async def test_a_driver_who_took_the_money_and_never_called_owes_a_refund(sessio
     # both apps can see it
     assert call_request_to_dict(done, None, None, requester.id)["refundDue"] is True
     assert call_request_to_dict(done, None, None, provider.id)["refundDue"] is True
+    # and the ledger line of that payment says so, for the driver and for the requester
+    assert payment_ledger_entry_to_dict(done, requester, provider, provider.id)["refundDue"] is True
+    assert payment_ledger_entry_to_dict(done, requester, provider, requester.id)["refundDue"] is True
 
 
 async def test_a_requester_who_never_answers_the_ring_keeps_nothing_back(sessions, clock):  # noqa: F811
@@ -156,6 +159,7 @@ async def test_a_requester_who_never_answers_the_ring_keeps_nothing_back(session
     assert (done.settlement, done.settlement_reason) == ("kept", "requester_no_answer")
     assert (provider.id, "call_refund_due") not in sessions.pushes
     assert call_request_to_dict(done, None, None, requester.id)["refundDue"] is False
+    assert payment_ledger_entry_to_dict(done, requester, provider, provider.id)["refundDue"] is False
 
 
 async def test_declining_the_ring_after_paying_keeps_the_money_with_the_driver(sessions):
