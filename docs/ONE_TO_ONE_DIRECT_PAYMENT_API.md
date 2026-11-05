@@ -110,6 +110,18 @@ Counted from the requests every time (nothing stored to drift). `CALL_PAYMENT_ST
 * On `call_requests`: `provider_beats`, `provider_mic_beats`, `provider_camera_beats`, `requester_beats`, `requester_mic_beats`, `requester_camera_beats`, `requester_saw_video_beats` (one count per heartbeat, about every 5 s), `threshold_met`, `provider_media_on`, `payment_outcome`, `paid_amount`, `payment_claimed_at`, `provider_confirmed(_at)`, `disputed_at`, `closed_reason`, `settlement`, `settlement_reason`, `resolution`, `resolved_at/by`, `resolution_note`, `payee_upi_id`, `upi_reference`.
 * The mic/camera numbers are what each phone *says*; `requester_saw_video_beats` is the requester's own observation of the driver's video. Neither is proof, which is the point of keeping both.
 
+## What the app does with it (convoynew, same branch)
+
+* **Requester:** the pay sheet opens by itself after `call_request_accepted` while `status == accepted` and `expiresAt` is in the future. It has Pay (the whole offer) and Cancel request, and can't be dismissed. After Yes it calls `payment/paid`. The request status sheet has a text and buttons for every status; no Cancel once `payment_claimed`.
+* **Driver:** Home banner and request sheet follow `accepted` (waiting for payment, **Withdraw** -> `POST /{id}/withdraw`), `payment_claimed` (**Confirm payment** -> `payment/confirm`, the second No sends `sure: true`) and `ready` (**Start call** is only offered here, and the app still blocks starting while another call is ringing or live). Pushes open the same questions: `call_payment`, `call_payment_confirmed`, `call_payment_disputed`, `call_refund_due`.
+* **Ledger page:** lists the confirmed payments of both tabs; a line with `refundDue` gets a red note. The app ignores `amountType`, `upiReference` and `providerConfirmed`.
+
+## Open points
+
+* UPI payments are self-reported (see Paying). Reading the UPI app's result on Android and a gateway (Razorpay Route VPA settlements) are possible later steps, neither is built.
+* The app opens "Did the payment go through?" as soon as the UPI app chooser opens (before the payment). Not changed on purpose for now.
+* Refunds are not moved by the system: `refundDue` and the admin disputes list tell a person whom to chase.
+
 ## Database
 
 Additive only (`migrations/030_call_direct_payment.sql`, then `031_advance_payment.sql`: three more statuses, three nullable columns and a wider open-pair unique index; it also closes any request an earlier build left in `awaiting_payment`), so the classic backend still runs on the same schema. `032_call_settlement.sql` adds six nullable columns and one partial index. A request left open by one flow can still confuse the other backend's sweep (the classic one would try to release a hold that was never taken), so the demo uses a **separate database** for this branch: `scripts/new_flow_db.sh`.

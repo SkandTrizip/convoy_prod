@@ -1,5 +1,7 @@
 # Paid 1:1 calls — API (requests, wallet, settlement, the call itself)
 
+> **This is the classic flow (wallet hold, "were you satisfied?").** The branch `feat/new-demand-call-flow` replaces the money part with advance payment by direct UPI and no wallet: see `ONE_TO_ONE_DIRECT_PAYMENT_API.md`. The request/accept/call/heartbeat endpoints below are shared.
+
 A requester offers money for a live 1:1 call with a driver. The driver accepts or
 rejects, starts the call (the requester's phone rings), the two talk over Agora, and
 after a call that really connected the requester says whether they were satisfied.
