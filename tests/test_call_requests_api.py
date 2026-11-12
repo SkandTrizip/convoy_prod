@@ -232,27 +232,20 @@ async def test_a_denied_payment_closes_the_request_as_a_dispute_over_http(api):
     assert await _request_over_http(api, requester, provider, post)
 
 
-async def test_the_driver_can_withdraw_until_the_requester_pays_over_http(api):
+async def test_an_accepted_request_cannot_be_withdrawn_by_the_driver(api):
+    """The requester may already be paying in their UPI app when the driver would back out, and the server
+    only learns of the payment when they say "paid": so after accepting there is no way out for the driver."""
     requester = await make_user(api.factory, "Asha")
     provider = await make_user(api.factory, "Vikram")
     post = await make_post(api.factory, provider)
     rid = await _request_over_http(api, requester, provider, post)
     base = f"/api/call-requests/{rid}"
-
-    r = await api.post(f"{base}/withdraw", headers=auth(provider))
-    assert r.status_code == 409 and r.json()["code"] == "INVALID_STATE"  # not accepted yet
     await api.post(f"{base}/accept", headers=auth(provider))
-    assert (await api.post(f"{base}/withdraw", headers=auth(requester))).json()["code"] == "NOT_PROVIDER"
-    r = await api.post(f"{base}/withdraw", headers=auth(provider))
-    assert r.status_code == 200
-    assert r.json()["request"]["status"] == "rejected" and r.json()["request"]["closedReason"] == "driver_withdrew"
-    assert r.json()["request"]["payment"] is None
 
-    rid = await _request_over_http(api, requester, provider, post)
-    base = f"/api/call-requests/{rid}"
-    await api.post(f"{base}/accept", headers=auth(provider))
-    await api.post(f"{base}/payment/paid", json={}, headers=auth(requester))
-    assert (await api.post(f"{base}/withdraw", headers=auth(provider))).status_code == 409  # paid: no backing out
+    assert (await api.post(f"{base}/withdraw", headers=auth(provider))).status_code in (404, 405)
+    assert (await api.post(f"{base}/reject", headers=auth(provider))).status_code == 409  # only while pending
+    status = (await api.get(base, headers=auth(provider))).json()["request"]["status"]
+    assert status == "accepted"  # still waiting for the requester's payment
 
 
 async def test_a_driver_without_a_upi_id_gets_a_clear_409(api):

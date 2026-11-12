@@ -478,38 +478,6 @@ async def test_the_drivers_queue_holds_every_stage_that_needs_them_oldest_first(
     assert [(q.id, q.status) for q in queue] == [(made[k].id, k) for k in ("pending", "accepted", "payment_claimed", "ready")]
 
 
-# --- the driver backing out ---------------------------------------------------------------------------
-
-
-async def test_the_driver_can_back_out_of_an_accepted_request_until_it_is_paid(sessions):
-    requester, provider, post = await setup_pair(sessions)
-    req = await accept_request(sessions, await request_call(sessions, requester, provider, post, "200"), provider)
-    async with sessions() as s:
-        req = await svc.withdraw(s, req.id, provider.id)
-    assert req.status == "rejected" and req.closed_reason == "driver_withdrew"
-    assert (requester.id, "call_request_rejected") in sessions.pushes
-    # the pair is free to ask again
-    assert (await request_call(sessions, requester, provider, post, "200")).status == "pending"
-
-
-async def test_the_driver_cannot_back_out_once_the_requester_says_they_paid(sessions):
-    requester, provider, post = await setup_pair(sessions)
-    req = await accept_request(sessions, await request_call(sessions, requester, provider, post, "200"), provider)
-    await pay(sessions, req, requester)
-    async with sessions() as s:
-        await expect_error("INVALID_STATE", svc.withdraw(s, req.id, provider.id), 409)
-
-
-async def test_only_the_driver_can_withdraw_and_a_pending_request_is_rejected_not_withdrawn(sessions):
-    requester, provider, post = await setup_pair(sessions)
-    req = await request_call(sessions, requester, provider, post, "200")
-    async with sessions() as s:
-        await expect_error("INVALID_STATE", svc.withdraw(s, req.id, provider.id), 409)
-    req = await accept_request(sessions, req, provider)
-    async with sessions() as s:
-        await expect_error("NOT_PROVIDER", svc.withdraw(s, req.id, requester.id), 403)
-
-
 # --- the requester pays in advance -----------------------------------------------------------------
 
 

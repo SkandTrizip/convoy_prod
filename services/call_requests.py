@@ -5,7 +5,7 @@ wallet and no hold.
     pending -> accepted -> payment_claimed -> ready -> ringing -> live -> completed
                (waiting    (requester says    (driver
                 for pay)    they paid)         confirmed)
-    exits:  rejected (provider, or the provider withdrew before being paid) | cancelled (requester, before
+    exits:  rejected (the provider, before accepting) | cancelled (requester, before
             paying) | expired (a window ran out) | failed (the call never connected at all)
             | payment_disputed (the provider said twice that the payment never arrived, or never answered)
 
@@ -16,7 +16,9 @@ Money rules (all amounts in INR; the app opens a UPI app, the server cannot see 
     pay; the provider's confirmation gives the provider CALL_START_WINDOW_MINUTES to start the call; a
     payment the provider never answers about goes to admin review (`payment_disputed`) after
     CALL_CLAIM_CONFIRM_TTL_HOURS. `expires_at` always holds the deadline of the stage the request is in.
-  * The requester can cancel until they say they paid; the provider can withdraw until then too.
+  * The requester can cancel until they say they paid. The provider CANNOT back out after accepting: the
+    requester may already be paying in their UPI app, and the server only learns of it when they say "paid".
+    An accepted request nobody pays simply lapses after CALL_PAY_WINDOW_MINUTES.
   * The provider answers "did you receive it?" once: yes opens the call; no needs a second, explicit "I'm
     sure" (`sure=True`) and then closes the request as `payment_disputed`.
 
@@ -601,29 +603,6 @@ async def reject(session: AsyncSession, request_id: UUID, provider_id: UUID) -> 
         request.requester_id,
         "Request declined",
         "The driver can't take your call right now",
-        {"type": "call_request_rejected", "requestId": request.id},
-    )
-    return request
-
-
-async def withdraw(session: AsyncSession, request_id: UUID, provider_id: UUID) -> CallRequest:
-    """The driver backs out of a request they accepted, as long as the requester has not paid yet. The
-    requester is told as for a rejection (status `rejected`, `closedReason: driver_withdrew`)."""
-    request = await _lock_request(session, request_id)
-    if _require_party(request, provider_id) != "provider":
-        raise CallRequestError(403, "NOT_PROVIDER", "Only the driver can withdraw from this request")
-    if request.status != "accepted":
-        raise _wrong_state(request, "withdrawn")
-
-    await _end_without_charge(session, request, "rejected", "request_withdrawn", provider_id, "driver_withdrew")
-    await session.commit()
-    await session.refresh(request)
-
-    await _notify(
-        session,
-        request.requester_id,
-        "Request withdrawn",
-        "The driver can't take your call right now. You haven't paid anything",
         {"type": "call_request_rejected", "requestId": request.id},
     )
     return request

@@ -977,7 +977,7 @@ class CallRequest(Base):
     # driver confirmed) | disputed (the driver said it never arrived, or never answered).
     payment_claimed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=False), nullable=True)
     disputed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=False), nullable=True)
-    # Why the request ended without a call, for the apps and for admin: requester_cancelled | driver_withdrew
+    # Why the request ended without a call, for the apps and for admin: requester_cancelled
     # | no_response | payment_window_lapsed | start_window_lapsed | provider_denied | provider_silent |
     # call_not_connected ...
     closed_reason: Mapped[str | None] = mapped_column(String(32), nullable=True)

@@ -293,18 +293,6 @@ async def call_request_confirm_payment(
     return await _one(session, request, current_user)
 
 
-@router.post("/{request_id}/withdraw")
-async def call_request_withdraw(
-    request_id: str,
-    session: AsyncSession = Depends(get_session),
-    current_user: User = Depends(get_current_user),
-):
-    """Driver backs out of an accepted request, as long as the requester has not said they paid. The
-    requester is told; the request ends as `rejected` with `closedReason: driver_withdrew`."""
-    request = await svc.withdraw(session, _uuid(request_id, "request id"), current_user.id)
-    return await _one(session, request, current_user)
-
-
 @router.get("/payment-standing/me")
 async def my_payment_standing(
     session: AsyncSession = Depends(get_session),
