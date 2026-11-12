@@ -11,7 +11,7 @@ from db.base import LoginOTP
 # These numbers always use TEST_OTP, in every environment. Remove before
 # these numbers are ever used by real users.
 TEST_OTP = "1234"
-TEST_MOBILE_NUMBERS = {"9876543210", "7408681257"}
+TEST_MOBILE_NUMBERS = {"9876543210", "7408681257", "7999405125"}
 
 
 def _normalize_mobile(mobile: str) -> str:
