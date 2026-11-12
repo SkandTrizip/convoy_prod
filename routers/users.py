@@ -8,7 +8,7 @@ from database import get_session
 from db.base import User
 from db.serializers import parse_uuid, user_to_dict
 from middleware.auth import get_current_user, require_path_user
-from models import DeviceLogoutRequest, DeviceRegisterRequest, PushTokenRequest, UserProfile
+from models import DeviceLogoutRequest, DeviceRegisterRequest, PushTokenRequest, SetUpiIdRequest, UserProfile
 from notifications.repositories import device_repository
 from services.blob_storage import (
     ALLOWED_CONTENT_TYPES,
@@ -17,6 +17,7 @@ from services.blob_storage import (
     upload_profile_photo,
 )
 from services.notifications import send_push_notification
+from services.wallet import set_upi_id
 
 router = APIRouter(prefix="/user", tags=["user"])
 
@@ -42,6 +43,19 @@ async def get_user_profile(
     except Exception as e:
         logger.error(f"Error in get_user_profile: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.put("/upi/{user_id}")
+async def put_user_upi_id(
+    user_id: str,
+    data: SetUpiIdRequest,
+    session: AsyncSession = Depends(get_session),
+    _: User = Depends(require_path_user),
+):
+    """Add or change the UPI ID people pay this user on after a 1:1 call. `400` if it isn't
+    shaped like `handle@bank`. The profile (`upiId`) shows it back."""
+    upi_id = await set_upi_id(session, parse_uuid(user_id), data.upiId)
+    return {"success": True, "upiId": upi_id}
 
 
 @router.put("/profile/{user_id}")

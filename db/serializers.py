@@ -47,6 +47,9 @@ def user_to_dict(user: User) -> dict:
         "profilePhoto": profile_photo_url(user),
         "kycStatus": user.kyc_status,
         "kycStep": user.kyc_step,
+        # Where callers pay this person after a call (null until they add it). Only ever sent to the
+        # person themselves (login / profile) and to admins.
+        "upiId": user.upi_id,
         "accountStatus": user.account_status,
         "createdDate": user.created_date,
         "verificationStatus": user.verification_status or {},
@@ -329,6 +332,46 @@ def call_request_party_to_dict(user: User | None) -> dict:
     }
 
 
+def payment_details(request: CallRequest, provider: User | None, viewer_id: uuid.UUID) -> dict | None:
+    """What the requester needs to pay in advance (the driver's UPI ID is shown to them only, and only while
+    the request is `accepted`, waiting for payment). None for everyone else / at any other time. `deadline`
+    is when the time to pay runs out."""
+    if request.status != "accepted" or viewer_id != request.requester_id:
+        return None
+    return {
+        "upiId": request.payee_upi_id or (provider.upi_id if provider else None),
+        "payeeName": provider.name if provider else None,
+        "amount": str(request.amount),
+        "deadline": request.expires_at.isoformat(),
+    }
+
+
+def payment_ledger_entry_to_dict(
+    request: CallRequest, requester: User | None, provider: User | None, viewer_id: uuid.UUID
+) -> dict:
+    """One line of the payments ledger. `counterparty` is the other person. Only the driver sees
+    `providerConfirmed` (their own "did you receive it?" answer); the requester's line never changes
+    because of it. `refundDue`: the call did not happen by the driver's doing and the money is owed back."""
+    received = viewer_id == request.provider_id
+    return {
+        "id": str(request.id),
+        "direction": "received" if received else "sent",
+        "counterparty": call_request_party_to_dict(requester if received else provider),
+        "amount": str(request.paid_amount),
+        "offerAmount": str(request.amount),
+        "amountType": "full" if request.paid_amount == request.amount else "minimum",
+        "topic": request.topic,
+        "durationMinutes": request.duration_minutes,
+        "connectedSeconds": request.connected_seconds,
+        "paidAt": request.payment_decided_at.isoformat() if request.payment_decided_at else None,
+        "callEndedAt": request.call_ended_at.isoformat() if request.call_ended_at else None,
+        "upiId": request.payee_upi_id,
+        "upiReference": request.upi_reference,
+        "providerConfirmed": request.provider_confirmed if received else None,
+        "refundDue": request.settlement == "refund_due" and request.resolved_at is None,
+    }
+
+
 def call_request_to_dict(
     request: CallRequest,
     requester: User | None,
@@ -336,9 +379,8 @@ def call_request_to_dict(
     viewer_id: uuid.UUID,
     on_another_device: bool = False,
 ) -> dict:
-    """`role` tells the app which side the caller is. `holdAmount` is the "call
-    amount" (frozen at request time, owed once the call connects); `amount` is
-    the full offer paid if the requester says they were satisfied. `onAnotherDevice`: the
+    """`role` tells the app which side the caller is. `amount` is the offer; `holdAmount` /
+    `minimumAmount` is the least payable (nothing is held in the new flow). `onAnotherDevice`: the
     call is on the viewer's OTHER phone (they are signed in on several), so this phone must
     not offer to join, rejoin or decline it."""
     return {
@@ -363,7 +405,79 @@ def call_request_to_dict(
         "callEndedAt": request.call_ended_at.isoformat() if request.call_ended_at else None,
         "connectedSeconds": request.connected_seconds,
         "feedbackDeadline": request.feedback_deadline.isoformat() if request.feedback_deadline else None,
-        "satisfied": request.satisfied,
-        "settledAmount": str(request.settled_amount) if request.settled_amount is not None else None,
+        # New flow: `holdAmount` is the minimum payable. Nothing is held; the requester pays UPI directly.
+        "minimumAmount": str(request.hold_amount),
+        "thresholdMet": request.threshold_met,
+        "paymentOutcome": request.payment_outcome,
+        "paidAmount": str(request.paid_amount) if request.paid_amount is not None else None,
+        "paymentReason": request.payment_reason,
+        "paymentDecidedAt": request.payment_decided_at.isoformat() if request.payment_decided_at else None,
+        "paymentClaimedAt": request.payment_claimed_at.isoformat() if request.payment_claimed_at else None,
+        "closedReason": request.closed_reason,
+        # The driver took the payment and never called: a refund is due from them (until an admin rules on it).
+        "refundDue": request.settlement == "refund_due" and request.resolved_at is None,
+        "providerConfirmed": request.provider_confirmed,
+        "payment": payment_details(request, provider, viewer_id),
         "onAnotherDevice": on_another_device,
     }
+
+
+def admin_dispute_to_dict(
+    request: CallRequest, requester: User | None, provider: User | None, events: list | None = None
+) -> dict:
+    """One line of the admin's disputes list: everything needed to rule on a payment without opening the
+    database. `events` (when given) is the request's behaviour log, oldest first."""
+
+    def party(user: User | None) -> dict:
+        return {"id": str(user.id) if user else None, "name": user.name if user else None, "mobile": user.mobile if user else None}
+
+    def ts(value) -> str | None:
+        return value.isoformat() if value else None
+
+    data = {
+        "id": str(request.id),
+        "status": request.status,
+        "closedReason": request.closed_reason,
+        "settlement": request.settlement,
+        "settlementReason": request.settlement_reason,
+        "requester": party(requester),
+        "provider": party(provider),
+        "amount": str(request.amount),
+        "paidAmount": str(request.paid_amount) if request.paid_amount is not None else None,
+        "payeeUpiId": request.payee_upi_id,
+        "upiReference": request.upi_reference,
+        "paymentOutcome": request.payment_outcome,
+        "providerConfirmed": request.provider_confirmed,
+        "ringAttempts": request.ring_attempts,
+        "connectedSeconds": request.connected_seconds,
+        "thresholdMet": request.threshold_met,
+        "endReason": request.end_reason,
+        "providerMediaOn": request.provider_media_on,
+        "providerBeats": {
+            "total": request.provider_beats,
+            "mic": request.provider_mic_beats,
+            "camera": request.provider_camera_beats,
+        },
+        "createdAt": ts(request.created_at),
+        "acceptedAt": ts(request.responded_at),
+        "paymentClaimedAt": ts(request.payment_claimed_at),
+        "providerAnsweredAt": ts(request.provider_confirmed_at),
+        "disputedAt": ts(request.disputed_at),
+        "callEndedAt": ts(request.call_ended_at),
+        "resolution": request.resolution,
+        "resolvedAt": ts(request.resolved_at),
+        "resolvedBy": request.resolved_by,
+        "resolutionNote": request.resolution_note,
+    }
+    if events is not None:
+        data["events"] = [
+            {
+                "type": e.event_type,
+                "role": e.role,
+                "source": e.source,
+                "at": ts(e.occurred_at),
+                "details": e.details,
+            }
+            for e in events
+        ]
+    return data

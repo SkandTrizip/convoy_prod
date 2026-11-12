@@ -8,9 +8,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from config import PROFILE_PHOTO_MAX_SIZE_MB, logger
 from database import get_session
 from db.base import AdminUser, CallLog, SearchDemand, Truck, TruckRoute, User
-from db.serializers import parse_uuid, user_to_dict
+from db.serializers import admin_dispute_to_dict, parse_uuid, user_to_dict
 from middleware.admin_auth import get_current_admin
-from models import AdminRedeemAction, AdminUpdateUserRequest, SendNotificationBatchRequest
+from models import (
+    AdminRedeemAction,
+    AdminResolveCallPaymentRequest,
+    AdminUpdateUserRequest,
+    SendNotificationBatchRequest,
+)
 from notifications.repositories import device_repository, notification_repository
 from notifications.sender.firebase_sender import PreparedMessage, send_batch
 from services.blob_storage import (
@@ -20,6 +25,8 @@ from services.blob_storage import (
     upload_profile_photo,
 )
 from services.notifications import send_push_notification
+from services import call_disputes, call_payment_standing
+from services.call_requests import CallRequestError
 from services.user_deletion import delete_user_cascade
 from services.wallet import list_pending_redeems, mark_redeem_paid, reject_redeem
 
@@ -348,6 +355,68 @@ def _redeem_request_to_dict(redeem_req) -> dict:
         "status": redeem_req.status,
         "createdAt": redeem_req.created_at.isoformat(),
     }
+
+
+@router.get("/call-payments/flagged")
+async def flagged_call_users(session: AsyncSession = Depends(get_session)):
+    """Everyone with something against them in the advance-payment 1:1 calls, worst first. Each has
+    `asRequester` (`deniedClaims`, `unpaidLapses`, `blocked`) and `asDriver` (`noShows`, `deniedClaims`,
+    `answeredClaims`, `denialRate`, `flagged`, `unansweredClaims`, `blocked`), `strikeLimit` and `resetAt`."""
+    return {"success": True, "users": await call_payment_standing.list_flagged(session)}
+
+
+@router.get("/call-payments/disputes")
+async def call_payment_disputes(
+    status: str = Query("open", description="open (no verdict yet), resolved or all"),
+    page: int = Query(1, ge=1),
+    pageSize: int = Query(20, ge=1, le=100),
+    session: AsyncSession = Depends(get_session),
+):
+    """Advance payments that need a person: denied or unanswered claims (`payment_disputed`), refunds
+    the driver owes (`settlement: refund_due`: they took the money and never called) and calls whose money needs
+    a look (`settlement: review`). Newest first, each with both people, the payment details and the behaviour log."""
+    requests, total = await call_disputes.list_disputes(session, status, pageSize, (page - 1) * pageSize)
+    ids = {r.requester_id for r in requests} | {r.provider_id for r in requests}
+    users = {}
+    if ids:
+        users = {u.id: u for u in (await session.execute(select(User).where(User.id.in_(ids)))).scalars()}
+    items = []
+    for r in requests:
+        events = await call_disputes.dispute_events(session, r.id)
+        items.append(admin_dispute_to_dict(r, users.get(r.requester_id), users.get(r.provider_id), events))
+    return {"success": True, "total": total, "page": page, "pageSize": pageSize, "disputes": items}
+
+
+@router.post("/call-payments/{request_id}/resolve")
+async def resolve_call_payment_dispute(
+    request_id: str,
+    body: AdminResolveCallPaymentRequest,
+    admin: AdminUser = Depends(get_current_admin),
+    session: AsyncSession = Depends(get_session),
+):
+    """Record the verdict on a disputed / refund-due / review request: `requester_right`, `driver_right` or
+    `no_fault`. Moves no money (the refund is chased outside the app); it decides whose record the request
+    counts against. The last verdict stands."""
+    try:
+        rid = parse_uuid(request_id)
+    except ValueError:
+        raise CallRequestError(400, "INVALID_ID", "Invalid request id")
+    request = await call_disputes.resolve(session, rid, str(admin.id), body.resolution, body.note)
+    requester = await session.get(User, request.requester_id)
+    provider = await session.get(User, request.provider_id)
+    return {"success": True, "dispute": admin_dispute_to_dict(request, requester, provider)}
+
+
+@router.post("/call-payments/{user_id}/reset")
+async def reset_call_payment_standing(
+    user_id: str,
+    admin: AdminUser = Depends(get_current_admin),
+    session: AsyncSession = Depends(get_session),
+):
+    """Forgive everything counted against a user so far, as requester and as driver: they can use the calls
+    again (new strikes count from now)."""
+    standing = await call_payment_standing.reset_standing(session, parse_uuid(user_id), str(admin.id))
+    return {"success": True, "standing": standing}
 
 
 @router.get("/wallet/redeem/pending")

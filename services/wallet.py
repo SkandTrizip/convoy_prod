@@ -4,12 +4,12 @@ from decimal import Decimal
 from uuid import UUID
 
 from fastapi import HTTPException
-from sqlalchemy import func, select, update
+from sqlalchemy import select, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from config import DEV_WALLET_CREDIT_ENABLED, DEV_WALLET_CREDIT_MAX_INR, MIN_REDEEM_AMOUNT_INR, logger
-from db.base import CALL_HOLDING_STATUSES, CallRequest, RedeemRequest, User, Wallet, WalletTransaction
+from db.base import RedeemRequest, User, Wallet, WalletTransaction
 from db.serializers import parse_uuid
 
 # Loose but real UPI VPA shape: handle@bank, e.g. "9876543210@ybl"
@@ -188,9 +188,7 @@ async def initiate_redeem(
     wallet = await _locked_wallet(session, user_id)
     if wallet.status == "frozen":
         raise HTTPException(status_code=403, detail="Wallet is frozen, contact support")
-    # Money promised to open 1:1 call requests can't be withdrawn from under them.
-    # Read under the wallet lock: creating a request takes the same lock first.
-    amount = wallet.available_balance - await call_commitments(session, user_id)
+    amount = wallet.available_balance
     if amount < MIN_REDEEM_AMOUNT_INR:
         raise HTTPException(
             status_code=400,
@@ -319,100 +317,6 @@ async def reject_redeem(
     await session.commit()
     await session.refresh(redeem_req)
     return redeem_req
-
-
-# --- Paid 1:1 calls -----------------------------------------------------------
-# These run inside the CALLER's transaction and never commit, so a call's state
-# change and its ledger rows land together or not at all. Each takes the wallet
-# row lock first (see _locked_wallet), and uses a deterministic idempotency key
-# per request so the ledger itself rejects a duplicate hold/release/settle.
-
-
-async def call_commitments(session: AsyncSession, user_id: UUID) -> Decimal:
-    """The part of the user's open call offers that is NOT frozen yet: for every
-    request still holding money, `amount - hold_amount`. If the requester says
-    "satisfied" they owe it, so it must stay out of reach of new requests and of
-    redeem. Frozen holds aren't counted here, they already left `available`."""
-    total = await session.scalar(
-        select(func.coalesce(func.sum(CallRequest.amount - CallRequest.hold_amount), 0)).where(
-            CallRequest.requester_id == user_id,
-            CallRequest.status.in_(CALL_HOLDING_STATUSES),
-        )
-    )
-    return Decimal(total or 0)
-
-
-def _call_ledger_row(
-    wallet: Wallet, request_id: UUID, txn_type: str, amount: Decimal, key_suffix: str, note: str | None = None
-) -> WalletTransaction:
-    return WalletTransaction(
-        user_id=wallet.user_id,
-        type=txn_type,
-        amount=amount,
-        available_after=wallet.available_balance,
-        reserved_after=wallet.reserved_balance,
-        reference_type="call_request",
-        reference_id=str(request_id),
-        note=note,
-        idempotency_key=f"call-{request_id}-{key_suffix}",
-    )
-
-
-async def hold_for_call(session: AsyncSession, request: CallRequest, wallet: Wallet) -> None:
-    """Freeze the request's hold_amount (available -> reserved). `wallet` must be
-    the requester's, already locked by the caller (which also checked it)."""
-    wallet.available_balance = wallet.available_balance - request.hold_amount
-    wallet.reserved_balance = wallet.reserved_balance + request.hold_amount
-    wallet.updated_at = datetime.utcnow()
-    session.add(_call_ledger_row(wallet, request.id, "call_hold", request.hold_amount, "hold"))
-
-
-async def release_call_hold(session: AsyncSession, request: CallRequest, note: str | None = None) -> None:
-    """Give the whole hold back (reserved -> available): the request ended with
-    nothing owed (rejected, cancelled, expired, call never connected)."""
-    wallet = await _locked_wallet(session, request.requester_id)
-    wallet.reserved_balance = wallet.reserved_balance - request.hold_amount
-    wallet.available_balance = wallet.available_balance + request.hold_amount
-    wallet.updated_at = datetime.utcnow()
-    session.add(_call_ledger_row(wallet, request.id, "call_release", request.hold_amount, "release", note))
-
-
-async def settle_call_payment(session: AsyncSession, request: CallRequest, pay_amount: Decimal) -> Decimal:
-    """The requester pays `pay_amount` (the hold, or the full offer) to the provider.
-    The hold is consumed first, any extra comes from `available`. Returns what was
-    actually paid.
-
-    Both wallets are locked in a fixed (id) order so two settlements touching the
-    same pair of users can't deadlock. A provider's frozen wallet still receives:
-    refusing would strand money the requester has already paid.
-    """
-    first, second = sorted([request.requester_id, request.provider_id], key=str)
-    locked = {first: await _locked_wallet(session, first), second: await _locked_wallet(session, second)}
-    payer, earner = locked[request.requester_id], locked[request.provider_id]
-
-    extra = pay_amount - request.hold_amount
-    if extra > payer.available_balance:
-        # Shouldn't happen: call_commitments keeps `extra` out of reach of redeem and
-        # of new requests. Never go negative or fail the settlement; charge what's there.
-        logger.error(
-            "Call %s: requester %s short by %s on settlement, charging what is available",
-            request.id,
-            request.requester_id,
-            extra - payer.available_balance,
-        )
-        extra = payer.available_balance
-    paid = request.hold_amount + extra
-
-    now = datetime.utcnow()
-    payer.reserved_balance = payer.reserved_balance - request.hold_amount
-    payer.available_balance = payer.available_balance - extra
-    payer.updated_at = now
-    session.add(_call_ledger_row(payer, request.id, "call_debit", paid, "debit"))
-
-    earner.available_balance = earner.available_balance + paid
-    earner.updated_at = now
-    session.add(_call_ledger_row(earner, request.id, "call_earning", paid, "earning"))
-    return paid
 
 
 async def dev_credit_wallet(

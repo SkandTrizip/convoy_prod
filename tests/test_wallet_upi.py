@@ -32,13 +32,13 @@ async def save_upi(api, user, upi):
 
 
 async def test_the_wallet_says_no_upi_yet_and_the_minimum(api):
-    user = await make_user(api.factory)
+    user = await make_user(api.factory, upi=False)
     w = await wallet(api, user)
     assert w["upiId"] is None and w["minRedeemAmount"] == "250"
 
 
 async def test_saving_and_changing_the_upi_id(api):
-    user = await make_user(api.factory)
+    user = await make_user(api.factory, upi=False)
     r = await save_upi(api, user, "  asha@ybl ")
     assert r.status_code == 200 and r.json()["upiId"] == "asha@ybl"
     assert (await wallet(api, user))["upiId"] == "asha@ybl"
@@ -48,7 +48,7 @@ async def test_saving_and_changing_the_upi_id(api):
 
 @pytest.mark.parametrize("bad", ["", "   ", "asha", "asha@", "@ybl", "a@b", "asha ybl@ok", "x" * 70 + "@ybl"])
 async def test_a_badly_shaped_upi_id_is_refused_and_keeps_the_old_one(api, bad):
-    user = await make_user(api.factory)
+    user = await make_user(api.factory, upi=False)
     await save_upi(api, user, "asha@ybl")
     r = await save_upi(api, user, bad)
     assert r.status_code == 400
@@ -56,15 +56,15 @@ async def test_a_badly_shaped_upi_id_is_refused_and_keeps_the_old_one(api, bad):
 
 
 async def test_nobody_can_save_a_upi_id_for_someone_else(api):
-    owner = await make_user(api.factory)
-    other = await make_user(api.factory)
+    owner = await make_user(api.factory, upi=False)
+    other = await make_user(api.factory, upi=False)
     r = await api.put(f"/api/wallet/{owner.id}/upi", json={"upiId": "evil@ybl"}, headers=auth(other))
     assert r.status_code in (401, 403)
     assert (await wallet(api, owner))["upiId"] is None
 
 
 async def test_without_a_upi_id_the_money_cannot_be_withdrawn(api):
-    user = await make_user(api.factory)
+    user = await make_user(api.factory, upi=False)
     await fund(api.factory, user, "1000")
     r = await withdraw(api, user)
     assert r.status_code == 400 and "UPI" in r.json()["detail"]
@@ -73,7 +73,7 @@ async def test_without_a_upi_id_the_money_cannot_be_withdrawn(api):
 
 
 async def test_under_the_minimum_cannot_be_withdrawn_but_exactly_the_minimum_can(api):
-    user = await make_user(api.factory)
+    user = await make_user(api.factory, upi=False)
     await save_upi(api, user, "asha@ybl")
     await fund(api.factory, user, "249.99")
     r = await withdraw(api, user)
@@ -87,7 +87,7 @@ async def test_under_the_minimum_cannot_be_withdrawn_but_exactly_the_minimum_can
 
 
 async def test_a_changed_upi_id_applies_to_the_next_withdrawal_only(api):
-    user = await make_user(api.factory)
+    user = await make_user(api.factory, upi=False)
     await save_upi(api, user, "old@ybl")
     await fund(api.factory, user, "300")
     first = (await withdraw(api, user)).json()["redeemRequest"]
@@ -98,14 +98,14 @@ async def test_a_changed_upi_id_applies_to_the_next_withdrawal_only(api):
 
 
 async def test_withdrawing_still_needs_approved_kyc(api):
-    user = await make_user(api.factory, kyc="pending")
+    user = await make_user(api.factory, kyc="pending", upi=False)
     await save_upi(api, user, "asha@ybl")
     await fund(api.factory, user, "1000")
     assert (await withdraw(api, user)).status_code == 403
 
 
 async def test_a_retry_with_the_same_key_does_not_withdraw_twice(api):
-    user = await make_user(api.factory)
+    user = await make_user(api.factory, upi=False)
     await save_upi(api, user, "asha@ybl")
     await fund(api.factory, user, "600")
     body = {"idempotencyKey": f"k-{uuid.uuid4()}"}
@@ -117,7 +117,7 @@ async def test_a_retry_with_the_same_key_does_not_withdraw_twice(api):
 
 
 async def test_an_older_app_sending_the_upi_id_with_the_withdrawal_still_works_and_saves_it(api):
-    user = await make_user(api.factory)
+    user = await make_user(api.factory, upi=False)
     await fund(api.factory, user, "400")
     r = await api.post(
         f"/api/wallet/{user.id}/redeem",

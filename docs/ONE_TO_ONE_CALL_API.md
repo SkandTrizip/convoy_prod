@@ -1,5 +1,7 @@
 # Paid 1:1 calls — API (requests, wallet, settlement, the call itself)
 
+> **This is the classic flow (wallet hold, "were you satisfied?").** The branch `feat/new-demand-call-flow` replaces the money part with advance payment by direct UPI and no wallet: see `ONE_TO_ONE_DIRECT_PAYMENT_API.md`. The request/accept/call/heartbeat endpoints below are shared.
+
 A requester offers money for a live 1:1 call with a driver. The driver accepts or
 rejects, starts the call (the requester's phone rings), the two talk over Agora, and
 after a call that really connected the requester says whether they were satisfied.
@@ -37,11 +39,11 @@ rejected / expired / cancelled
 ```
 
 - A ring nobody answers within **45 s** goes back to `accepted`; the driver can `start` again
-  (as often as they like) until the request's 30-minute window ends.
+  (as often as they like) until the request's window ends (30 minutes after the driver accepted; in the advance-payment flow see ONE_TO_ONE_DIRECT_PAYMENT_API.md).
 - The requester **declining** a ring (`end` while ringing) cancels the request and releases the money.
 
 - `pending`, `accepted`, `ringing`, `live` are **open**: at most one per requester/driver pair.
-- A request lives **30 minutes** from creation (pending + accepted + ringing); then it's `expired`.
+- A request lives **30 minutes** from creation while it is `pending`. **Accepting restarts the clock: it then lives 30 minutes from the acceptance** (accepted + ringing), so a driver can take several requests and call them one by one; `expiresAt` moves accordingly. Then it's `expired`.
 - `awaiting_feedback` still holds money but doesn't block a new request to the same driver.
 
 ## Endpoints
@@ -89,7 +91,7 @@ All of these also return the usual `request` object. `start` and `join` add a `c
 Only from `accepted`. Rings the requester (push `data.type = "call_incoming"`) and returns the
 driver's credentials. Join the Agora channel and start the camera while it rings.
 Calling it again while it is still ringing returns the same credentials, so it is safe after an
-app restart. `410 REQUEST_EXPIRED` if the 30-minute window is over.
+app restart. `410 REQUEST_EXPIRED` if the window (30 minutes after acceptance) is over.
 
 #### `POST /call-requests/{id}/join` (requester answers; either side rejoins)
 Requester, while `ringing`: the call goes `live` and they get credentials with `audioOnly: true`.

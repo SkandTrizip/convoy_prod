@@ -462,9 +462,21 @@ class CreateCallRequestRequest(BaseModel):
     amount: Decimal = Field(..., gt=0, max_digits=12, decimal_places=2, description="Offer in INR (50 to 10000)")
 
 
-class CallFeedbackRequest(BaseModel):
-    satisfied: bool = Field(
-        ..., description="True pays the full offer; false pays only the call amount (the part frozen up front)"
+class CallPayRequest(BaseModel):
+    amountType: Optional[str] = Field(
+        None, description='Optional, and only "full" is accepted: the whole offer is paid up front'
+    )
+    upiReference: Optional[str] = Field(
+        None, max_length=100, description="The UPI transaction id, if the UPI app handed it back"
+    )
+
+
+class CallConfirmPaymentRequest(BaseModel):
+    received: bool = Field(..., description="Did the provider receive the money the requester says they paid?")
+    sure: bool = Field(
+        False,
+        description='Required (true) for received=false: the app asks "are you sure?" first. Without it the server '
+        "answers 409 CONFIRM_REQUIRED and changes nothing",
     )
 
 
@@ -475,6 +487,9 @@ class CallHeartbeatRequest(BaseModel):
         "(e.g. from the SDK's user-joined / user-offline events)? Time only counts "
         "while both sides say yes.",
     )
+    micOn: Optional[bool] = Field(None, description="Is this phone's own microphone on right now?")
+    cameraOn: Optional[bool] = Field(None, description="Is this phone's own camera on right now?")
+    peerVideoOn: Optional[bool] = Field(None, description="Is the other person's video showing on this phone?")
 
 
 class CallBehaviourEventItem(BaseModel):
@@ -518,3 +533,8 @@ class LocationReportRequest(BaseModel):
     city: Optional[str] = Field(default=None, max_length=128)
     state: Optional[str] = Field(default=None, max_length=128)
     pincode: Optional[str] = Field(default=None, max_length=16)
+
+
+class AdminResolveCallPaymentRequest(BaseModel):
+    resolution: str = Field(..., description="requester_right | driver_right | no_fault")
+    note: Optional[str] = Field(None, max_length=1000, description="What the admin found, for the record")

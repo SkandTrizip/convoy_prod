@@ -9,7 +9,6 @@ from middleware.auth import get_current_user, require_path_user
 from models import ConfirmRechargeRequest, CreateRechargeRequest, DevCreditRequest, InitiateRedeemRequest, SetUpiIdRequest
 from services import recharge as recharge_service
 from services.wallet import (
-    call_commitments,
     dev_credit_wallet,
     get_or_create_wallet,
     get_upi_id,
@@ -107,15 +106,13 @@ async def get_wallet(
     """Get the caller's wallet balance."""
     try:
         wallet = await get_or_create_wallet(session, parse_uuid(user_id))
-        # Money promised to open 1:1 call offers (not frozen, but not free either):
-        # `spendableBalance` is what a new offer or a redeem can actually use.
-        commitments = await call_commitments(session, wallet.user_id)
         return {
             "success": True,
             "wallet": {
                 **_wallet_to_dict(wallet),
-                "callCommitments": str(commitments),
-                "spendableBalance": str(max(wallet.available_balance - commitments, 0)),
+                # No call money is ever held back any more; both fields stay for older apps.
+                "callCommitments": "0.00",
+                "spendableBalance": str(wallet.available_balance),
                 # Where a withdrawal would be paid (null until the user adds it), and the
                 # smallest spendable balance that can be withdrawn.
                 "upiId": await get_upi_id(session, wallet.user_id),
@@ -165,7 +162,7 @@ async def redeem_wallet(
     session: AsyncSession = Depends(get_session),
     _: User = Depends(require_path_user),
 ):
-    """Withdraw the full spendable balance to the account's saved UPI ID (400 if none is saved,
+    """Withdraw the full available balance to the account's saved UPI ID (400 if none is saved,
     or if the balance is under the minimum). Reserves the balance
     immediately; an admin confirms or rejects the actual payout separately."""
     try:

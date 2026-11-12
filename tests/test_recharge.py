@@ -633,18 +633,3 @@ async def test_several_recharges_add_up_and_the_ledger_matches_the_balance(sessi
         total = (await s.execute(select(func.sum(WalletTransaction.amount)).where(
             WalletTransaction.user_id == user.id, WalletTransaction.type == "credit"))).scalar_one()
     assert total == D("399.50")
-
-
-@needs_db
-@pytest.mark.anyio
-async def test_recharged_money_funds_a_call_offer_like_any_other(sessions, rz):
-    """The point of it all: after a recharge the requester has spendable money."""
-    from services import wallet as wallet_service
-
-    user = await make_user(sessions)
-    row = await new_recharge(sessions, user, "500")
-    await confirm(sessions, user, row, rz.pays(row.razorpay_order_id))
-    async with sessions() as s:
-        wallet = await wallet_service.get_or_create_wallet(s, user.id)
-        commitments = await wallet_service.call_commitments(s, user.id)
-    assert wallet.available_balance - commitments == D("500.00")
